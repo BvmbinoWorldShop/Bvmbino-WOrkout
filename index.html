@@ -247,8 +247,8 @@ body>*{position:relative;z-index:1}
 .ex-check.done{background:var(--green);border-color:var(--green)}
 .ex-check span{display:none;color:var(--black);font-size:11px;font-weight:800}
 .ex-check.done span{display:block}
-.ex-detail{max-height:0;overflow:hidden;transition:max-height 0.4s ease;padding:0 14px}
-.ex-detail.open{max-height:160px;padding-bottom:14px}
+.ex-detail{max-height:0;overflow:hidden;transition:max-height 0.4s cubic-bezier(0.4,0,0.2,1);padding:0 14px}
+.ex-detail.open{max-height:3000px;overflow:visible;padding-bottom:18px}
 .ex-why-text{font-size:12px;color:var(--text-mid);line-height:1.6;border-left:2px solid var(--gold-dim);padding-left:10px}
 .achilles-tag{display:inline-flex;align-items:center;gap:4px;font-family:'DM Mono',monospace;font-size:8px;color:var(--red);background:rgba(224,52,52,0.1);padding:3px 8px;border-radius:4px;margin-top:6px}
 
@@ -782,7 +782,7 @@ body>*{position:relative;z-index:1}
   inset: 0;
   background: rgba(0,0,0,0.85);
   backdrop-filter: blur(8px);
-  z-index: 105;
+  z-index: 600; /* Renders in front of workout modal (z-index 300) */
   display: none;
   align-items: flex-end;
   justify-content: center;
@@ -1060,6 +1060,46 @@ body>*{position:relative;z-index:1}
   color: #5B9AFF;
   letter-spacing: 1px;
   margin-top: 3px;
+}
+
+
+/* ── EXERCISE EXPAND & SCROLLING IMPROVEMENTS ── */
+.ex-expand-arrow {
+  font-size: 12px;
+  color: var(--text-dim);
+  transition: transform 0.3s ease, color 0.3s ease;
+  line-height: 1;
+}
+.ex-row.expanded .ex-expand-arrow {
+  transform: rotate(180deg);
+  color: var(--gold);
+}
+.ex-row {
+  cursor: pointer;
+  user-select: none;
+}
+.ex-row:active {
+  background: rgba(255,255,255,0.02);
+}
+.ex-logger-wrap {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.set-table {
+  min-width: 310px;
+}
+.set-input {
+  min-height: 32px;
+  font-size: 13px !important;
+}
+.set-rpe-select {
+  min-height: 32px;
+  font-size: 11px !important;
+}
+.set-check-btn {
+  width: 28px;
+  height: 28px;
+  font-size: 12px;
 }
 
 </style>
@@ -2405,7 +2445,10 @@ function openModal(key,sessionId,dayIdx){
       <div class="ex-row" onclick="toggleExDetail(this)">
         <div class="ex-num">0${i+1}</div>
         <div class="ex-info">
-          <div class="ex-name">${curEx.name}</div>
+          <div style="display:flex;align-items:center;gap:6px">
+            <div class="ex-name">${curEx.name}</div>
+            <div class="ex-expand-arrow">▾</div>
+          </div>
           <div class="ex-sets-tag">${wkSets} · ${curEx.quality}</div>
           ${isSwapped?`<div class="ex-swap-badge">⇄ SWAPPED: ${origEx.name}</div>`:''}
         </div>
@@ -2445,7 +2488,18 @@ function completeSessionFromModal(){
   if(btn){btn.className=isDone?'complete-btn is-done':'complete-btn';btn.textContent=isDone?'✓ SESSION COMPLETED':'MARK SESSION COMPLETE ✓';}
 }
 
-function toggleExDetail(el){el.nextElementSibling.classList.toggle('open');}
+function toggleExDetail(el){
+  const detail=el.nextElementSibling;
+  if(!detail)return;
+  const isOpen=detail.classList.toggle('open');
+  el.classList.toggle('expanded',isOpen);
+  if(isOpen){
+    setTimeout(()=>{
+      const item=el.closest('.ex-item');
+      if(item)item.scrollIntoView({behavior:'smooth',block:'nearest'});
+    },80);
+  }
+}
 
 function toggleExCheck(e,el,workoutKey,exKey){
   e.stopPropagation();const was=el.classList.contains('done');
