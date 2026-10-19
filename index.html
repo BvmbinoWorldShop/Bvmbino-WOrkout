@@ -445,6 +445,623 @@ body>*{position:relative;z-index:1}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.5}}
 @keyframes checkPop{0%{transform:scale(0)}60%{transform:scale(1.3)}100%{transform:scale(1)}}
 .check-anim{animation:checkPop 0.35s cubic-bezier(0.34,1.56,0.64,1)}
+
+/* ════════════════════════════════════════════════════
+   NEW FEATURES: REST TIMER, SET LOGGER, SWAP & CHARTS
+   ════════════════════════════════════════════════════ */
+
+/* ── REST TIMER ── */
+.rest-timer-box {
+  background: linear-gradient(135deg, rgba(212,168,67,0.14), rgba(17,17,21,0.96));
+  border: 1px solid rgba(212,168,67,0.35);
+  border-radius: var(--r-sm);
+  padding: 14px 16px;
+  margin-bottom: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  position: relative;
+  overflow: hidden;
+}
+.rest-timer-box::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; height: 2px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+}
+.rt-top-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.rt-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 2px;
+  color: var(--gold);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 500;
+}
+.rt-time-display {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 40px;
+  letter-spacing: 2px;
+  color: #fff;
+  line-height: 1;
+  transition: color 0.3s;
+}
+.rt-time-display.active {
+  color: var(--gold);
+  text-shadow: 0 0 16px rgba(212,168,67,0.45);
+}
+.rt-time-display.finished {
+  color: var(--green);
+  animation: rtPulse 0.9s infinite alternate;
+}
+@keyframes rtPulse {
+  from { transform: scale(1); opacity: 1; }
+  to { transform: scale(1.06); opacity: 0.8; }
+}
+.rt-presets {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.rt-preset-btn {
+  background: var(--panel2);
+  border: 1px solid var(--border);
+  color: var(--text-mid);
+  padding: 5px 10px;
+  border-radius: 6px;
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.rt-preset-btn:hover, .rt-preset-btn.active {
+  background: var(--gold-dim);
+  border-color: var(--gold);
+  color: var(--gold);
+}
+.rt-ctrls {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.rt-btn {
+  flex: 1;
+  padding: 9px 12px;
+  border-radius: 6px;
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 1px;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: all 0.2s;
+  text-align: center;
+  user-select: none;
+}
+.rt-btn-start {
+  background: var(--gold);
+  color: var(--black);
+}
+.rt-btn-pause {
+  background: rgba(255,159,10,0.18);
+  border-color: var(--orange);
+  color: var(--orange);
+}
+.rt-btn-reset {
+  background: var(--panel2);
+  border-color: var(--border);
+  color: var(--text-mid);
+}
+.rt-prog-bar-wrap {
+  height: 4px;
+  background: var(--border);
+  border-radius: 2px;
+  overflow: hidden;
+  width: 100%;
+}
+.rt-prog-fill {
+  height: 100%;
+  background: var(--gold);
+  width: 100%;
+  transition: width 0.25s linear;
+}
+
+/* ── SET, REP & LOAD LOGGING ── */
+.ex-swap-btn {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 5px 8px;
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 1px;
+  color: var(--text-mid);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  transition: all 0.2s;
+  user-select: none;
+}
+.ex-swap-btn:hover {
+  border-color: var(--gold);
+  color: var(--gold);
+}
+.ex-swap-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: rgba(52,120,246,0.14);
+  border: 1px solid rgba(52,120,246,0.35);
+  color: #5B9AFF;
+  font-family: 'DM Mono', monospace;
+  font-size: 8px;
+  padding: 2px 7px;
+  border-radius: 4px;
+  margin-top: 5px;
+  letter-spacing: 0.5px;
+}
+.ex-logger-wrap {
+  margin-top: 10px;
+  background: var(--panel);
+  border: 1px solid var(--border2);
+  border-radius: 8px;
+  padding: 10px 12px;
+}
+.last-time-card {
+  background: rgba(212,168,67,0.08);
+  border: 1px solid rgba(212,168,67,0.25);
+  border-radius: 6px;
+  padding: 8px 10px;
+  margin-bottom: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.last-time-card.empty {
+  background: rgba(255,255,255,0.03);
+  border-color: var(--border2);
+}
+.lt-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.lt-tag {
+  font-family: 'DM Mono', monospace;
+  font-size: 8px;
+  letter-spacing: 1.5px;
+  color: var(--gold);
+  font-weight: 600;
+}
+.lt-copy-btn {
+  background: transparent;
+  border: 1px solid rgba(212,168,67,0.45);
+  color: var(--gold);
+  border-radius: 4px;
+  font-family: 'DM Mono', monospace;
+  font-size: 8px;
+  padding: 2px 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.lt-copy-btn:hover {
+  background: var(--gold);
+  color: var(--black);
+}
+.lt-content {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  color: var(--text);
+  line-height: 1.4;
+  word-break: break-word;
+}
+.set-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.set-table th {
+  font-family: 'DM Mono', monospace;
+  font-size: 8px;
+  letter-spacing: 1px;
+  color: var(--text-dim);
+  text-align: center;
+  padding: 4px 2px;
+  font-weight: 400;
+}
+.set-table th:first-child { text-align: left; padding-left: 4px; }
+.set-row {
+  border-top: 1px solid var(--border2);
+  transition: background 0.2s;
+}
+.set-row.is-done {
+  background: rgba(48,209,88,0.04);
+}
+.set-num-cell {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  color: var(--text-dim);
+  padding: 6px 4px;
+  font-weight: 500;
+  width: 28px;
+}
+.set-prev-cell {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  color: var(--text-mid);
+  text-align: center;
+  width: 48px;
+  white-space: nowrap;
+}
+.set-input-cell {
+  padding: 4px 2px;
+  text-align: center;
+}
+.set-input {
+  width: 52px;
+  height: 28px;
+  background: var(--panel2);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  color: #fff;
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  text-align: center;
+  outline: none;
+  transition: border 0.2s;
+}
+.set-input:focus {
+  border-color: var(--gold);
+}
+.set-rpe-select {
+  width: 46px;
+  height: 28px;
+  background: var(--panel2);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  color: var(--gold);
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  text-align: center;
+  outline: none;
+  cursor: pointer;
+}
+.set-check-btn {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 1.5px solid var(--border);
+  background: transparent;
+  color: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  margin: 0 auto;
+  font-size: 10px;
+  font-weight: bold;
+  transition: all 0.2s;
+}
+.set-check-btn.checked {
+  background: var(--green);
+  border-color: var(--green);
+  color: var(--black);
+}
+.set-actions-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 8px;
+  padding-top: 6px;
+  border-top: 1px solid var(--border2);
+}
+.set-add-btn, .set-del-btn {
+  background: transparent;
+  border: none;
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 1px;
+  cursor: pointer;
+  padding: 4px 6px;
+  border-radius: 4px;
+}
+.set-add-btn { color: var(--gold); }
+.set-add-btn:hover { background: var(--gold-dim); }
+.set-del-btn { color: var(--text-dim); }
+.set-del-btn:hover { color: var(--red); }
+
+/* ── SWAP EXERCISE MODAL ── */
+.swap-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.85);
+  backdrop-filter: blur(8px);
+  z-index: 105;
+  display: none;
+  align-items: flex-end;
+  justify-content: center;
+}
+.swap-modal-overlay.open {
+  display: flex;
+}
+.swap-sheet {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 24px 24px 0 0;
+  width: 100%;
+  max-width: 430px;
+  max-height: 85vh;
+  overflow-y: auto;
+  padding: 20px 20px 32px;
+}
+.swap-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 12px;
+  position: relative;
+}
+.swap-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 26px;
+  letter-spacing: 1px;
+  color: #fff;
+  line-height: 1;
+}
+.swap-close {
+  background: var(--panel2);
+  border: 1px solid var(--border);
+  color: var(--text-dim);
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 11px;
+}
+.swap-sub {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  color: var(--text-mid);
+  margin-bottom: 14px;
+  line-height: 1.4;
+}
+.swap-item {
+  background: var(--panel2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 12px;
+  margin-bottom: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.swap-item:hover, .swap-item:active {
+  border-color: var(--gold);
+  background: rgba(212,168,67,0.06);
+}
+.swap-item-name {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  color: #fff;
+}
+.swap-item-meta {
+  display: flex;
+  gap: 6px;
+  margin-top: 4px;
+  align-items: center;
+}
+.swap-chip {
+  font-family: 'DM Mono', monospace;
+  font-size: 8px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: rgba(255,255,255,0.06);
+  color: var(--gold);
+}
+.swap-why {
+  font-size: 11px;
+  color: var(--text-mid);
+  margin-top: 6px;
+  line-height: 1.4;
+}
+.swap-custom-wrap {
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid var(--border2);
+}
+.swap-custom-input {
+  width: 100%;
+  height: 38px;
+  background: var(--panel2);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 0 12px;
+  color: #fff;
+  font-family: 'Barlow', sans-serif;
+  font-size: 13px;
+  outline: none;
+  margin-bottom: 8px;
+}
+.swap-custom-input:focus {
+  border-color: var(--gold);
+}
+
+/* ── ACHILLES TREND CHART ── */
+.achilles-chart-card {
+  margin-top: 12px;
+  background: var(--panel2);
+  border: 1px solid var(--border2);
+  border-radius: 8px;
+  padding: 12px;
+}
+.ac-chart-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+.ac-chart-title {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 1.5px;
+  color: var(--gold);
+}
+.ac-chart-legend {
+  display: flex;
+  gap: 12px;
+  font-family: 'DM Mono', monospace;
+  font-size: 8px;
+  color: var(--text-dim);
+}
+.ac-chart-svg {
+  width: 100%;
+  height: 125px;
+  display: block;
+}
+.ac-stat-summary {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid var(--border2);
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  color: var(--text-mid);
+}
+
+/* ── DAILY WELLNESS (SLEEP & ENERGY) ── */
+.wellness-card {
+  margin: 0 20px 16px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  padding: 16px;
+}
+.wellness-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+.wellness-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 20px;
+  letter-spacing: 1px;
+  color: #fff;
+}
+.wellness-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+.wellness-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 1px;
+  color: var(--text-dim);
+  min-width: 80px;
+}
+.wellness-scale {
+  display: flex;
+  gap: 3px;
+  flex: 1;
+  justify-content: flex-end;
+}
+.wellness-btn {
+  width: 24px;
+  height: 24px;
+  border-radius: 4px;
+  border: 1px solid var(--border);
+  background: var(--panel2);
+  color: var(--text-dim);
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.wellness-btn.sel-sleep {
+  background: rgba(52,120,246,0.28);
+  border-color: #3478F6;
+  color: #5B9AFF;
+  font-weight: bold;
+}
+.wellness-btn.sel-energy {
+  background: rgba(255,159,10,0.28);
+  border-color: #FF9F0A;
+  color: #FFAE33;
+  font-weight: bold;
+}
+
+/* ── REPORT CHARTS ── */
+.rp-chart-card {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.rp-chart-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.rp-chart-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 18px;
+  letter-spacing: 1px;
+  color: #fff;
+}
+.rp-chart-sub {
+  font-family: 'DM Mono', monospace;
+  font-size: 8px;
+  color: var(--text-dim);
+  letter-spacing: 1px;
+}
+.rp-chart-svg {
+  width: 100%;
+  height: 140px;
+  display: block;
+}
+.rp-tonnage-card {
+  background: linear-gradient(135deg, rgba(52,120,246,0.12), rgba(17,17,21,0.95));
+  border: 1px solid rgba(52,120,246,0.3);
+  border-radius: var(--r-sm);
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.rp-tonnage-val {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 32px;
+  color: #fff;
+  letter-spacing: 1px;
+  line-height: 1;
+}
+.rp-tonnage-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  color: #5B9AFF;
+  letter-spacing: 1px;
+  margin-top: 3px;
+}
+
 </style>
 </head>
 <body>
@@ -638,6 +1255,7 @@ body>*{position:relative;z-index:1}
       <div class="pain-row"><div class="pain-label">DURING SESSION</div><div class="pain-scale" id="pain-during"><div class="pain-dot" onclick="setPain('during',1)" data-v="1">1</div><div class="pain-dot" onclick="setPain('during',2)" data-v="2">2</div><div class="pain-dot" onclick="setPain('during',3)" data-v="3">3</div><div class="pain-dot" onclick="setPain('during',4)" data-v="4">4</div><div class="pain-dot" onclick="setPain('during',5)" data-v="5">5</div></div></div>
       <div class="pain-row"><div class="pain-label">24HR AFTER</div><div class="pain-scale" id="pain-after"><div class="pain-dot" onclick="setPain('after',1)" data-v="1">1</div><div class="pain-dot" onclick="setPain('after',2)" data-v="2">2</div><div class="pain-dot" onclick="setPain('after',3)" data-v="3">3</div><div class="pain-dot" onclick="setPain('after',4)" data-v="4">4</div><div class="pain-dot" onclick="setPain('after',5)" data-v="5">5</div></div></div>
       <div class="pain-status pain-ok" id="pain-status">✓ LOADING WITHIN SAFE RANGE — PROCEED</div>
+      <div class="achilles-chart-card" id="home-achilles-chart"></div>
     </div>
   </div>
   <div style="height:16px"></div>
@@ -748,6 +1366,28 @@ body>*{position:relative;z-index:1}
       </div>
     </div>
   </div>
+  
+  <div class="sec-label"><div class="sec-title">DAILY WELLNESS CHECK-IN</div></div>
+  <div class="wellness-card">
+    <div class="wellness-header">
+      <div class="wellness-title">SLEEP & CNS READINESS</div>
+      <div style="font-family:'DM Mono',monospace;font-size:9px;color:var(--gold)">SCALE 1–10</div>
+    </div>
+    <div class="wellness-row">
+      <div class="wellness-label">SLEEP QUALITY</div>
+      <div class="wellness-scale" id="scale-sleep">
+        <div class="wellness-btn" data-type="sleep" data-v="1" onclick="setWellness('sleep',1)">1</div><div class="wellness-btn" data-type="sleep" data-v="2" onclick="setWellness('sleep',2)">2</div><div class="wellness-btn" data-type="sleep" data-v="3" onclick="setWellness('sleep',3)">3</div><div class="wellness-btn" data-type="sleep" data-v="4" onclick="setWellness('sleep',4)">4</div><div class="wellness-btn" data-type="sleep" data-v="5" onclick="setWellness('sleep',5)">5</div><div class="wellness-btn" data-type="sleep" data-v="6" onclick="setWellness('sleep',6)">6</div><div class="wellness-btn" data-type="sleep" data-v="7" onclick="setWellness('sleep',7)">7</div><div class="wellness-btn" data-type="sleep" data-v="8" onclick="setWellness('sleep',8)">8</div><div class="wellness-btn" data-type="sleep" data-v="9" onclick="setWellness('sleep',9)">9</div><div class="wellness-btn" data-type="sleep" data-v="10" onclick="setWellness('sleep',10)">10</div>
+      </div>
+    </div>
+    <div class="wellness-row">
+      <div class="wellness-label">ENERGY / CNS</div>
+      <div class="wellness-scale" id="scale-energy">
+        <div class="wellness-btn" data-type="energy" data-v="1" onclick="setWellness('energy',1)">1</div><div class="wellness-btn" data-type="energy" data-v="2" onclick="setWellness('energy',2)">2</div><div class="wellness-btn" data-type="energy" data-v="3" onclick="setWellness('energy',3)">3</div><div class="wellness-btn" data-type="energy" data-v="4" onclick="setWellness('energy',4)">4</div><div class="wellness-btn" data-type="energy" data-v="5" onclick="setWellness('energy',5)">5</div><div class="wellness-btn" data-type="energy" data-v="6" onclick="setWellness('energy',6)">6</div><div class="wellness-btn" data-type="energy" data-v="7" onclick="setWellness('energy',7)">7</div><div class="wellness-btn" data-type="energy" data-v="8" onclick="setWellness('energy',8)">8</div><div class="wellness-btn" data-type="energy" data-v="9" onclick="setWellness('energy',9)">9</div><div class="wellness-btn" data-type="energy" data-v="10" onclick="setWellness('energy',10)">10</div>
+      </div>
+    </div>
+  </div>
+  <div class="divider"></div>
+
   <div class="sec-label"><div class="sec-title">RECOVERY CHECKLIST</div></div>
   <div class="rec-grid">
     <div class="rec-card" id="rc-0" onclick="toggleRec(this,'rc-0')"><div class="rc-icon">❄️</div><div class="rc-title">Cold Immersion</div><div class="rc-meta">10–12°C · 10–12 MIN</div><div class="rc-check"></div></div>
@@ -864,6 +1504,33 @@ body>*{position:relative;z-index:1}
       <div class="sheet-meta" id="m-meta"></div>
     </div>
     <div class="sheet-body">
+      
+      <!-- REST TIMER WIDGET -->
+      <div class="rest-timer-box" id="modal-rest-timer">
+        <div class="rt-top-row">
+          <div class="rt-label">
+            <span>⏱ REST TIMER</span>
+          </div>
+          <div class="rt-time-display" id="rt-time">01:30</div>
+        </div>
+        <div class="rt-prog-bar-wrap">
+          <div class="rt-prog-fill" id="rt-prog-fill" style="width:100%"></div>
+        </div>
+        <div class="rt-presets">
+          <button class="rt-preset-btn" data-sec="30" onclick="setRestPreset(30)">30s</button>
+          <button class="rt-preset-btn" data-sec="60" onclick="setRestPreset(60)">60s</button>
+          <button class="rt-preset-btn active" data-sec="90" onclick="setRestPreset(90)">90s</button>
+          <button class="rt-preset-btn" data-sec="120" onclick="setRestPreset(120)">2m</button>
+          <button class="rt-preset-btn" data-sec="180" onclick="setRestPreset(180)">3m</button>
+          <button class="rt-preset-btn" onclick="adjustRestTimer(30)">+30s</button>
+          <button class="rt-preset-btn" onclick="adjustRestTimer(-15)">-15s</button>
+        </div>
+        <div class="rt-ctrls">
+          <button class="rt-btn rt-btn-start" id="rt-btn-start" onclick="toggleRestTimer()">▶ START</button>
+          <button class="rt-btn rt-btn-reset" onclick="resetRestTimer()">↺ RESET</button>
+        </div>
+      </div>
+
       <div class="ex-list" id="m-exercises"></div>
       <button class="complete-btn" id="modal-complete-btn" onclick="completeSessionFromModal()">MARK SESSION COMPLETE ✓</button>
       <div class="notes-section">
@@ -871,6 +1538,30 @@ body>*{position:relative;z-index:1}
         <textarea class="notes-area" id="session-notes-area" placeholder="Log your effort, energy, any pain, PRs hit, what felt strong or weak..."></textarea>
         <button class="notes-save-btn" onclick="saveNotes()">SAVE NOTES ✓</button>
       </div>
+    </div>
+  </div>
+</div>
+
+
+
+<!-- ═══ SWAP EXERCISE MODAL ═══ -->
+<div class="swap-modal-overlay" id="swap-modal-overlay" onclick="if(event.target===this)closeSwapModal()">
+  <div class="swap-sheet">
+    <div class="swap-header">
+      <div>
+        <div style="font-family:'DM Mono',monospace;font-size:9px;color:var(--gold);letter-spacing:2px">// REGRESSION / PROGRESSION</div>
+        <div class="swap-title">SWAP EXERCISE</div>
+      </div>
+      <div class="swap-close" onclick="closeSwapModal()">✕</div>
+    </div>
+    <div class="swap-sub">
+      CURRENT: <strong id="swap-cur-name" style="color:#fff"></strong>
+    </div>
+    <div id="swap-options-list"></div>
+    <div class="swap-custom-wrap">
+      <div style="font-family:'DM Mono',monospace;font-size:9px;color:var(--text-dim);letter-spacing:1px;margin-bottom:6px">CUSTOM EXERCISE ALTERNATIVE</div>
+      <input class="swap-custom-input" id="swap-custom-text" placeholder="e.g. Hex Bar High Pull, Belt Squat...">
+      <button class="biz-add-btn" style="margin-top:0;padding:10px" onclick="saveCustomSwap()">USE CUSTOM EXERCISE ✓</button>
     </div>
   </div>
 </div>
@@ -1195,9 +1886,56 @@ const STORE_KEY='bvmbino_v3';
 // ══════════════════════════════════════════════
 function getWeekKey(){const d=new Date(),jan1=new Date(d.getFullYear(),0,1),wk=Math.ceil(((d-jan1)/86400000+jan1.getDay()+1)/7);return`${d.getFullYear()}-W${wk}`}
 
+function getInitialAchillesData(){
+  const days=['MON','TUE','WED','THU','FRI','SAT','SUN'];
+  return days.map((d,i)=>({
+    date:new Date(Date.now()-(6-i)*86400000).toISOString().slice(0,10),
+    day:d,
+    during:i===1||i===3||i===5?1:(i===0||i===2||i===4?2:0),
+    after:i===6?1:(i%2===0?2:1)
+  }));
+}
+
+function getInitialWellnessData(){
+  const data={};
+  for(let i=0;i<7;i++){
+    const dt=new Date(Date.now()-(6-i)*86400000).toISOString().slice(0,10);
+    data[dt]={sleep:7+(i%3),energy:8+(i%2)-(i===4?1:0)};
+  }
+  return data;
+}
+
 function loadData(){
-  try{const r=localStorage.getItem(STORE_KEY);if(r)return JSON.parse(r);}catch(e){}
-  return{weekKey:getWeekKey(),streak:0,lastActiveDate:null,totalSessions:0,weeksCompleted:0,sessions:{},mentalSteps:{},recovery:{},pain:{during:0,after:0},weekHistory:[],phaseWeeks:[0,0,0,0],currentPhaseWeek:0,modalEx:{},exDone:0,sessionNotes:{},warmupSteps:{},bizEvents:[],bizProjects:[],bizContacts:[],shownComplete:{}};
+  let d=null;
+  try{const r=localStorage.getItem(STORE_KEY);if(r)d=JSON.parse(r);}catch(e){}
+  if(!d)d={};
+  return{
+    weekKey:d.weekKey||getWeekKey(),
+    streak:d.streak||0,
+    lastActiveDate:d.lastActiveDate||null,
+    totalSessions:d.totalSessions||0,
+    weeksCompleted:d.weeksCompleted||0,
+    sessions:d.sessions||{},
+    mentalSteps:d.mentalSteps||{},
+    recovery:d.recovery||{},
+    pain:d.pain||{during:0,after:0},
+    weekHistory:d.weekHistory||[],
+    phaseWeeks:d.phaseWeeks||[0,0,0,0],
+    currentPhaseWeek:d.currentPhaseWeek||0,
+    modalEx:d.modalEx||{},
+    exDone:d.exDone||0,
+    sessionNotes:d.sessionNotes||{},
+    warmupSteps:d.warmupSteps||{},
+    bizEvents:d.bizEvents||[],
+    bizProjects:d.bizProjects||[],
+    bizContacts:d.bizContacts||[],
+    shownComplete:d.shownComplete||{},
+    exerciseLogs:d.exerciseLogs||{},
+    currentSessionSets:d.currentSessionSets||{},
+    achillesTrend:(d.achillesTrend&&d.achillesTrend.length)?d.achillesTrend:getInitialAchillesData(),
+    dailyWellness:d.dailyWellness||getInitialWellnessData(),
+    swappedExercises:d.swappedExercises||{}
+  };
 }
 
 function saveData(){try{localStorage.setItem(STORE_KEY,JSON.stringify(APP));}catch(e){}}
@@ -1260,6 +1998,9 @@ function restoreState(){
   if(APP.pain.during)setPainSilent('during',APP.pain.during);
   if(APP.pain.after)setPainSilent('after',APP.pain.after);
   updatePainStatus();refreshStreakUI();updateAllStats();updateTodayBadge();updatePhaseUI();updateHistory();updateGoalBars();
+  renderAchillesChart('home-achilles-chart');
+  renderWellnessUI();
+  updateRestTimerUI();
   renderEvents();renderProjects();renderContacts();
   initBizDelegation();
   renderQuotes();
@@ -1601,7 +2342,28 @@ function toggleRec(el,id){
 // ══════════════════════════════════════════════
 // PAIN
 // ══════════════════════════════════════════════
-function setPain(type,val){APP.pain[type]=APP.pain[type]===val?0:val;renderPainScale(type);updatePainStatus();saveData();}
+function setPain(type,val){
+  APP.pain[type]=APP.pain[type]===val?0:val;
+  renderPainScale(type);
+  updatePainStatus();
+  recordAchillesPain(type,APP.pain[type]);
+  saveData();
+  renderAchillesChart('home-achilles-chart');
+}
+
+function recordAchillesPain(type,val){
+  if(!APP.achillesTrend)APP.achillesTrend=getInitialAchillesData();
+  const today=new Date().toISOString().slice(0,10);
+  const days=['SUN','MON','TUE','WED','THU','FRI','SAT'];
+  const dayName=days[new Date().getDay()];
+  let entry=APP.achillesTrend.find(e=>e.date===today);
+  if(!entry){
+    entry={date:today,day:dayName,during:APP.pain.during||0,after:APP.pain.after||0};
+    APP.achillesTrend.push(entry);
+    if(APP.achillesTrend.length>14)APP.achillesTrend.shift();
+  }
+  entry[type]=val;
+}
 function setPainSilent(type,val){APP.pain[type]=val;renderPainScale(type);}
 function renderPainScale(type){
   document.getElementById('pain-'+type)?.querySelectorAll('.pain-dot').forEach(d=>{
@@ -1627,25 +2389,42 @@ function openModal(key,sessionId,dayIdx){
   document.getElementById('m-title').textContent=w.title;
   const wCfg=WEEK_CONFIG[getPhaseWeekIdx()];
   document.getElementById('m-meta').innerHTML=w.meta.map(m=>`<div class="sheet-chip">${m}</div>`).join('')+`<div class="sheet-chip" style="background:rgba(212,168,67,0.12);border-color:rgba(212,168,67,0.4);color:var(--gold)">${wCfg.tag} · ${wCfg.intensity}</div><div class="sheet-chip" style="background:rgba(212,168,67,0.06);border-color:rgba(212,168,67,0.2);color:var(--text-mid);font-size:8px">${wCfg.focus}</div>`;
+  
+  updateRestTimerUI();
+  
   const savedEx=(APP.modalEx&&APP.modalEx[key])||{};
-  document.getElementById('m-exercises').innerHTML=w.exercises.map((ex,i)=>{
-    const exKey=`${key}-${i}`,isDone=savedEx[exKey],wkSets=getExSets(ex);
-    const hasYT=ex.yt;
+  document.getElementById('m-exercises').innerHTML=w.exercises.map((origEx,i)=>{
+    const exKey=`${key}-${i}`;
+    const curEx=(APP.swappedExercises&&APP.swappedExercises[exKey])||origEx;
+    const isDone=savedEx[exKey];
+    const wkSets=getExSets(curEx);
+    const hasYT=curEx.yt;
+    const isSwapped=curEx.name!==origEx.name;
+
     return`<div class="ex-item${isDone?' ex-done':''}">
       <div class="ex-row" onclick="toggleExDetail(this)">
         <div class="ex-num">0${i+1}</div>
-        <div class="ex-info"><div class="ex-name">${ex.name}</div><div class="ex-sets-tag">${wkSets} · ${ex.quality}</div></div>
+        <div class="ex-info">
+          <div class="ex-name">${curEx.name}</div>
+          <div class="ex-sets-tag">${wkSets} · ${curEx.quality}</div>
+          ${isSwapped?`<div class="ex-swap-badge">⇄ SWAPPED: ${origEx.name}</div>`:''}
+        </div>
         <div class="ex-actions">
-          ${hasYT?`<div class="yt-btn" onclick="openYT(event,'${ex.name.replace(/'/g,"\\'").replace(/"/g,'&quot;')}')">▶</div>`:''}
-          <div class="ex-check${isDone?' done':''}" onclick="toggleExCheck(event,this,'${key}','${exKey}')"><span>✓</span></div>
+          <div class="ex-swap-btn" onclick="openSwapModal(event,'${key}',${i})">⇄ SWAP</div>
+          ${hasYT?`<div class="yt-btn" onclick="openYT(event,'${curEx.name.replace(/'/g,"\\'").replace(/"/g,'&quot;')}')">▶</div>`:''}
+          <div class="ex-check${isDone?' done':''}" data-exkey="${exKey}" onclick="toggleExCheck(event,this,'${key}','${exKey}')"><span>✓</span></div>
         </div>
       </div>
       <div class="ex-detail">
-        <div class="ex-why-text">${ex.why}</div>
-        ${ex.achilles?'<div class="achilles-tag">⚠ ACHILLES MONITOR</div>':''}
+        <div class="ex-why-text">${curEx.why}</div>
+        ${curEx.achilles?'<div class="achilles-tag">⚠ ACHILLES MONITOR</div>':''}
+        <div class="ex-logger-wrap" id="sets-wrap-${key}-${i}">
+          ${renderSetLoggerHTML(key,i,curEx,wkSets)}
+        </div>
       </div>
     </div>`;
   }).join('');
+  
   // Load saved note
   const noteKey=`${key}-${APP.weekKey}`;
   const savedNote=(APP.sessionNotes&&APP.sessionNotes[noteKey])||'';
@@ -1736,44 +2515,265 @@ function buildReport(){
   for(let d=0;d<5;d++){total+=DAY_TOTALS[d];for(let j=0;j<DAY_TOTALS[d];j++)if(APP.sessions[`s-${d}-${j}`])done++;}
   const mDone=Object.keys(APP.mentalSteps).length;
   const rcDone=Object.keys(APP.recovery).length;
-  const dayData=[
-    {name:'MON',done:0,total:3},{name:'TUE',done:0,total:3},
-    {name:'WED',done:0,total:3},{name:'THU',done:0,total:2},{name:'FRI',done:0,total:3}
-  ];
-  for(let d=0;d<5;d++)for(let j=0;j<DAY_TOTALS[d];j++)if(APP.sessions[`s-${d}-${j}`])dayData[d].done++;
+  
+  // Day-by-day completion including Sat/Sun
+  const dayNames=['MON','TUE','WED','THU','FRI','SAT','SUN'];
+  const dayTotals=[3,3,3,2,3,0,0];
+  const dayData=dayNames.map((name,d)=>{
+    const dTot=dayTotals[d];
+    let dDone=0;
+    if(dTot>0){
+      for(let j=0;j<dTot;j++)if(APP.sessions[`s-${d}-${j}`])dDone++;
+    }
+    const dPct=dTot>0?Math.round((dDone/dTot)*100):(d===5?100:0);
+    return{name,done:dDone,total:dTot,pct:dPct};
+  });
+
+  // Calculate total volume (tonnage) & sets logged across exercises
+  let totalSetsLogged=0;
+  let totalTonnage=0;
+  const topLifts=[];
+
+  if(APP.currentSessionSets){
+    Object.keys(APP.currentSessionSets).forEach(k=>{
+      const sets=APP.currentSessionSets[k]||[];
+      sets.forEach(s=>{
+        if(s.done||(s.weight&&s.reps)){
+          totalSetsLogged++;
+          const wVal=parseFloat(s.weight)||0;
+          const rVal=parseFloat(s.reps)||0;
+          if(wVal&&rVal)totalTonnage+=(wVal*rVal);
+        }
+      });
+    });
+  }
+
+  // Also check exerciseLogs for top loads
+  if(APP.exerciseLogs){
+    Object.keys(APP.exerciseLogs).forEach(exName=>{
+      const logs=APP.exerciseLogs[exName]||[];
+      logs.forEach(l=>{
+        if(l.sets){
+          l.sets.forEach(s=>{
+            if(s.weight&&s.reps){
+              topLifts.push({name:exName,weight:parseFloat(s.weight),reps:parseFloat(s.reps),rpe:s.rpe});
+            }
+          });
+        }
+      });
+    });
+  }
+  topLifts.sort((a,b)=>b.weight-a.weight);
+  const bestLifts=topLifts.slice(0,3);
+
+  // 1. SVG: COMPLETION BY DAY CHART
+  const cSvgW=360,cSvgH=130;
+  const cBarW=24;
+  const cPadL=20;
+  const cSpacing=(cSvgW-cPadL*2)/dayData.length;
+  const cChartH=cSvgH-30;
+
+  let compBarsSvg='';
+  dayData.forEach((d,i)=>{
+    const x=cPadL+i*cSpacing+(cSpacing-cBarW)/2;
+    const bHeight=Math.max(4,(d.pct/100)*cChartH);
+    const y=cChartH-bHeight+10;
+    const barColor=d.pct>=100?'var(--green)':(d.pct>0?'var(--gold)':'rgba(255,255,255,0.08)');
+    compBarsSvg+=`
+      <rect x="${x}" y="${y}" width="${cBarW}" height="${bHeight}" rx="4" fill="${barColor}" />
+      <text x="${x+cBarW/2}" y="${Math.max(10,y-4)}" font-family="'DM Mono', monospace" font-size="8" fill="${d.pct>0?'var(--gold)':'#555568'}" text-anchor="middle">${d.pct}%</text>
+      <text x="${x+cBarW/2}" y="${cSvgH-6}" font-family="'DM Mono', monospace" font-size="9" fill="#999AB0" text-anchor="middle">${d.name}</text>
+    `;
+  });
+
+  // 2. SVG: ACHILLES PAIN TREND CHART (MON-SUN)
+  const achillesTrend=(APP.achillesTrend&&APP.achillesTrend.length)?APP.achillesTrend.slice(-7):getInitialAchillesData();
+  const aSvgW=360,aSvgH=120,aPadL=28,aPadR=16,aPadT=12,aPadB=22;
+  const aChartW=aSvgW-aPadL-aPadR;
+  const aChartH=aSvgH-aPadT-aPadB;
+  const getAX=(idx)=>aPadL+(idx/Math.max(1,achillesTrend.length-1))*aChartW;
+  const getAY=(val)=>aPadT+aChartH-(Math.min(5,Math.max(0,val))/5)*aChartH;
+
+  let pathADuring='',pathAAfter='';
+  let aDots='';
+  achillesTrend.forEach((p,i)=>{
+    const x=getAX(i);
+    const yd=getAY(p.during);
+    const ya=getAY(p.after);
+    if(i===0){pathADuring+=`M ${x} ${yd}`;pathAAfter+=`M ${x} ${ya}`;}
+    else{pathADuring+=` L ${x} ${yd}`;pathAAfter+=` L ${x} ${ya}`;}
+    aDots+=`
+      <circle cx="${x}" cy="${yd}" r="3.5" fill="#E03434" stroke="#060608" stroke-width="1.5" />
+      <circle cx="${x}" cy="${ya}" r="3.5" fill="#3478F6" stroke="#060608" stroke-width="1.5" />
+      <text x="${x}" y="${aSvgH-5}" font-family="'DM Mono', monospace" font-size="8" fill="#555568" text-anchor="middle">${p.day||'DAY'}</text>
+    `;
+  });
+
+  const avgADuring=(achillesTrend.reduce((acc,p)=>acc+(p.during||0),0)/achillesTrend.length).toFixed(1);
+  const avgAAfter=(achillesTrend.reduce((acc,p)=>acc+(p.after||0),0)/achillesTrend.length).toFixed(1);
+
+  // 3. SVG: SLEEP & ENERGY RATINGS CHART (MON-SUN)
+  const wellnessData=APP.dailyWellness||getInitialWellnessData();
+  const wKeys=Object.keys(wellnessData).sort().slice(-7);
+  const wPoints=wKeys.map(k=>({date:k,...wellnessData[k]}));
+  if(wPoints.length<7){
+    // fill up to 7
+    const defW=getInitialWellnessData();
+    Object.keys(defW).forEach(k=>{
+      if(!wPoints.find(p=>p.date===k))wPoints.unshift({date:k,...defW[k]});
+    });
+  }
+  const cleanWPoints=wPoints.slice(-7);
+  const getWX=(idx)=>aPadL+(idx/Math.max(1,cleanWPoints.length-1))*aChartW;
+  const getWY=(val)=>aPadT+aChartH-(Math.min(10,Math.max(0,val))/10)*aChartH;
+
+  let pathWSleep='',pathWEnergy='';
+  let wDots='';
+  let sumSleep=0,sumEnergy=0;
+  cleanWPoints.forEach((p,i)=>{
+    const x=getWX(i);
+    const sl=p.sleep||7;
+    const en=p.energy||8;
+    sumSleep+=sl;sumEnergy+=en;
+    const ys=getWY(sl);
+    const ye=getWY(en);
+    if(i===0){pathWSleep+=`M ${x} ${ys}`;pathWEnergy+=`M ${x} ${ye}`;}
+    else{pathWSleep+=` L ${x} ${ys}`;pathWEnergy+=` L ${x} ${ye}`;}
+    const dName=['SUN','MON','TUE','WED','THU','FRI','SAT'][new Date(p.date).getDay()]||'DAY';
+    wDots+=`
+      <circle cx="${x}" cy="${ys}" r="3.5" fill="#3478F6" stroke="#060608" stroke-width="1.5" />
+      <circle cx="${x}" cy="${ye}" r="3.5" fill="#FF9F0A" stroke="#060608" stroke-width="1.5" />
+      <text x="${x}" y="${aSvgH-5}" font-family="'DM Mono', monospace" font-size="8" fill="#555568" text-anchor="middle">${dName}</text>
+    `;
+  });
+  const avgSleep=(sumSleep/Math.max(1,cleanWPoints.length)).toFixed(1);
+  const avgEnergy=(sumEnergy/Math.max(1,cleanWPoints.length)).toFixed(1);
 
   // Build notes section
   let notesHTML='';
   const noteKeys=Object.keys(APP.sessionNotes||{});
   if(noteKeys.length){
-    notesHTML=`<div class="rp-notes-section"><div class="rp-notes-header">SESSION NOTES</div>
+    notesHTML=`<div class="rp-notes-section"><div class="rp-notes-header">SESSION REFLECTIONS & NOTES</div>
     ${noteKeys.map(k=>{const label=k.split('-')[0].replace(/-/g,' ').toUpperCase();return`<div class="rp-note-item"><div class="rp-note-key">${label}</div><div class="rp-note-text">${APP.sessionNotes[k]}</div></div>`;}).join('')}</div>`;
   }
 
-  const painSummary=APP.pain.during>0||APP.pain.after>0?
-    `During: ${APP.pain.during}/5 · After 24hr: ${APP.pain.after}/5${APP.pain.during>=4||APP.pain.after>=5?' — ⚠ LOAD REDUCTION RECOMMENDED':' — Within safe range'}`
-    :'No pain logged this week — optimal loading.';
+  // Top lifts section
+  let bestLiftsHTML='';
+  if(bestLifts.length>0){
+    bestLiftsHTML=`
+      <div class="rp-chart-card">
+        <div class="rp-chart-head">
+          <div class="rp-chart-title">TOP RECORDED LOADS</div>
+          <div class="rp-chart-sub">THIS CYCLE</div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          ${bestLifts.map((bl,idx)=>`
+            <div style="display:flex;justify-content:space-between;align-items:center;background:var(--panel2);padding:8px 12px;border-radius:6px;border:1px solid var(--border2)">
+              <div>
+                <span style="font-family:'DM Mono',monospace;font-size:9px;color:var(--gold);margin-right:8px">0${idx+1}</span>
+                <strong style="font-family:'Barlow Condensed',sans-serif;font-size:15px;color:#fff">${bl.name}</strong>
+              </div>
+              <div style="font-family:'DM Mono',monospace;font-size:11px;color:var(--gold)">
+                ${bl.weight} LBS × ${bl.reps} ${bl.rpe?'@ RPE '+bl.rpe:''}
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    `;
+  }
 
   document.getElementById('rp-body').innerHTML=`
+    <!-- HERO STAT -->
     <div class="rp-hero-card">
       <div class="rp-big-num">${pct}%</div>
-      <div class="rp-big-label">WEEKLY COMPLETION</div>
+      <div class="rp-big-label">OVERALL WEEKLY COMPLETION</div>
     </div>
+
+    <!-- STAT GRID -->
     <div class="rp-grid">
-      <div class="rp-stat-card"><div class="rp-stat-val">${done}/${total}</div><div class="rp-stat-label">SESSIONS COMPLETED</div></div>
+      <div class="rp-stat-card"><div class="rp-stat-val">${done}/${total}</div><div class="rp-stat-label">SESSIONS DONE</div></div>
       <div class="rp-stat-card"><div class="rp-stat-val">${APP.streak}</div><div class="rp-stat-label">DAY STREAK</div></div>
-      <div class="rp-stat-card"><div class="rp-stat-val">${mDone}/18</div><div class="rp-stat-label">MENTAL STEPS</div></div>
-      <div class="rp-stat-card"><div class="rp-stat-val">${rcDone}/8</div><div class="rp-stat-label">RECOVERY ITEMS</div></div>
+      <div class="rp-stat-card"><div class="rp-stat-val">${totalSetsLogged}</div><div class="rp-stat-label">SETS LOGGED</div></div>
+      <div class="rp-stat-card"><div class="rp-stat-val">${mDone}/18</div><div class="rp-stat-label">MENTAL BLOCKS</div></div>
     </div>
-    <div class="rp-day-grid">
-      ${dayData.map(d=>`<div class="rp-day-row"><div class="rp-day-name">${d.name}</div><div class="rp-day-bar-wrap"><div class="rp-day-bar" style="width:${Math.round(d.done/d.total*100)}%"></div></div><div class="rp-day-pct">${Math.round(d.done/d.total*100)}%</div></div>`).join('')}
+
+    <!-- TONNAGE BANNER -->
+    ${totalTonnage>0?`
+    <div class="rp-tonnage-card">
+      <div>
+        <div class="rp-tonnage-val">${Math.round(totalTonnage).toLocaleString()} LBS</div>
+        <div class="rp-tonnage-label">TOTAL VOLUME / TONNAGE LIFTED</div>
+      </div>
+      <div style="font-size:24px">🏋️</div>
+    </div>`:''}
+
+    <!-- CHART 1: COMPLETION BY DAY -->
+    <div class="rp-chart-card">
+      <div class="rp-chart-head">
+        <div class="rp-chart-title">COMPLETION BY DAY</div>
+        <div class="rp-chart-sub">SCHEDULED VS DONE</div>
+      </div>
+      <svg class="rp-chart-svg" viewBox="0 0 ${cSvgW} ${cSvgH}">
+        ${compBarsSvg}
+      </svg>
     </div>
+
+    <!-- CHART 2: ACHILLES PAIN TREND -->
+    <div class="rp-chart-card" style="border-color:rgba(224,52,52,0.25)">
+      <div class="rp-chart-head">
+        <div class="rp-chart-title" style="color:#FF6B6B">⚠ ACHILLES PAIN TREND</div>
+        <div style="display:flex;gap:8px;font-family:'DM Mono',monospace;font-size:8px">
+          <span style="color:#E03434">● DURING</span>
+          <span style="color:#3478F6">● 24HR POST</span>
+        </div>
+      </div>
+      <svg class="rp-chart-svg" viewBox="0 0 ${aSvgW} ${aSvgH}">
+        <!-- Safe & Warn background zones -->
+        <rect x="${aPadL}" y="${getAY(2)}" width="${aChartW}" height="${aChartH-(getAY(2)-aPadT)}" fill="rgba(48,209,88,0.06)" />
+        <rect x="${aPadL}" y="${getAY(4)}" width="${aChartW}" height="${getAY(2)-getAY(4)}" fill="rgba(255,214,10,0.05)" />
+        <line x1="${aPadL}" y1="${getAY(2)}" x2="${aSvgW-aPadR}" y2="${getAY(2)}" stroke="rgba(48,209,88,0.25)" stroke-dasharray="3,3" />
+        <line x1="${aPadL}" y1="${getAY(4)}" x2="${aSvgW-aPadR}" y2="${getAY(4)}" stroke="rgba(255,214,10,0.25)" stroke-dasharray="3,3" />
+        <text x="${aPadL-4}" y="${getAY(2)+3}" font-family="'DM Mono', monospace" font-size="8" fill="#30D158" text-anchor="end">2</text>
+        <text x="${aPadL-4}" y="${getAY(4)+3}" font-family="'DM Mono', monospace" font-size="8" fill="#FFD60A" text-anchor="end">4</text>
+        <path d="${pathAAfter}" fill="none" stroke="#3478F6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+        <path d="${pathADuring}" fill="none" stroke="#E03434" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+        ${aDots}
+      </svg>
+      <div style="display:flex;justify-content:space-between;align-items:center;padding-top:6px;border-top:1px solid var(--border2);font-family:'DM Mono',monospace;font-size:9px">
+        <span>Week Avg: <strong style="color:#E03434">${avgADuring}/5</strong> (during) · <strong style="color:#3478F6">${avgAAfter}/5</strong> (post)</span>
+        <span style="color:${avgADuring<=2?'var(--green)':'#FFD60A'};font-weight:600">${avgADuring<=2?'✓ OPTIMAL ADAPTATION':'⚠ LOAD MONITOR'}</span>
+      </div>
+    </div>
+
+    <!-- CHART 3: SLEEP & ENERGY RATINGS -->
+    <div class="rp-chart-card" style="border-color:rgba(52,120,246,0.25)">
+      <div class="rp-chart-head">
+        <div class="rp-chart-title" style="color:#5B9AFF">💤 SLEEP & ENERGY RATINGS</div>
+        <div style="display:flex;gap:8px;font-family:'DM Mono',monospace;font-size:8px">
+          <span style="color:#3478F6">● SLEEP</span>
+          <span style="color:#FF9F0A">● CNS ENERGY</span>
+        </div>
+      </div>
+      <svg class="rp-chart-svg" viewBox="0 0 ${aSvgW} ${aSvgH}">
+        <line x1="${aPadL}" y1="${getWY(5)}" x2="${aSvgW-aPadR}" y2="${getWY(5)}" stroke="rgba(255,255,255,0.08)" stroke-dasharray="3,3" />
+        <line x1="${aPadL}" y1="${getWY(8)}" x2="${aSvgW-aPadR}" y2="${getWY(8)}" stroke="rgba(255,255,255,0.12)" stroke-dasharray="3,3" />
+        <text x="${aPadL-4}" y="${getWY(5)+3}" font-family="'DM Mono', monospace" font-size="8" fill="#555568" text-anchor="end">5</text>
+        <text x="${aPadL-4}" y="${getWY(8)+3}" font-family="'DM Mono', monospace" font-size="8" fill="#555568" text-anchor="end">8</text>
+        <path d="${pathWSleep}" fill="none" stroke="#3478F6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+        <path d="${pathWEnergy}" fill="none" stroke="#FF9F0A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+        ${wDots}
+      </svg>
+      <div style="display:flex;justify-content:space-between;align-items:center;padding-top:6px;border-top:1px solid var(--border2);font-family:'DM Mono',monospace;font-size:9px">
+        <span>Avg Sleep: <strong style="color:#3478F6">${avgSleep}/10</strong> · Avg Energy: <strong style="color:#FF9F0A">${avgEnergy}/10</strong></span>
+        <span style="color:var(--gold);font-weight:600">CNS READINESS: ${Math.round(avgEnergy*10)}%</span>
+      </div>
+    </div>
+
+    ${bestLiftsHTML}
     ${notesHTML}
-    <div class="rp-achilles-section">
-      <div class="rp-achilles-header">⚠ ACHILLES LOG</div>
-      <div class="rp-achilles-body">${painSummary}</div>
-    </div>
-    <button class="rp-share-btn" onclick="shareReport()">📸 SCREENSHOT TO SHARE</button>
+
+    <button class="rp-share-btn" onclick="shareReport()">📸 SCREENSHOT TO SHARE REPORT</button>
   `;
 }
 
@@ -2117,6 +3117,657 @@ window.addEventListener('load',()=>{
   if(!isStandalone&&!dismissed&&isIOS)document.getElementById('install-banner').classList.add('show');
   registerSW();
 });
+
+// ══════════════════════════════════════════════
+// EXERCISE SWAPS LIBRARY
+// ══════════════════════════════════════════════
+const EXERCISE_SWAPS={
+  'Hang Power Clean':[
+    {name:'Trap Bar Explosive High Pull',quality:'POWER',why:'Peak RFD triple extension with easier wrist catch mechanics.',achilles:false},
+    {name:'Dumbbell Power Snatch',quality:'POWER',why:'Unilateral vertical explosive hip drive, lower bar technical demand.',achilles:false},
+    {name:'Underhand Med Ball Blast',quality:'POWER',why:'Max RFD concentric release without landing impact shock.',achilles:false},
+    {name:'KB Explosive Clean',quality:'POWER',why:'Hips-through extension power with smooth bell transition.',achilles:false}
+  ],
+  'Back Squat — CAT Method':[
+    {name:'Safety Bar Squat',quality:'MAX STR',why:'Upright torso angle protects shoulders and lumbar spine under max load.',achilles:false},
+    {name:'Front Squat — CAT Method',quality:'MAX STR',why:'Greater anterior chain recruitment and core stiffness for vertical jump.',achilles:false},
+    {name:'Trap Bar Squat',quality:'MAX STR',why:'Balanced knee/hip loading with neutral grip ergonomics.',achilles:false},
+    {name:'Box Squat with Pause',quality:'MAX STR',why:'Breaks eccentric-concentric chain to build pure starting strength.',achilles:false}
+  ],
+  'Bulgarian Split Squat':[
+    {name:'Reverse Lunge off Small Box',quality:'UNILATERAL',why:'Regulated Achilles deceleration with safer knee angle.',achilles:true},
+    {name:'Single-Leg Leg Press (Heavy)',quality:'UNILATERAL',why:'High quad & glute overload with minimal Achilles shear force.',achilles:false},
+    {name:'Walking DB Lunge with Pause',quality:'UNILATERAL',why:'Dynamic hip stabilization across linear movement.',achilles:true},
+    {name:'Rear-Foot Elevated Squat (BW only)',quality:'UNILATERAL',why:'Deloaded regression for high tendon sensitivity days.',achilles:true}
+  ],
+  'Trap Bar Deadlift — Explosive':[
+    {name:'Barbell Romanian Deadlift (RDL)',quality:'POSTERIOR',why:'Eccentric hamstring loading and posterior chain control.',achilles:true},
+    {name:'Heavy Russian KB Swing',quality:'POSTERIOR',why:'Ballistic hip hinge power without heavy axial spinal compression.',achilles:false},
+    {name:'Barbell Hip Thrust',quality:'GLUTE PWR',why:'Direct horizontal force vector transfer for sprinting speed.',achilles:false}
+  ],
+  'Depth Jump to Box Jump':[
+    {name:'Continuous Box Jump (Low Box)',quality:'REACTIVE',why:'Sub-maximal SSC stimulus with reduced landing impact.',achilles:true},
+    {name:'Band-Assisted Jump',quality:'OVERSPEED',why:'Fast rate of force development at minimal ground reaction load.',achilles:false},
+    {name:'Trap Bar Jump Squat (Light)',quality:'VERT JUMP',why:'Loaded concentric jump with controlled landing absorption.',achilles:false}
+  ],
+  'Ankle Pogo Jumps — Double Leg':[
+    {name:'Isometric Soleus Hold (Wall)',quality:'TENDON ISO',why:'Tendon stiffness adaptation with zero impact stress.',achilles:true},
+    {name:'Seated Calf Raise (Heavy Eccentric)',quality:'TENDON LOAD',why:'Deep Achilles/soleus structural remodeling without plyo shock.',achilles:true},
+    {name:'Low Box Drop and Stick',quality:'ABSORPTION',why:'Trains landing stiffness without continuous hopping fatigue.',achilles:true}
+  ],
+  'Single Leg Pogo':[
+    {name:'Single-Leg Isometric Calf Hold',quality:'TENDON ISO',why:'Controlled unilateral tendon loading for sensitive Achilles days.',achilles:true},
+    {name:'Assisted Single-Leg Pogo (Band)',quality:'TENDON STIFF',why:'Deloads 20-30% bodyweight to keep contact times fast.',achilles:true},
+    {name:'Double Leg Pogo with Staggered Stance',quality:'REGRESSION',why:'Safe bridge between bilateral and full single-leg plyo.',achilles:true}
+  ],
+  'Romanian Deadlift':[
+    {name:'Single-Leg RDL with DB',quality:'POSTERIOR',why:'Unilateral hamstring/glute stability with ankle proprioception.',achilles:true},
+    {name:'Glute Ham Raise (GHR)',quality:'POSTERIOR',why:'Knee-flexor hamstring strength without lumbar loading.',achilles:false},
+    {name:'Barbell Good Morning',quality:'POSTERIOR',why:'Direct posterior chain hinge with high spinal erector demand.',achilles:false}
+  ],
+  'Deceleration Stick Drill':[
+    {name:'Skater Bound to Balanced Stick',quality:'DECEL',why:'Frontal plane deceleration and lateral Achilles absorption.',achilles:true},
+    {name:'Forward Sled Drag Decelerations',quality:'DECEL',why:'Safe eccentric deceleration with zero flight phase shock.',achilles:true},
+    {name:'Linear 2-Step Decel Drop',quality:'DECEL',why:'Short-distance controlled braking from game speed.',achilles:true}
+  ]
+};
+
+function getDefaultSwaps(quality){
+  return[
+    {name:'Dumbbell Power Clean',quality:quality||'POWER',why:'Reliable free weight alternative with natural arm path.',achilles:false},
+    {name:'Goblet Squat with 3s Pause',quality:quality||'STRENGTH',why:'Safe core and leg drive with bottom position mobility.',achilles:false},
+    {name:'Single-Leg Step Up with High Knee',quality:quality||'UNILATERAL',why:'Sport-specific hip drive and landing stability.',achilles:true},
+    {name:'Isometric Wall Sit with Calf Raise',quality:quality||'DURABILITY',why:'Deep tendon loading without dynamic impact stress.',achilles:true}
+  ];
+}
+
+// ══════════════════════════════════════════════
+// REST TIMER
+// ══════════════════════════════════════════════
+let restTimerInterval=null;
+let restTimerTotal=90;
+let restTimerRemaining=90;
+let restTimerRunning=false;
+
+function playRestChime(){
+  try{
+    const AudioCtx=window.AudioContext||window.webkitAudioContext;
+    if(!AudioCtx)return;
+    const ctx=new AudioCtx();
+    const tones=[523.25,659.25,783.99,1046.50];
+    tones.forEach((freq,idx)=>{
+      const osc=ctx.createOscillator();
+      const gain=ctx.createGain();
+      osc.type='sine';
+      osc.frequency.setValueAtTime(freq,ctx.currentTime+idx*0.12);
+      gain.gain.setValueAtTime(0.28,ctx.currentTime+idx*0.12);
+      gain.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+idx*0.12+0.35);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start(ctx.currentTime+idx*0.12);
+      osc.stop(ctx.currentTime+idx*0.12+0.38);
+    });
+    if(navigator.vibrate)navigator.vibrate([200,100,200]);
+  }catch(e){}
+}
+
+function updateRestTimerUI(){
+  const disp=document.getElementById('rt-time');
+  const fill=document.getElementById('rt-prog-fill');
+  const btnStart=document.getElementById('rt-btn-start');
+  if(!disp)return;
+  const m=Math.floor(restTimerRemaining/60);
+  const s=restTimerRemaining%60;
+  disp.textContent=`${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+  if(restTimerRunning){
+    disp.className='rt-time-display active';
+    if(btnStart){btnStart.textContent='⏸ PAUSE';btnStart.className='rt-btn rt-btn-pause';}
+  }else if(restTimerRemaining===0){
+    disp.className='rt-time-display finished';
+    if(btnStart){btnStart.textContent='↺ RESTART';btnStart.className='rt-btn rt-btn-start';}
+  }else{
+    disp.className='rt-time-display';
+    if(btnStart){btnStart.textContent='▶ START';btnStart.className='rt-btn rt-btn-start';}
+  }
+  if(fill){
+    const pct=restTimerTotal>0?(restTimerRemaining/restTimerTotal)*100:0;
+    fill.style.width=pct+'%';
+  }
+  document.querySelectorAll('.rt-preset-btn').forEach(btn=>{
+    if(btn.dataset.sec)btn.classList.toggle('active',parseInt(btn.dataset.sec)===restTimerTotal);
+  });
+}
+
+function toggleRestTimer(){
+  if(restTimerRunning)pauseRestTimer();
+  else startRestTimer();
+}
+
+function startRestTimer(duration){
+  if(duration){
+    restTimerTotal=duration;
+    restTimerRemaining=duration;
+  }
+  if(restTimerRemaining<=0)restTimerRemaining=restTimerTotal;
+  if(restTimerInterval)clearInterval(restTimerInterval);
+  restTimerRunning=true;
+  updateRestTimerUI();
+  restTimerInterval=setInterval(()=>{
+    if(restTimerRemaining>1){
+      restTimerRemaining--;
+      updateRestTimerUI();
+    }else{
+      restTimerRemaining=0;
+      restTimerRunning=false;
+      clearInterval(restTimerInterval);
+      updateRestTimerUI();
+      playRestChime();
+      showToast('REST OVER — NEXT SET! ⚡','toast-fire');
+    }
+  },1000);
+}
+
+function pauseRestTimer(){
+  restTimerRunning=false;
+  if(restTimerInterval)clearInterval(restTimerInterval);
+  updateRestTimerUI();
+}
+
+function resetRestTimer(){
+  restTimerRunning=false;
+  if(restTimerInterval)clearInterval(restTimerInterval);
+  restTimerRemaining=restTimerTotal;
+  updateRestTimerUI();
+}
+
+function setRestPreset(sec){
+  restTimerTotal=sec;
+  restTimerRemaining=sec;
+  restTimerRunning=false;
+  if(restTimerInterval)clearInterval(restTimerInterval);
+  updateRestTimerUI();
+}
+
+function adjustRestTimer(delta){
+  restTimerRemaining=Math.max(0,restTimerRemaining+delta);
+  if(restTimerRemaining>restTimerTotal)restTimerTotal=restTimerRemaining;
+  updateRestTimerUI();
+}
+
+// ══════════════════════════════════════════════
+// SET, REP & LOAD LOGGING WITH LAST TIME COMPARISON
+// ══════════════════════════════════════════════
+function getLastTimeLog(exName){
+  if(!APP.exerciseLogs||!APP.exerciseLogs[exName]||!APP.exerciseLogs[exName].length)return null;
+  const logs=APP.exerciseLogs[exName];
+  return logs[logs.length-1];
+}
+
+function parsePrescriptionSets(wkSetsStr){
+  if(typeof wkSetsStr!=='string')return 3;
+  const match=wkSetsStr.match(/^(\d+)×/);
+  if(match)return parseInt(match[1]);
+  return 3;
+}
+
+function parsePrescriptionReps(wkSetsStr){
+  if(typeof wkSetsStr!=='string')return '';
+  const match=wkSetsStr.match(/×(\d+)/);
+  if(match)return match[1];
+  return '';
+}
+
+function getSessionSets(workoutKey,exIdx,ex,wkSetsStr){
+  const setKey=`${workoutKey}-${exIdx}`;
+  if(!APP.currentSessionSets)APP.currentSessionSets={};
+  if(!APP.currentSessionSets[setKey]||!APP.currentSessionSets[setKey].length){
+    const defaultCount=parsePrescriptionSets(wkSetsStr);
+    const defaultReps=parsePrescriptionReps(wkSetsStr);
+    const lastLog=getLastTimeLog(ex.name);
+    const sets=[];
+    for(let s=1;s<=defaultCount;s++){
+      const prevSet=lastLog&&lastLog.sets&&lastLog.sets[s-1];
+      sets.push({
+        setNum:s,
+        prev:prevSet?`${prevSet.weight}×${prevSet.reps}`:'',
+        weight:prevSet?prevSet.weight:'',
+        reps:prevSet?prevSet.reps:defaultReps,
+        rpe:prevSet?prevSet.rpe:'8',
+        done:false
+      });
+    }
+    APP.currentSessionSets[setKey]=sets;
+  }
+  return APP.currentSessionSets[setKey];
+}
+
+function renderSetLoggerHTML(workoutKey,exIdx,ex,wkSetsStr){
+  const sets=getSessionSets(workoutKey,exIdx,ex,wkSetsStr);
+  const lastLog=getLastTimeLog(ex.name);
+
+  let ltHTML='';
+  if(lastLog&&lastLog.sets&&lastLog.sets.length){
+    const summary=lastLog.sets.map(s=>`Set ${s.setNum}: ${s.weight?s.weight+' lbs':'BW'} × ${s.reps||0}${s.rpe?' @ '+s.rpe:''}`).join('  •  ');
+    ltHTML=`
+      <div class="last-time-card">
+        <div class="lt-header">
+          <span class="lt-tag">⚡ LAST TIME LOGGED (${lastLog.date||'PREV'})</span>
+          <button class="lt-copy-btn" onclick="copyLastTimeToCurrent(event,'${workoutKey}',${exIdx},'${ex.name.replace(/'/g,"\\'")}')">USE VALUES</button>
+        </div>
+        <div class="lt-content">${summary}</div>
+      </div>
+    `;
+  }else{
+    ltHTML=`
+      <div class="last-time-card empty">
+        <div class="lt-header">
+          <span class="lt-tag" style="color:var(--text-dim)">⚡ BASELINE SESSION</span>
+        </div>
+        <div class="lt-content" style="color:var(--text-dim);font-size:9px">
+          Enter weight, reps, and RPE below. "Last time" comparison will appear automatically next session.
+        </div>
+      </div>
+    `;
+  }
+
+  const rowsHTML=sets.map((s,sIdx)=>`
+    <tr class="set-row${s.done?' is-done':''}">
+      <td class="set-num-cell">#${s.setNum}</td>
+      <td class="set-prev-cell">${s.prev||'—'}</td>
+      <td class="set-input-cell">
+        <input type="number" class="set-input" placeholder="lbs" value="${s.weight||''}" oninput="logSetField('${workoutKey}',${exIdx},${sIdx},'weight',this.value)" onclick="event.stopPropagation()">
+      </td>
+      <td class="set-input-cell">
+        <input type="number" class="set-input" placeholder="reps" value="${s.reps||''}" oninput="logSetField('${workoutKey}',${exIdx},${sIdx},'reps',this.value)" onclick="event.stopPropagation()">
+      </td>
+      <td class="set-input-cell">
+        <select class="set-rpe-select" onchange="logSetField('${workoutKey}',${exIdx},${sIdx},'rpe',this.value)" onclick="event.stopPropagation()">
+          <option value="6" ${s.rpe=='6'?'selected':''}>6</option>
+          <option value="7" ${s.rpe=='7'?'selected':''}>7</option>
+          <option value="7.5" ${s.rpe=='7.5'?'selected':''}>7.5</option>
+          <option value="8" ${s.rpe=='8'?'selected':''}>8</option>
+          <option value="8.5" ${s.rpe=='8.5'?'selected':''}>8.5</option>
+          <option value="9" ${s.rpe=='9'?'selected':''}>9</option>
+          <option value="9.5" ${s.rpe=='9.5'?'selected':''}>9.5</option>
+          <option value="10" ${s.rpe=='10'?'selected':''}>10</option>
+        </select>
+      </td>
+      <td class="set-input-cell">
+        <button class="set-check-btn${s.done?' checked':''}" onclick="toggleSetCheck(event,'${workoutKey}',${exIdx},${sIdx},'${ex.name.replace(/'/g,"\\'")}')">✓</button>
+      </td>
+    </tr>
+  `).join('');
+
+  return`
+    ${ltHTML}
+    <table class="set-table">
+      <thead>
+        <tr>
+          <th>SET</th>
+          <th>PREV</th>
+          <th>LOAD (LBS)</th>
+          <th>REPS</th>
+          <th>RPE</th>
+          <th>✓</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${rowsHTML}
+      </tbody>
+    </table>
+    <div class="set-actions-row">
+      <button class="set-add-btn" onclick="addSetRow(event,'${workoutKey}',${exIdx},'${ex.name.replace(/'/g,"\\'")}')">+ ADD SET</button>
+      <button class="set-del-btn" onclick="removeSetRow(event,'${workoutKey}',${exIdx},'${ex.name.replace(/'/g,"\\'")}')">− REMOVE SET</button>
+    </div>
+  `;
+}
+
+function logSetField(workoutKey,exIdx,setIdx,field,val){
+  const setKey=`${workoutKey}-${exIdx}`;
+  if(!APP.currentSessionSets||!APP.currentSessionSets[setKey])return;
+  if(APP.currentSessionSets[setKey][setIdx]){
+    APP.currentSessionSets[setKey][setIdx][field]=val;
+    saveData();
+  }
+}
+
+function toggleSetCheck(e,workoutKey,exIdx,setIdx,exName){
+  if(e&&e.stopPropagation)e.stopPropagation();
+  const setKey=`${workoutKey}-${exIdx}`;
+  if(!APP.currentSessionSets||!APP.currentSessionSets[setKey])return;
+  const setItem=APP.currentSessionSets[setKey][setIdx];
+  if(!setItem)return;
+  setItem.done=!setItem.done;
+  saveData();
+
+  const container=document.getElementById(`sets-wrap-${workoutKey}-${exIdx}`);
+  if(container){
+    const w=WORKOUTS[workoutKey];
+    const curEx=(APP.swappedExercises&&APP.swappedExercises[setKey])||w.exercises[exIdx];
+    container.innerHTML=renderSetLoggerHTML(workoutKey,exIdx,curEx,getExSets(curEx));
+  }
+
+  if(setItem.done){
+    startRestTimer(restTimerTotal||90);
+    showToast(`SET ${setIdx+1} LOGGED ✓ REST TIMER STARTED`,'toast-success');
+  }
+
+  // Check if all sets completed
+  const allDone=APP.currentSessionSets[setKey].length>0&&APP.currentSessionSets[setKey].every(s=>s.done);
+  const exCheckEl=document.querySelector(`.ex-check[data-exkey="${workoutKey}-${exIdx}"]`);
+  const exItemEl=exCheckEl?exCheckEl.closest('.ex-item'):null;
+  if(!APP.modalEx)APP.modalEx={};
+  if(!APP.modalEx[workoutKey])APP.modalEx[workoutKey]={};
+  const exKey=`${workoutKey}-${exIdx}`;
+
+  if(allDone){
+    if(!APP.modalEx[workoutKey][exKey]){
+      APP.modalEx[workoutKey][exKey]=true;
+      APP.exDone=(APP.exDone||0)+1;
+      if(exCheckEl)exCheckEl.classList.add('done');
+      if(exItemEl)exItemEl.classList.add('ex-done');
+      saveData();
+      updateAllStats();
+    }
+  }
+
+  saveCurrentSetsToExerciseLog(exName,APP.currentSessionSets[setKey]);
+}
+
+function saveCurrentSetsToExerciseLog(exName,sets){
+  if(!APP.exerciseLogs)APP.exerciseLogs={};
+  if(!APP.exerciseLogs[exName])APP.exerciseLogs[exName]=[];
+  const today=new Date().toISOString().slice(0,10);
+  const logs=APP.exerciseLogs[exName];
+  const existingToday=logs.find(l=>l.date===today);
+  const validSets=sets.filter(s=>s.weight||s.reps||s.done).map(s=>({
+    setNum:s.setNum,
+    weight:s.weight||0,
+    reps:s.reps||0,
+    rpe:s.rpe||'8',
+    done:s.done
+  }));
+  if(validSets.length>0){
+    if(existingToday){
+      existingToday.sets=validSets;
+    }else{
+      logs.push({date:today,weekKey:APP.weekKey,sets:validSets});
+      if(logs.length>10)logs.shift();
+    }
+    saveData();
+  }
+}
+
+function addSetRow(e,workoutKey,exIdx,exName){
+  if(e&&e.stopPropagation)e.stopPropagation();
+  const setKey=`${workoutKey}-${exIdx}`;
+  if(!APP.currentSessionSets)APP.currentSessionSets={};
+  if(!APP.currentSessionSets[setKey])APP.currentSessionSets[setKey]=[];
+  const sets=APP.currentSessionSets[setKey];
+  const nextNum=sets.length+1;
+  const prevSet=sets[sets.length-1];
+  sets.push({
+    setNum:nextNum,
+    prev:prevSet?`${prevSet.weight}×${prevSet.reps}`:'',
+    weight:prevSet?prevSet.weight:'',
+    reps:prevSet?prevSet.reps:'',
+    rpe:prevSet?prevSet.rpe:'8',
+    done:false
+  });
+  saveData();
+  const container=document.getElementById(`sets-wrap-${workoutKey}-${exIdx}`);
+  if(container){
+    const w=WORKOUTS[workoutKey];
+    const curEx=(APP.swappedExercises&&APP.swappedExercises[setKey])||w.exercises[exIdx];
+    container.innerHTML=renderSetLoggerHTML(workoutKey,exIdx,curEx,getExSets(curEx));
+  }
+}
+
+function removeSetRow(e,workoutKey,exIdx,exName){
+  if(e&&e.stopPropagation)e.stopPropagation();
+  const setKey=`${workoutKey}-${exIdx}`;
+  if(!APP.currentSessionSets||!APP.currentSessionSets[setKey]||APP.currentSessionSets[setKey].length<=1)return;
+  APP.currentSessionSets[setKey].pop();
+  saveData();
+  const container=document.getElementById(`sets-wrap-${workoutKey}-${exIdx}`);
+  if(container){
+    const w=WORKOUTS[workoutKey];
+    const curEx=(APP.swappedExercises&&APP.swappedExercises[setKey])||w.exercises[exIdx];
+    container.innerHTML=renderSetLoggerHTML(workoutKey,exIdx,curEx,getExSets(curEx));
+  }
+}
+
+function copyLastTimeToCurrent(e,workoutKey,exIdx,exName){
+  if(e&&e.stopPropagation)e.stopPropagation();
+  const lastLog=getLastTimeLog(exName);
+  if(!lastLog||!lastLog.sets||!lastLog.sets.length){
+    showToast('NO PREVIOUS LOG FOUND','toast-fire');
+    return;
+  }
+  const setKey=`${workoutKey}-${exIdx}`;
+  APP.currentSessionSets[setKey]=lastLog.sets.map((s,idx)=>({
+    setNum:idx+1,
+    prev:`${s.weight}×${s.reps}`,
+    weight:s.weight,
+    reps:s.reps,
+    rpe:s.rpe||'8',
+    done:false
+  }));
+  saveData();
+  const container=document.getElementById(`sets-wrap-${workoutKey}-${exIdx}`);
+  if(container){
+    const w=WORKOUTS[workoutKey];
+    const curEx=(APP.swappedExercises&&APP.swappedExercises[setKey])||w.exercises[exIdx];
+    container.innerHTML=renderSetLoggerHTML(workoutKey,exIdx,curEx,getExSets(curEx));
+  }
+  showToast('COPIED PREVIOUS WEIGHTS & REPS ✓','toast-success');
+}
+
+// ══════════════════════════════════════════════
+// SWAP EXERCISE MODAL
+// ══════════════════════════════════════════════
+let currentSwapContext=null;
+
+function openSwapModal(e,key,exIdx){
+  if(e&&e.stopPropagation)e.stopPropagation();
+  const w=WORKOUTS[key];
+  if(!w)return;
+  const setKey=`${key}-${exIdx}`;
+  const originalEx=w.exercises[exIdx];
+  const curEx=(APP.swappedExercises&&APP.swappedExercises[setKey])||originalEx;
+  currentSwapContext={key,exIdx,originalEx,curEx};
+
+  document.getElementById('swap-cur-name').textContent=curEx.name;
+  const alts=(EXERCISE_SWAPS&&EXERCISE_SWAPS[originalEx.name])||getDefaultSwaps(originalEx.quality);
+
+  const listEl=document.getElementById('swap-options-list');
+  let html='';
+  if(curEx.name!==originalEx.name){
+    html+=`
+      <div class="swap-item" style="border-color:var(--gold);background:rgba(212,168,67,0.08)" onclick="revertSwapExercise()">
+        <div class="swap-item-name">↺ REVERT TO ORIGINAL: ${originalEx.name}</div>
+        <div class="swap-item-meta"><span class="swap-chip">${originalEx.quality}</span></div>
+        <div class="swap-why">${originalEx.why}</div>
+      </div>
+    `;
+  }
+
+  html+=alts.map((alt,idx)=>`
+    <div class="swap-item" onclick="chooseSwapExercise(${idx})">
+      <div class="swap-item-name">${alt.name}</div>
+      <div class="swap-item-meta">
+        <span class="swap-chip">${alt.quality}</span>
+        ${alt.achilles?'<span class="swap-chip" style="color:var(--red);border-color:rgba(224,52,52,0.3)">⚠ ACHILLES MONITOR</span>':''}
+      </div>
+      <div class="swap-why">${alt.why}</div>
+    </div>
+  `).join('');
+
+  listEl.innerHTML=html;
+  document.getElementById('swap-modal-overlay').classList.add('open');
+}
+
+function closeSwapModal(){
+  document.getElementById('swap-modal-overlay').classList.remove('open');
+  currentSwapContext=null;
+}
+
+function chooseSwapExercise(altIdx){
+  if(!currentSwapContext)return;
+  const {key,exIdx,originalEx}=currentSwapContext;
+  const alts=(EXERCISE_SWAPS&&EXERCISE_SWAPS[originalEx.name])||getDefaultSwaps(originalEx.quality);
+  const chosen=alts[altIdx];
+  if(!chosen)return;
+
+  if(!APP.swappedExercises)APP.swappedExercises={};
+  const setKey=`${key}-${exIdx}`;
+  APP.swappedExercises[setKey]={
+    name:chosen.name,
+    sets:originalEx.sets,
+    quality:chosen.quality,
+    why:chosen.why,
+    achilles:!!chosen.achilles,
+    yt:true,
+    swappedFrom:originalEx.name
+  };
+  saveData();
+  closeSwapModal();
+  openModal(key,currentModalSession,currentModalDay);
+  showToast(`SWAPPED TO ${chosen.name.toUpperCase()} ✓`,'toast-success');
+}
+
+function revertSwapExercise(){
+  if(!currentSwapContext)return;
+  const {key,exIdx}=currentSwapContext;
+  const setKey=`${key}-${exIdx}`;
+  if(APP.swappedExercises&&APP.swappedExercises[setKey]){
+    delete APP.swappedExercises[setKey];
+    saveData();
+  }
+  closeSwapModal();
+  openModal(key,currentModalSession,currentModalDay);
+  showToast('REVERTED TO ORIGINAL EXERCISE ✓','toast-success');
+}
+
+function saveCustomSwap(){
+  if(!currentSwapContext)return;
+  const input=document.getElementById('swap-custom-text');
+  const name=input?input.value.trim():'';
+  if(!name)return;
+  const {key,exIdx,originalEx}=currentSwapContext;
+  const setKey=`${key}-${exIdx}`;
+  if(!APP.swappedExercises)APP.swappedExercises={};
+  APP.swappedExercises[setKey]={
+    name:name,
+    sets:originalEx.sets,
+    quality:'CUSTOM SWAP',
+    why:`Athlete custom replacement for ${originalEx.name}.`,
+    achilles:originalEx.achilles,
+    yt:true,
+    swappedFrom:originalEx.name
+  };
+  saveData();
+  closeSwapModal();
+  openModal(key,currentModalSession,currentModalDay);
+  showToast(`SWAPPED TO ${name.toUpperCase()} ✓`,'toast-success');
+}
+
+// ══════════════════════════════════════════════
+// ACHILLES TREND CHART RENDERING (HOME & REPORT)
+// ══════════════════════════════════════════════
+function renderAchillesChart(targetId){
+  const container=document.getElementById(targetId);
+  if(!container)return;
+
+  const trend=(APP.achillesTrend&&APP.achillesTrend.length)?APP.achillesTrend.slice(-7):getInitialAchillesData();
+  const width=360,height=125;
+  const padL=28,padR=16,padT=14,padB=22;
+  const chartW=width-padL-padR;
+  const chartH=height-padT-padB;
+
+  const getX=(idx)=>padL+(idx/Math.max(1,trend.length-1))*chartW;
+  const getY=(val)=>padT+chartH-(Math.min(5,Math.max(0,val))/5)*chartH;
+
+  const y2=getY(2);
+  const y4=getY(4);
+
+  let pathDuring='',pathAfter='';
+  let dotsHTML='';
+  trend.forEach((p,i)=>{
+    const x=getX(i);
+    const yd=getY(p.during);
+    const ya=getY(p.after);
+    if(i===0){
+      pathDuring+=`M ${x} ${yd}`;
+      pathAfter+=`M ${x} ${ya}`;
+    }else{
+      pathDuring+=` L ${x} ${yd}`;
+      pathAfter+=` L ${x} ${ya}`;
+    }
+    dotsHTML+=`
+      <circle cx="${x}" cy="${yd}" r="3.5" fill="#E03434" stroke="#060608" stroke-width="1.5" />
+      <circle cx="${x}" cy="${ya}" r="3.5" fill="#3478F6" stroke="#060608" stroke-width="1.5" />
+      <text x="${x}" y="${height-5}" font-family="'DM Mono', monospace" font-size="8" fill="#555568" text-anchor="middle">${p.day||'DAY'}</text>
+    `;
+  });
+
+  const avgDuring=(trend.reduce((acc,p)=>acc+(p.during||0),0)/trend.length).toFixed(1);
+  const avgAfter=(trend.reduce((acc,p)=>acc+(p.after||0),0)/trend.length).toFixed(1);
+  const isSafe=avgDuring<=2&&avgAfter<=3;
+
+  container.innerHTML=`
+    <div class="ac-chart-header">
+      <div class="ac-chart-title">7-DAY ACHILLES PAIN TREND</div>
+      <div class="ac-chart-legend">
+        <span style="color:#E03434">● DURING</span>
+        <span style="color:#3478F6">● 24HR POST</span>
+      </div>
+    </div>
+    <svg class="ac-chart-svg" viewBox="0 0 ${width} ${height}">
+      <!-- Safe Zone (0-2) -->
+      <rect x="${padL}" y="${y2}" width="${chartW}" height="${chartH-(y2-padT)}" fill="rgba(48,209,88,0.06)" />
+      <!-- Caution Zone (2-4) -->
+      <rect x="${padL}" y="${y4}" width="${chartW}" height="${y2-y4}" fill="rgba(255,214,10,0.05)" />
+      <line x1="${padL}" y1="${y2}" x2="${width-padR}" y2="${y2}" stroke="rgba(48,209,88,0.2)" stroke-dasharray="3,3" />
+      <line x1="${padL}" y1="${y4}" x2="${width-padR}" y2="${y4}" stroke="rgba(255,214,10,0.2)" stroke-dasharray="3,3" />
+      <text x="${padL-4}" y="${getY(0)+3}" font-family="'DM Mono', monospace" font-size="8" fill="#555568" text-anchor="end">0</text>
+      <text x="${padL-4}" y="${y2+3}" font-family="'DM Mono', monospace" font-size="8" fill="#30D158" text-anchor="end">2</text>
+      <text x="${padL-4}" y="${y4+3}" font-family="'DM Mono', monospace" font-size="8" fill="#FFD60A" text-anchor="end">4</text>
+      <path d="${pathAfter}" fill="none" stroke="#3478F6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+      <path d="${pathDuring}" fill="none" stroke="#E03434" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+      ${dotsHTML}
+    </svg>
+    <div class="ac-stat-summary">
+      <span>Avg: <strong style="color:#E03434">${avgDuring}/5</strong> (during) · <strong style="color:#3478F6">${avgAfter}/5</strong> (post)</span>
+      <span style="font-weight:600;color:${isSafe?'var(--green)':'#FFD60A'}">${isSafe?'✓ ADAPTING WELL':'⚠ MONITOR CLOSELY'}</span>
+    </div>
+  `;
+}
+
+// ══════════════════════════════════════════════
+// DAILY WELLNESS (SLEEP & ENERGY)
+// ══════════════════════════════════════════════
+function setWellness(type,val){
+  if(!APP.dailyWellness)APP.dailyWellness={};
+  const today=new Date().toISOString().slice(0,10);
+  if(!APP.dailyWellness[today])APP.dailyWellness[today]={sleep:8,energy:8};
+  APP.dailyWellness[today][type]=val;
+  saveData();
+  renderWellnessUI();
+  showToast(`${type.toUpperCase()} RATED ${val}/10 ✓`,'toast-success');
+}
+
+function renderWellnessUI(){
+  const today=new Date().toISOString().slice(0,10);
+  const cur=(APP.dailyWellness&&APP.dailyWellness[today])||{sleep:8,energy:8};
+  document.querySelectorAll('.wellness-btn[data-type="sleep"]').forEach(btn=>{
+    btn.classList.toggle('sel-sleep',parseInt(btn.dataset.v)===cur.sleep);
+  });
+  document.querySelectorAll('.wellness-btn[data-type="energy"]').forEach(btn=>{
+    btn.classList.toggle('sel-energy',parseInt(btn.dataset.v)===cur.energy);
+  });
+}
+
 </script>
 </body>
 </html>
