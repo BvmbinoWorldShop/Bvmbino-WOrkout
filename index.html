@@ -2039,7 +2039,7 @@ body>*{position:relative;z-index:1}
       </div>
     </div>
     <div class="wellness-row">
-      <div class="wellness-label">ENERGY / CNS</div>
+      <div class="wellness-label">ENERGY / CNS <span id="wellness-energy-label" style="color:var(--gold);font-size:9px;letter-spacing:1px;margin-left:6px;font-weight:600"></span></div>
       <div class="wellness-scale" id="scale-energy">
         <div class="wellness-btn" data-type="energy" data-v="1" onclick="setWellness('energy',1)">1</div><div class="wellness-btn" data-type="energy" data-v="2" onclick="setWellness('energy',2)">2</div><div class="wellness-btn" data-type="energy" data-v="3" onclick="setWellness('energy',3)">3</div><div class="wellness-btn" data-type="energy" data-v="4" onclick="setWellness('energy',4)">4</div><div class="wellness-btn" data-type="energy" data-v="5" onclick="setWellness('energy',5)">5</div><div class="wellness-btn" data-type="energy" data-v="6" onclick="setWellness('energy',6)">6</div><div class="wellness-btn" data-type="energy" data-v="7" onclick="setWellness('energy',7)">7</div><div class="wellness-btn" data-type="energy" data-v="8" onclick="setWellness('energy',8)">8</div><div class="wellness-btn" data-type="energy" data-v="9" onclick="setWellness('energy',9)">9</div><div class="wellness-btn" data-type="energy" data-v="10" onclick="setWellness('energy',10)">10</div>
       </div>
@@ -2577,6 +2577,14 @@ const STORE_KEY='bvmbino_v3';
 // ══════════════════════════════════════════════
 // STORAGE
 // ══════════════════════════════════════════════
+function getTodayDateStr(dateObj) {
+  const d = dateObj || new Date();
+  const year = d.getFullYear();
+  const month = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  return year + '-' + month + '-' + day;
+}
+
 function getWeekKey(){const d=new Date(),jan1=new Date(d.getFullYear(),0,1),wk=Math.ceil(((d-jan1)/86400000+jan1.getDay()+1)/7);return`${d.getFullYear()}-W${wk}`}
 
 function getInitialAchillesData(){
@@ -2591,8 +2599,10 @@ function getInitialAchillesData(){
 
 function getInitialWellnessData(){
   const data={};
-  for(let i=0;i<7;i++){
-    const dt=new Date(Date.now()-(6-i)*86400000).toISOString().slice(0,10);
+  // Pre-fill previous 6 days for trends; today is unrated so athlete rates fresh daily
+  for(let i=0;i<6;i++){
+    const pastDate=new Date(Date.now()-(6-i)*86400000);
+    const dt=getTodayDateStr(pastDate);
     data[dt]={sleep:7+(i%3),energy:8+(i%2)-(i===4?1:0)};
   }
   return data;
@@ -2602,6 +2612,17 @@ function loadData(){
   let d=null;
   try{const r=localStorage.getItem(STORE_KEY);if(r)d=JSON.parse(r);}catch(e){}
   if(!d)d={};
+  const todayDate=getTodayDateStr();
+  const todayStr=new Date().toDateString();
+  const isNewDay=!d.lastActiveDate||d.lastActiveDate!==todayStr||!d.recoveryDate||d.recoveryDate!==todayDate;
+
+  const initialRecovery=isNewDay?{}:(d.recovery||{});
+  const initialMental=d.mentalSteps?Object.assign({},d.mentalSteps):{};
+  if(isNewDay){
+    Object.keys(initialMental).forEach(k=>{
+      if(k.startsWith('ms-0-')||k.startsWith('ms-1-'))delete initialMental[k];
+    });
+  }
   return{
     weekKey:d.weekKey||getWeekKey(),
     streak:d.streak||0,
@@ -2609,9 +2630,10 @@ function loadData(){
     totalSessions:d.totalSessions||0,
     weeksCompleted:d.weeksCompleted||0,
     sessions:d.sessions||{},
-    mentalSteps:d.mentalSteps||{},
-    recovery:d.recovery||{},
-    recoveryDate:d.recoveryDate||new Date().toISOString().slice(0,10),
+    mentalSteps:initialMental,
+    mentalDate:isNewDay?todayDate:(d.mentalDate||todayDate),
+    recovery:initialRecovery,
+    recoveryDate:todayDate,
     recoveryHistory:d.recoveryHistory||{},
     pain:d.pain||{during:0,after:0},
     weekHistory:d.weekHistory||[],
@@ -2689,7 +2711,7 @@ function restoreState(){
   Object.keys(APP.sessions).forEach(id=>{const el=document.getElementById(id);if(el)el.classList.add('done');});
   for(let d=0;d<5;d++)recalcDayProgress(d);
   Object.keys(APP.mentalSteps).forEach(id=>{const el=document.getElementById(id);if(el)el.classList.add('done');});
-  checkDailyRecoveryReset(); renderRecoveryChecklist();
+  checkDailyResets();
   Object.keys(APP.warmupSteps||{}).forEach(id=>{const el=document.getElementById(id);if(el)el.classList.add('done');});
   if(APP.pain.during)setPainSilent('during',APP.pain.during);
   if(APP.pain.after)setPainSilent('after',APP.pain.after);
@@ -3028,33 +3050,55 @@ function updateHistory(){
 // ══════════════════════════════════════════════
 // MENTAL
 // ══════════════════════════════════════════════
-function toggleMental(el,id){
-  const was=el.classList.contains('done');el.classList.toggle('done');
-  if(!was){APP.mentalSteps[id]=true;showToast('STEP COMPLETE ✓','toast-success');}else delete APP.mentalSteps[id];
-  saveData();updateAllStats();
-}
+function checkDailyResets() {
+  const today = getTodayDateStr();
+  let hasReset = false;
 
-// ══════════════════════════════════════════════
-// RECOVERY
-// ══════════════════════════════════════════════
-function checkDailyRecoveryReset() {
-  const today = new Date().toISOString().slice(0, 10);
-  if (!APP.recoveryDate) {
-    APP.recoveryDate = today;
-    return false;
-  }
-  if (APP.recoveryDate !== today) {
+  // 1. RECOVERY CHECKLIST RESET (Clean start every midnight)
+  if (!APP.recoveryDate || APP.recoveryDate !== today) {
     if (!APP.recoveryHistory) APP.recoveryHistory = {};
-    if (APP.recovery && Object.keys(APP.recovery).length > 0) {
+    if (APP.recovery && Object.keys(APP.recovery).length > 0 && APP.recoveryDate) {
       APP.recoveryHistory[APP.recoveryDate] = Object.assign({}, APP.recovery);
     }
     APP.recovery = {};
     APP.recoveryDate = today;
-    saveData();
-    renderRecoveryChecklist();
-    return true;
+    hasReset = true;
   }
-  return false;
+
+  // 2. DAILY MENTAL PROTOCOLS RESET (Visualization ms-0-* and Box Breathing ms-1-*)
+  if (!APP.mentalDate || APP.mentalDate !== today) {
+    if (APP.mentalSteps) {
+      Object.keys(APP.mentalSteps).forEach(k => {
+        if (k.startsWith('ms-0-') || k.startsWith('ms-1-')) {
+          delete APP.mentalSteps[k];
+          hasReset = true;
+        }
+      });
+    }
+    APP.mentalDate = today;
+  }
+
+  // 3. DAILY WELLNESS (SLEEP & CNS READINESS)
+  if (!APP.dailyWellness) APP.dailyWellness = {};
+  if (!APP.wellnessDate || APP.wellnessDate !== today) {
+    APP.wellnessDate = today;
+    hasReset = true;
+  }
+
+  if (hasReset) {
+    saveData();
+  }
+
+  // Render all DOM components
+  renderRecoveryChecklist();
+  renderWellnessUI();
+  renderMentalDailySteps();
+
+  return hasReset;
+}
+
+function checkDailyRecoveryReset() {
+  return checkDailyResets();
 }
 
 function renderRecoveryChecklist() {
@@ -3072,7 +3116,7 @@ function renderRecoveryChecklist() {
 }
 
 function toggleRec(el, id) {
-  checkDailyRecoveryReset();
+  checkDailyResets();
   const was = el.classList.contains('done');
   el.classList.toggle('done');
   const ch = el.querySelector('.rc-check');
@@ -3086,6 +3130,40 @@ function toggleRec(el, id) {
   }
   saveData();
   renderRecoveryChecklist();
+}
+
+function renderMentalDailySteps() {
+  if (!APP.mentalSteps) APP.mentalSteps = {};
+  // Visualization ms-0-0 to ms-0-5
+  for (let i = 0; i < 6; i++) {
+    const el = document.getElementById('ms-0-' + i);
+    if (el) {
+      const isDone = !!APP.mentalSteps['ms-0-' + i];
+      el.classList.toggle('done', isDone);
+    }
+  }
+  // Box Breathing ms-1-0 to ms-1-5
+  for (let i = 0; i < 6; i++) {
+    const el = document.getElementById('ms-1-' + i);
+    if (el) {
+      const isDone = !!APP.mentalSteps['ms-1-' + i];
+      el.classList.toggle('done', isDone);
+    }
+  }
+}
+
+function toggleMental(el, id) {
+  checkDailyResets();
+  const was = el.classList.contains('done');
+  el.classList.toggle('done');
+  if (!was) {
+    APP.mentalSteps[id] = true;
+    showToast('STEP COMPLETE ✓', 'toast-success');
+  } else {
+    delete APP.mentalSteps[id];
+  }
+  saveData();
+  updateAllStats();
 }
 
 // ══════════════════════════════════════════════
@@ -4854,33 +4932,53 @@ function renderAchillesChart(targetId){
 // ══════════════════════════════════════════════
 // DAILY WELLNESS (SLEEP & ENERGY)
 // ══════════════════════════════════════════════
-function setWellness(type,val){
-  if(!APP.dailyWellness)APP.dailyWellness={};
-  const today=new Date().toISOString().slice(0,10);
-  if(!APP.dailyWellness[today])APP.dailyWellness[today]={sleep:8,energy:8};
-  APP.dailyWellness[today][type]=val;
+function setWellness(type, val) {
+  checkDailyResets();
+  if (!APP.dailyWellness) APP.dailyWellness = {};
+  const today = getTodayDateStr();
+  if (!APP.dailyWellness[today]) APP.dailyWellness[today] = { sleep: null, energy: null };
+
+  // Click same number again to unselect/reset
+  if (APP.dailyWellness[today][type] === val) {
+    APP.dailyWellness[today][type] = null;
+    showToast(`${type.toUpperCase()} RESET`, 'toast-success');
+  } else {
+    APP.dailyWellness[today][type] = val;
+    showToast(`${type.toUpperCase()} RATED ${val}/10 ✓`, 'toast-success');
+  }
   saveData();
   renderWellnessUI();
-  showToast(`${type.toUpperCase()} RATED ${val}/10 ✓`,'toast-success');
 }
 
-function renderWellnessUI(){
-  const today=new Date().toISOString().slice(0,10);
-  const cur=(APP.dailyWellness&&APP.dailyWellness[today])||{sleep:8,energy:8};
-  document.querySelectorAll('.wellness-btn[data-type="sleep"]').forEach(btn=>{
-    btn.classList.toggle('sel-sleep',parseInt(btn.dataset.v)===cur.sleep);
+function renderWellnessUI() {
+  const today = getTodayDateStr();
+  const cur = (APP.dailyWellness && APP.dailyWellness[today]) || null;
+  const sleepVal = (cur && cur.sleep !== null && cur.sleep !== undefined) ? parseInt(cur.sleep) : null;
+  const energyVal = (cur && cur.energy !== null && cur.energy !== undefined) ? parseInt(cur.energy) : null;
+
+  document.querySelectorAll('.wellness-btn[data-type="sleep"]').forEach(btn => {
+    btn.classList.toggle('sel-sleep', sleepVal !== null && parseInt(btn.dataset.v) === sleepVal);
   });
-  document.querySelectorAll('.wellness-btn[data-type="energy"]').forEach(btn=>{
-    btn.classList.toggle('sel-energy',parseInt(btn.dataset.v)===cur.energy);
+  document.querySelectorAll('.wellness-btn[data-type="energy"]').forEach(btn => {
+    btn.classList.toggle('sel-energy', energyVal !== null && parseInt(btn.dataset.v) === energyVal);
   });
+
+  const sleepLabel = document.getElementById('wellness-sleep-label');
+  if (sleepLabel) sleepLabel.textContent = sleepVal !== null ? `(${sleepVal}/10)` : '(NOT RATED)';
+  const energyLabel = document.getElementById('wellness-energy-label');
+  if (energyLabel) energyLabel.textContent = energyVal !== null ? `(${energyVal}/10)` : '(NOT RATED)';
+
+  const headerBadge = document.getElementById('wellness-today-indicator');
+  if (headerBadge) {
+    if (sleepVal !== null && energyVal !== null) {
+      headerBadge.textContent = `// TODAY · SLEEP ${sleepVal}/10 · CNS ${energyVal}/10`;
+    } else if (sleepVal !== null || energyVal !== null) {
+      headerBadge.textContent = '// TODAY · IN PROGRESS';
+    } else {
+      headerBadge.textContent = '// TODAY · READY TO RATE';
+    }
+  }
 }
-
-
-// ══════════════════════════════════════════════════════════
-// BVMBINO AI COACH ENGINE — SPORT SCIENCE, PSYCHOLOGY, FINANCE
-
-
-
 
 // ══════════════════════════════════════════════
 // COLOR-CODED MENTAL PERFORMANCE QUOTES ENGINE
@@ -5002,8 +5100,8 @@ function setMentalDay(dayNum, btnEl) {
 // Auto-refresh daily recovery when switching back to app
 document.addEventListener('visibilitychange', () => {
   if (document.visibilityState === 'visible') {
-    if (checkDailyRecoveryReset()) {
-      showToast('NEW DAY · RECOVERY RESET ✓', 'toast-success');
+    if (checkDailyResets()) {
+      showToast('NEW DAY · DAILY PROTOCOLS REFRESHED ✓', 'toast-success');
     }
   }
 });
