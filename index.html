@@ -1148,6 +1148,195 @@ body>*{position:relative;z-index:1}
   letter-spacing: 1px;
   line-height: 1.1;
 }
+
+/* ── CHANGE WORKOUT TYPE SHEET ── */
+.change-workout-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  z-index: 700;
+  display: none;
+  align-items: flex-end;
+  justify-content: center;
+}
+.change-workout-overlay.open {
+  display: flex;
+}
+.change-workout-sheet {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 24px 24px 0 0;
+  width: 100%;
+  max-width: 440px;
+  max-height: 85vh;
+  overflow-y: auto;
+  padding-bottom: calc(var(--safe-bottom) + 24px);
+  animation: slideUpCWSheet 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 -12px 40px rgba(0,0,0,0.85);
+}
+@keyframes slideUpCWSheet {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}
+.cws-header {
+  padding: 20px 20px 14px;
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  background: var(--panel);
+  z-index: 10;
+}
+.cws-top-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+}
+.cws-badge {
+  font-family: 'DM Mono', monospace;
+  font-size: 8.5px;
+  color: var(--gold);
+  letter-spacing: 2px;
+}
+.cws-close-btn {
+  background: var(--panel2);
+  border: 1px solid var(--border);
+  color: var(--text-dim);
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 13px;
+}
+.cws-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 24px;
+  color: #fff;
+  letter-spacing: 1px;
+  line-height: 1;
+}
+.cws-sub {
+  font-size: 11px;
+  color: var(--text-mid);
+  margin-top: 4px;
+}
+.cws-body {
+  padding: 16px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.cws-category-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 8px;
+  color: var(--gold);
+  letter-spacing: 2px;
+  margin: 10px 0 2px;
+}
+.cws-opt {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  background: var(--panel2);
+  border: 1px solid var(--border2);
+  border-radius: var(--r-sm);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  user-select: none;
+}
+.cws-opt:hover, .cws-opt:active {
+  background: rgba(212, 168, 67, 0.08);
+  border-color: var(--gold);
+  transform: scale(0.99);
+}
+.cws-opt.is-active {
+  border-color: var(--gold);
+  background: rgba(212, 168, 67, 0.12);
+}
+.cws-opt-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.cws-opt-info {
+  flex: 1;
+}
+.cws-opt-name {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: 0.5px;
+}
+.cws-opt-meta {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  color: var(--text-dim);
+  margin-top: 2px;
+  letter-spacing: 0.5px;
+}
+.cws-opt-time {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  color: var(--gold);
+  letter-spacing: 1px;
+}
+.session-item.is-customized {
+  border-left: 3px solid var(--gold);
+}
+.session-swap-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-dim);
+  font-size: 12px;
+  padding: 4px 6px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.7;
+}
+.session-swap-btn:hover, .session-swap-btn:active {
+  color: var(--gold);
+  opacity: 1;
+  background: rgba(212, 168, 67, 0.15);
+,
+  'rest-day':{type:'// RECOVERY — FULL REST DAY',color:'#2ECC71',title:'COMPLETE OFF DAY & CNS RESET',meta:['ALL DAY','PASSIVE RECOVERY','0 CNS LOAD'],exercises:[
+    {name:'Hydration & Electrolytes (3.5L)',sets:['Goal: 3.5L water + 1500mg sodium + magnesium','Goal: 3.5L water + 1500mg sodium + magnesium','Goal: 3.5L water + 1500mg sodium + magnesium','Goal: 3.5L water + 1500mg sodium + magnesium'],quality:'HYDRATION',yt:false,why:'Restores intracellular fluid balance and muscle glycogen synthesis.',achilles:false},
+    {name:'Contrast Shower / Cold Plunge',sets:['3 rounds: 60s cold / 2m warm','3 rounds: 60s cold / 2m warm','3 rounds: 60s cold / 2m warm','3 rounds: 60s cold / 2m warm'],quality:'VASCULAR',yt:true,why:'Stimulates peripheral vasoconstriction and lymphatic drainage.',achilles:false},
+    {name:'Diaphragmatic Parasympathetic Breathwork',sets:['15–20 min box breathing','15–20 min box breathing','15–20 min box breathing','15–20 min box breathing'],quality:'CNS RESET',yt:true,why:'Shifts nervous system from sympathetic fight-or-flight to parasympathetic recovery.',achilles:false},
+    {name:'8.5+ Hours Deep Sleep Window',sets:['Dark room, 19°C, no blue light 60m pre-bed','Dark room, 19°C, no blue light 60m pre-bed','Dark room, 19°C, no blue light 60m pre-bed','Dark room, 19°C, no blue light 60m pre-bed'],quality:'ANABOLIC',yt:false,why:'Peak human growth hormone (HGH) release and tendon collagen remodeling.',achilles:false}
+  ]},
+  'recovery-mobility':{type:'// RECOVERY — MOBILITY & FLUSH',color:'#1ABC9C',title:'FULL BODY MOBILITY & ANKLE DECOMPRESSION',meta:['35–40 MIN','LOW CNS','TISSUE QUALITY'],exercises:[
+    {name:'90/90 Hip Flow & Internal Rotation',sets:['3×60s each side','3×60s each side','3×60s each side','3×60s each side'],quality:'HIP CAPSULE',yt:true,why:'Frees femoral head rotation to prevent compensatory pelvic tilt during sprinting.',achilles:false},
+    {name:'Banded Ankle Joint Mobilization',sets:['3×15 pulses each','3×15 pulses each','3×15 pulses each','3×15 pulses each'],quality:'DORSIFLEXION',yt:true,why:'Restores talocrural posterior glide for knee-over-toe ankle dorsiflexion.',achilles:true},
+    {name:'Couch Stretch (Hip Flexor & Quad)',sets:['3×45s each side','3×45s each side','3×45s each side','3×45s each side'],quality:'PSOAS',yt:true,why:'Decompresses lumbar spine and anterior hip capsule.',achilles:false},
+    {name:'Thoracic Extension & Lat Opener',sets:['3×12 extensions','3×12 extensions','3×12 extensions','3×12 extensions'],quality:'T-SPINE',yt:true,why:'Improves overhead reach, shoulder mobility, and upright landing mechanics.',achilles:false},
+    {name:'Elevated Legs Wall Drain',sets:['10–15 min hold','10–15 min hold','10–15 min hold','10–15 min hold'],quality:'LYMPHATIC',yt:true,why:'Gravitational venous return flushes metabolic waste from calf and quads.',achilles:true}
+  ]},
+  'track-speed':{type:'// SPEED — TRACK & ACCELERATION',color:'#E67E22',title:'LINEAR SPEED & MAXIMUM VELOCITY',meta:['50–60 MIN','HIGH CNS','MAX POWER'],exercises:[
+    {name:'10m Resisted Sled Sprints',sets:['5×10m @ 25% BW','5×10m @ 25% BW','6×10m @ 25% BW','4×10m @ 20% BW'],quality:'ACCEL',yt:true,why:'Teaches forward horizontal force application and aggressive shin angles.',achilles:true},
+    {name:'Flying 20m Sprints (20m build + 20m fly)',sets:['4×20m fly','4×20m fly','5×20m fly','3×20m fly'],quality:'MAX VEL',yt:true,why:'Recruits highest threshold motor units without deceleration strain.',achilles:true},
+    {name:'Single-Leg Bounding for Distance',sets:['3×20m each','3×20m each','4×20m each','3×15m each'],quality:'ELASTIC',yt:true,why:'Elastic tendon recoil and unilateral stiffness upon ground contact.',achilles:true},
+    {name:'Curved Acceleration 30m',sets:['4×30m (2L/2R)','4×30m (2L/2R)','4×30m (2L/2R)','3×30m (2L/1R)'],quality:'AGILITY',yt:true,why:'Transfers linear velocity into court curvature and basketball cut angles.',achilles:false}
+  ]},
+  'achilles-rehab':{type:'// REHAB — ACHILLES TENDON',color:'#E84393',title:'ACHILLES HEAVY ISOMETRICS & HSR',meta:['40–45 MIN','TENDON STIFFNESS','PAIN-FREE ADAPTATION'],exercises:[
+    {name:'Single-Leg Soleus Wall Sit Iso Hold',sets:['5×45s @ neutral angle','5×45s @ neutral angle','5×45s @ neutral angle','4×45s @ neutral angle'],quality:'ISOMETRIC',yt:true,why:'Induces tendon stress relaxation and cortical inhibition reduction without compression.',achilles:true},
+    {name:'Heavy Standing Single-Leg Calf Raise',sets:['4×6-8 heavy (RPE 8)','4×6-8 heavy (RPE 8)','4×6-8 heavy (RPE 8)','3×6-8 moderate'],quality:'HSR',yt:true,why:'Heavy Slow Resistance stimulates tendon collagen fibril synthesis and cross-linking.',achilles:true},
+    {name:'Seated Bent-Knee Soleus Raise',sets:['4×10-12 heavy','4×10-12 heavy','4×10-12 heavy','3×10 heavy'],quality:'SOLEUS HSR',yt:true,why:'Isolates the soleus muscle which absorbs 6-8x bodyweight during basketball deceleration.',achilles:true},
+    {name:'Slant Board Eccentric Drops (Pain-Free)',sets:['3×12 each leg','3×12 each leg','3×12 each leg','3×10 each leg'],quality:'ECCENTRIC',yt:true,why:'Lengthens muscle-tendon unit and increases tensile tolerance.',achilles:true},
+    {name:'Tibialis Anterior Banded Dorsiflexion',sets:['3×20 each','3×20 each','3×20 each','3×15 each'],quality:'ANTAGONIST',yt:true,why:'Strengthens anterior compartment to balance ankle joint forces.',achilles:false}
+  ]}
+}
 </style>
 </head>
 <body>
@@ -2053,6 +2242,7 @@ function loadData(){
     phaseWeeks:d.phaseWeeks||[0,0,0,0],
     currentPhaseWeek:d.currentPhaseWeek||0,
     modalEx:d.modalEx||{},
+    customWorkouts:d.customWorkouts||{},
     exDone:d.exDone||0,
     sessionNotes:d.sessionNotes||{},
     warmupSteps:d.warmupSteps||{},
@@ -2289,6 +2479,8 @@ function gotoCard(cid,idx,did){
 function updateDots(did,idx){document.querySelectorAll(`#${did} .dot`).forEach((d,i)=>d.classList.toggle('active',i===idx));}
 
 document.addEventListener('DOMContentLoaded',()=>{
+  applyCustomWorkouts();
+  attachLongPressHandlers();
   [['day-carousel','day-dots'],['mental-carousel','mental-dots'],['pool-carousel','pool-dots'],['gallery-carousel','gallery-dots']].forEach(([cid,did])=>{
     const el=document.getElementById(cid);if(!el)return;
     el.addEventListener('scroll',()=>{const first=el.children[0];const w=first?first.offsetWidth:240;updateDots(did,Math.round(el.scrollLeft/(w+12)));});
@@ -2519,6 +2711,232 @@ function updatePainStatus(){
 // ══════════════════════════════════════════════
 // MODAL
 // ══════════════════════════════════════════════
+// ══════════════════════════════════════════════
+// WORKOUT TYPE CHANGER & LONG PRESS LOGIC
+// ══════════════════════════════════════════════
+const DEFAULT_SESSIONS = {
+  's-0-0': { key: 'weight-a', name: 'WEIGHT ROOM A', meta: 'MAX POWER · 6 EXERCISES', color: '#E74C3C', time: '75 MIN', day: 0 },
+  's-0-1': { key: 'fascia-a', name: 'FASCIA ELASTIC', meta: 'RECOIL + TENDON · 6 DRILLS', color: '#9B59B6', time: '35 MIN', day: 0 },
+  's-0-2': { key: 'vis-daily', name: 'VISUALIZATION', meta: 'MENTAL PROTOCOL · DAILY', color: '#2ECC71', time: '10 MIN', day: 0 },
+  's-1-0': { key: 'bball-a', name: 'BASKETBALL A', meta: 'GAME-SPEED SKILLS · 6 DRILLS', color: 'var(--gold)', time: '60 MIN', day: 1 },
+  's-1-1': { key: 'pool-a', name: 'POOL SESSION A', meta: 'CNS RECOVERY · 5 PROTOCOLS', color: '#3498DB', time: '45 MIN', day: 1 },
+  's-1-2': { key: 'focus-daily', name: 'FOCUS ROUTINE', meta: 'COGNITIVE READINESS', color: '#2ECC71', time: '10 MIN', day: 1 },
+  's-2-0': { key: 'weight-b', name: 'WEIGHT ROOM B', meta: 'POSTERIOR CHAIN · 6 EXERCISES', color: '#E74C3C', time: '75 MIN', day: 2 },
+  's-2-1': { key: 'fascia-b', name: 'FASCIA ROTATIONAL', meta: 'ROTATIONAL FORCE · 6 DRILLS', color: '#9B59B6', time: '35 MIN', day: 2 },
+  's-2-2': { key: 'breath-daily', name: 'BREATH CONTROL', meta: 'PARASYMPATHETIC RESET', color: '#2ECC71', time: '10 MIN', day: 2 },
+  's-3-0': { key: 'bball-b', name: 'BASKETBALL B', meta: 'PICK & ROLL / ISO · 6 DRILLS', color: 'var(--gold)', time: '60 MIN', day: 3 },
+  's-3-1': { key: 'weight-c', name: 'WEIGHT ROOM C', meta: 'EXPLOSIVE HYPERTROPHY · 6 EXERCISES', color: '#E74C3C', time: '60 MIN', day: 3 },
+  's-4-0': { key: 'bball-c', name: 'BASKETBALL C', meta: 'LIVE RUNS · FULL INTENSITY', color: 'var(--gold)', time: '75 MIN', day: 4 },
+  's-4-1': { key: 'fascia-c', name: 'FASCIA MULTI-DIR', meta: 'MULTI-DIRECTIONAL · 6 DRILLS', color: '#9B59B6', time: '35 MIN', day: 4 },
+  's-4-2': { key: 'pool-b', name: 'POOL SESSION B', meta: 'WEEK-END FLUSH · 5 PROTOCOLS', color: '#3498DB', time: '45 MIN', day: 4 }
+};
+
+const WORKOUT_TYPE_OPTIONS = [
+  { group: 'BASKETBALL & COURT', options: [
+    { key: 'bball-a', name: 'BASKETBALL A — GAME SPEED & SHOOTING', meta: 'Catch & Shoot, Floaters, Live 1v1', color: 'var(--gold)', time: '60 MIN' },
+    { key: 'bball-b', name: 'BASKETBALL B — PICK & ROLL / ISO', meta: 'Ball Screen Read, Midrange Pullups', color: 'var(--gold)', time: '60 MIN' },
+    { key: 'bball-c', name: 'BASKETBALL C — FULL LIVE RUNS / 5v5', meta: 'Full-Court Scrimmage, High Intensity', color: 'var(--gold)', time: '75 MIN' }
+  ]},
+  { group: 'FASCIA & TENDON', options: [
+    { key: 'fascia-a', name: 'FASCIA A — ELASTIC RECOIL & TENDON', meta: 'Pogo Jumps, Drop Jumps, Foot Stiffness', color: '#9B59B6', time: '35 MIN' },
+    { key: 'fascia-b', name: 'FASCIA B — ROTATIONAL FORCE & SPIRAL', meta: 'Rotational Med Ball, Lateral Bounds', color: '#9B59B6', time: '35 MIN' },
+    { key: 'fascia-c', name: 'FASCIA C — MULTI-DIRECTIONAL AGILITY', meta: 'Zig-Zag Hops, Deceleration Stops', color: '#9B59B6', time: '35 MIN' }
+  ]},
+  { group: 'WEIGHT ROOM / STRENGTH', options: [
+    { key: 'weight-a', name: 'WEIGHT ROOM A — MAX POWER & CAT', meta: 'Hang Power Clean, CAT Back Squat', color: '#E74C3C', time: '75 MIN' },
+    { key: 'weight-b', name: 'WEIGHT ROOM B — POSTERIOR CHAIN', meta: 'Trap Bar Deadlift, Glute Ham Raise', color: '#E74C3C', time: '75 MIN' },
+    { key: 'weight-c', name: 'WEIGHT ROOM C — EXPLOSIVE HYPERTROPHY', meta: 'Push Press, Weighted Chin-Ups, Armor', color: '#E74C3C', time: '60 MIN' }
+  ]},
+  { group: 'RECOVERY, POOL & OFF DAY', options: [
+    { key: 'rest-day', name: 'FULL REST DAY — OFF & SLEEP', meta: 'Zero CNS Load, Hydration, Breathwork', color: '#2ECC71', time: 'ALL DAY' },
+    { key: 'pool-a', name: 'POOL A — CNS FLUSH & HYDRO DRAIN', meta: 'Contrast Water Therapy, Non-Impact Mobility', color: '#3498DB', time: '45 MIN' },
+    { key: 'pool-b', name: 'POOL B — WEEK-END RECOVERY FLUSH', meta: 'Spinal Traction, Hydro Aqua Running', color: '#3498DB', time: '45 MIN' },
+    { key: 'recovery-mobility', name: 'ACTIVE MOBILITY & ANKLE DECOMP', meta: '90/90 Hips, Banded Ankle Glide, Couch Stretch', color: '#1ABC9C', time: '35 MIN' }
+  ]},
+  { group: 'SPECIALIZED / REHAB', options: [
+    { key: 'achilles-rehab', name: 'ACHILLES TENDON ISOMETRIC PROTOCOL', meta: 'Soleus Wall Iso, Heavy Calf HSR, Tibialis', color: '#E84393', time: '40 MIN' },
+    { key: 'track-speed', name: 'TRACK & SPEED — MAX VELOCITY', meta: 'Sled Sprints, Flying 20m, Single-Leg Bounds', color: '#E67E22', time: '50 MIN' }
+  ]}
+];
+
+let activeChangeSessionId = null;
+
+function openChangeWorkoutModal(sessionId) {
+  activeChangeSessionId = sessionId;
+  const def = DEFAULT_SESSIONS[sessionId];
+  const curKey = (APP.customWorkouts && APP.customWorkouts[sessionId]) || (def ? def.key : null);
+  const dayIdx = def ? def.day : 0;
+  const dayNames = ['MONDAY','TUESDAY','WEDNESDAY','THURSDAY','FRIDAY'];
+  
+  const badgeEl = document.getElementById('cws-badge');
+  if (badgeEl) badgeEl.textContent = '// ' + (dayNames[dayIdx] || 'DAY') + ' · SESSION REASSIGNMENT';
+  
+  const subEl = document.getElementById('cws-sub');
+  if (subEl) subEl.innerHTML = 'Currently: <strong style="color:#fff">' + (def ? def.name : 'SESSION') + '</strong> — select what you actually trained today:';
+  
+  let html = '';
+  WORKOUT_TYPE_OPTIONS.forEach(g => {
+    html += '<div class="cws-category-label">// ' + g.group + '</div>';
+    g.options.forEach(opt => {
+      const isCur = curKey === opt.key;
+      html += '<div class="cws-opt ' + (isCur ? 'is-active' : '') + '" onclick="selectWorkoutType(\'' + sessionId + '\',\'' + opt.key + '\')">' +
+        '<div class="cws-opt-dot" style="background:' + opt.color + '"></div>' +
+        '<div class="cws-opt-info">' +
+          '<div class="cws-opt-name">' + opt.name + (isCur ? ' ✓' : '') + '</div>' +
+          '<div class="cws-opt-meta">' + opt.meta + '</div>' +
+        '</div>' +
+        '<div class="cws-opt-time">' + opt.time + '</div>' +
+      '</div>';
+    });
+  });
+  
+  if (APP.customWorkouts && APP.customWorkouts[sessionId]) {
+    html += '<div style="margin-top:12px;border-top:1px solid var(--border);padding-top:12px">' +
+      '<div class="cws-opt" style="border-color:rgba(231,76,60,0.4);background:rgba(231,76,60,0.08)" onclick="selectWorkoutType(\'' + sessionId + '\',\'RESET\')">' +
+        '<div style="font-size:16px">🔄</div>' +
+        '<div class="cws-opt-info">' +
+          '<div class="cws-opt-name" style="color:#E74C3C">RESET TO SCHEDULED PROGRAM</div>' +
+          '<div class="cws-opt-meta">Revert back to original ' + (def ? def.name : 'workout') + '</div>' +
+        '</div>' +
+      '</div>' +
+    '</div>';
+  }
+
+  const listEl = document.getElementById('cws-options-list');
+  if (listEl) listEl.innerHTML = html;
+  
+  const m = document.getElementById('change-workout-modal');
+  if (m) m.classList.add('open');
+}
+
+function closeChangeWorkoutModal() {
+  const m = document.getElementById('change-workout-modal');
+  if (m) m.classList.remove('open');
+  activeChangeSessionId = null;
+}
+
+function selectWorkoutType(sessionId, newKey) {
+  if (!APP.customWorkouts) APP.customWorkouts = {};
+  if (newKey === 'RESET') {
+    delete APP.customWorkouts[sessionId];
+    showToast('REVERTED TO SCHEDULED PROGRAM', 'toast-success');
+  } else {
+    APP.customWorkouts[sessionId] = newKey;
+    const w = WORKOUTS[newKey];
+    showToast('LOGGED AS: ' + (w ? w.title : 'CUSTOM WORKOUT') + ' ✓', 'toast-success');
+  }
+  saveData();
+  applyCustomWorkouts();
+  closeChangeWorkoutModal();
+}
+
+function applyCustomWorkouts() {
+  if (!APP.customWorkouts) APP.customWorkouts = {};
+
+  Object.keys(DEFAULT_SESSIONS).forEach(sId => {
+    const item = document.getElementById(sId);
+    if (!item) return;
+
+    const def = DEFAULT_SESSIONS[sId];
+    const customKey = APP.customWorkouts[sId];
+    const key = customKey || def.key;
+    const w = WORKOUTS[key];
+
+    const dot = item.querySelector('.session-dot');
+    const name = item.querySelector('.session-name');
+    const meta = item.querySelector('.session-meta');
+    const time = item.querySelector('.session-time');
+
+    if (customKey && w) {
+      if (dot) dot.style.background = w.color;
+      if (name) name.textContent = w.title.replace('DEVELOPMENT','').replace('PROTOCOL','').trim();
+      if (meta) meta.textContent = (w.meta ? w.meta[1] || w.meta[0] : 'CUSTOM') + ' • SWAPPED';
+      if (time && w.meta && w.meta[0]) time.textContent = w.meta[0].replace(' MIN','M');
+      item.onclick = function(e) {
+        if (window.__longPressFired) { window.__longPressFired = false; return; }
+        openModal(key, sId, def.day);
+      };
+      item.classList.add('is-customized');
+    } else {
+      if (dot) dot.style.background = def.color;
+      if (name) name.textContent = def.name;
+      if (meta) meta.textContent = def.meta;
+      if (time) time.textContent = def.time;
+      if (def.key && WORKOUTS[def.key]) {
+        item.onclick = function(e) {
+          if (window.__longPressFired) { window.__longPressFired = false; return; }
+          openModal(def.key, sId, def.day);
+        };
+      }
+      item.classList.remove('is-customized');
+    }
+
+    if (!item.querySelector('.session-swap-btn')) {
+      const swapBtn = document.createElement('button');
+      swapBtn.className = 'session-swap-btn';
+      swapBtn.innerHTML = '⇄';
+      swapBtn.title = 'Change workout type';
+      swapBtn.onclick = function(e) {
+        e.stopPropagation();
+        openChangeWorkoutModal(sId);
+      };
+      const checkEl = item.querySelector('.check-circle');
+      if (checkEl) item.insertBefore(swapBtn, checkEl);
+      else item.appendChild(swapBtn);
+    }
+  });
+}
+
+function attachLongPressHandlers() {
+  let timer = null;
+  let startX = 0, startY = 0;
+  window.__longPressFired = false;
+
+  document.querySelectorAll('.session-item').forEach(el => {
+    if (el.dataset.lpBound) return;
+    el.dataset.lpBound = 'true';
+
+    el.addEventListener('touchstart', (e) => {
+      if (e.target.closest('.check-circle') || e.target.closest('.session-swap-btn')) return;
+      window.__longPressFired = false;
+      startX = e.touches[0].clientX;
+      startY = e.touches[0].clientY;
+      timer = setTimeout(() => {
+        window.__longPressFired = true;
+        if (navigator.vibrate) navigator.vibrate(60);
+        openChangeWorkoutModal(el.id);
+      }, 500);
+    }, { passive: true });
+
+    el.addEventListener('touchmove', (e) => {
+      const dx = Math.abs(e.touches[0].clientX - startX);
+      const dy = Math.abs(e.touches[0].clientY - startY);
+      if (dx > 8 || dy > 8) clearTimeout(timer);
+    }, { passive: true });
+
+    el.addEventListener('touchend', (e) => {
+      clearTimeout(timer);
+      if (window.__longPressFired) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+    });
+
+    el.addEventListener('mousedown', (e) => {
+      if (e.target.closest('.check-circle') || e.target.closest('.session-swap-btn')) return;
+      window.__longPressFired = false;
+      timer = setTimeout(() => {
+        window.__longPressFired = true;
+        openChangeWorkoutModal(el.id);
+      }, 500);
+    });
+
+    el.addEventListener('mouseup', () => clearTimeout(timer));
+    el.addEventListener('mouseleave', () => clearTimeout(timer));
+  });
+}
+
+
 function openModal(key,sessionId,dayIdx){
   const w=WORKOUTS[key];if(!w)return;
   currentModalSession=sessionId;currentModalKey=key;currentModalDay=dayIdx;
@@ -2834,6 +3252,52 @@ function buildReport(){
     `;
   }
 
+  
+  // Completed sessions log with swapped custom workout types
+  let completedSessionsHTML = '';
+  const completedList = [];
+  for (let d = 0; d < 5; d++) {
+    const dayNames = ['MON','TUE','WED','THU','FRI'];
+    const dTot = DAY_TOTALS[d] || 3;
+    for (let j = 0; j < dTot; j++) {
+      const sId = 's-' + d + '-' + j;
+      if (APP.sessions[sId]) {
+        const def = (typeof DEFAULT_SESSIONS !== 'undefined' && DEFAULT_SESSIONS[sId]) ? DEFAULT_SESSIONS[sId] : null;
+        const customKey = (APP.customWorkouts && APP.customWorkouts[sId]);
+        const key = customKey || (def ? def.key : null);
+        const w = (key && WORKOUTS[key]) ? WORKOUTS[key] : null;
+        const title = w ? w.title.replace('DEVELOPMENT','').replace('PROTOCOL','').trim() : (def ? def.name : 'SESSION');
+        const color = w ? w.color : (def ? def.color : 'var(--gold)');
+        const isSwapped = !!customKey;
+        completedList.push({ day: dayNames[d], title, color, isSwapped, time: (w && w.meta) ? w.meta[0] : '' });
+      }
+    }
+  }
+
+  if (completedList.length > 0) {
+    completedSessionsHTML = `
+      <div class="rp-chart-card">
+        <div class="rp-chart-head">
+          <div class="rp-chart-title">ACTUAL LOGGED SESSIONS</div>
+          <div class="rp-chart-sub">THIS WEEK</div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:6px">
+          ${completedList.map(item => `
+            <div style="display:flex;justify-content:space-between;align-items:center;background:var(--panel2);padding:8px 12px;border-radius:6px;border:1px solid var(--border2)">
+              <div style="display:flex;align-items:center;gap:8px">
+                <span style="font-family:'DM Mono',monospace;font-size:9px;color:var(--gold);width:28px">${item.day}</span>
+                <div style="width:7px;height:7px;border-radius:50%;background:${item.color}"></div>
+                <strong style="font-family:'Barlow Condensed',sans-serif;font-size:14px;color:#fff">${item.title}</strong>
+                ${item.isSwapped ? '<span style="font-family:\'DM Mono\',monospace;font-size:7.5px;color:var(--gold);border:1px solid rgba(212,168,67,0.3);padding:1px 5px;border-radius:4px">SWAPPED</span>' : ''}
+              </div>
+              <div style="font-family:'DM Mono',monospace;font-size:9px;color:var(--text-dim)">${item.time}</div>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    `;
+  }
+
   document.getElementById('rp-body').innerHTML=`
     <!-- HERO STAT -->
     <div class="rp-hero-card">
@@ -2921,6 +3385,7 @@ function buildReport(){
       </div>
     </div>
 
+    ${completedSessionsHTML}
     ${bestLiftsHTML}
     ${notesHTML}
 
@@ -3920,5 +4385,22 @@ function renderWellnessUI(){
 }
 
 </script>
+
+<!-- ── CHANGE WORKOUT TYPE SHEET MODAL ── -->
+<div class="change-workout-overlay" id="change-workout-modal" onclick="if(event.target===this)closeChangeWorkoutModal()">
+  <div class="change-workout-sheet">
+    <div class="cws-header">
+      <div class="cws-top-row">
+        <div class="cws-badge" id="cws-badge">// DAY WORKOUT ASSIGNMENT</div>
+        <button class="cws-close-btn" onclick="closeChangeWorkoutModal()">✕</button>
+      </div>
+      <div class="cws-title">CHANGE WORKOUT TYPE</div>
+      <div class="cws-sub" id="cws-sub">Select what you actually trained today. The app tracks and logs this session.</div>
+    </div>
+    <div class="cws-body" id="cws-options-list">
+      <!-- Options dynamically rendered by openChangeWorkoutModal() -->
+    </div>
+  </div>
+</div>
 </body>
 </html>
