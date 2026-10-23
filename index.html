@@ -2585,7 +2585,19 @@ function getTodayDateStr(dateObj) {
   return year + '-' + month + '-' + day;
 }
 
-function getWeekKey(){const d=new Date(),jan1=new Date(d.getFullYear(),0,1),wk=Math.ceil(((d-jan1)/86400000+jan1.getDay()+1)/7);return`${d.getFullYear()}-W${wk}`}
+function getWeekKey(dateObj) {
+  const d = dateObj ? new Date(dateObj.getTime()) : new Date();
+  // ISO-8601 week: weeks strictly start on Monday (day 1) and end on Sunday (day 0)
+  const dayNr = (d.getDay() + 6) % 7; // Mon=0, ..., Sun=6
+  d.setDate(d.getDate() - dayNr + 3); // Target nearest Thursday
+  const firstThursday = d.getTime();
+  d.setMonth(0, 1);
+  if (d.getDay() !== 4) {
+    d.setMonth(0, 1 + ((4 - d.getDay()) + 7) % 7);
+  }
+  const wk = 1 + Math.ceil((firstThursday - d.getTime()) / 604800000);
+  return d.getFullYear() + '-W' + String(wk).padStart(2, '0');
+}
 
 function getInitialAchillesData(){
   const days=['MON','TUE','WED','THU','FRI','SAT','SUN'];
@@ -2612,10 +2624,12 @@ function loadData(){
   let d=null;
   try{const r=localStorage.getItem(STORE_KEY);if(r)d=JSON.parse(r);}catch(e){}
   if(!d)d={};
+
   const todayDate=getTodayDateStr();
   const todayStr=new Date().toDateString();
   const isNewDay=!d.lastActiveDate||d.lastActiveDate!==todayStr||!d.recoveryDate||d.recoveryDate!==todayDate;
 
+  // Daily protocols (recovery checklist & mental steps) reset daily
   const initialRecovery=isNewDay?{}:(d.recovery||{});
   const initialMental=d.mentalSteps?Object.assign({},d.mentalSteps):{};
   if(isNewDay){
@@ -2623,20 +2637,51 @@ function loadData(){
       if(k.startsWith('ms-0-')||k.startsWith('ms-1-'))delete initialMental[k];
     });
   }
+
+  // Workouts (sessions) protection & auto-heal:
+  // Workouts NEVER reset daily — they ONLY reset on MONDAY!
+  let restoredSessions = d.sessions ? Object.assign({}, d.sessions) : {};
+  let restoredWeekHistory = d.weekHistory ? d.weekHistory.slice() : [];
+  let restoredWeeksCompleted = d.weeksCompleted || 0;
+  const curWeek = getWeekKey();
+  const dayOfWeek = new Date().getDay(); // 0=Sun, 1=Mon, ..., 6=Sat
+
+  // Auto-heal if premature weekend reset occurred (Saturday or Sunday with 0 sessions but archived history):
+  if ((dayOfWeek === 6 || dayOfWeek === 0) && Object.keys(restoredSessions).length === 0 && restoredWeekHistory.length > 0) {
+    const topArchived = restoredWeekHistory[0];
+    if (topArchived && (topArchived.week === curWeek || topArchived.pct > 0 || topArchived.sessions > 0)) {
+      const ALL_SESSION_IDS = [
+        's-0-0', 's-0-1', 's-0-2',
+        's-1-0', 's-1-1', 's-1-2',
+        's-2-0', 's-2-1', 's-2-2',
+        's-3-0', 's-3-1',
+        's-4-0', 's-4-1', 's-4-2'
+      ];
+      if (topArchived.completedSessions && Object.keys(topArchived.completedSessions).length > 0) {
+        restoredSessions = Object.assign({}, topArchived.completedSessions);
+      } else {
+        const count = topArchived.sessions || Math.round(((topArchived.pct || 100) / 100) * 14) || 14;
+        ALL_SESSION_IDS.slice(0, Math.min(14, count)).forEach(id => { restoredSessions[id] = true; });
+      }
+      restoredWeekHistory.shift();
+      restoredWeeksCompleted = Math.max(0, restoredWeeksCompleted - 1);
+    }
+  }
+
   return{
-    weekKey:d.weekKey||getWeekKey(),
+    weekKey:curWeek,
     streak:d.streak||0,
     lastActiveDate:d.lastActiveDate||null,
     totalSessions:d.totalSessions||0,
-    weeksCompleted:d.weeksCompleted||0,
-    sessions:d.sessions||{},
+    weeksCompleted:restoredWeeksCompleted,
+    sessions:restoredSessions,
     mentalSteps:initialMental,
     mentalDate:isNewDay?todayDate:(d.mentalDate||todayDate),
     recovery:initialRecovery,
     recoveryDate:todayDate,
     recoveryHistory:d.recoveryHistory||{},
     pain:d.pain||{during:0,after:0},
-    weekHistory:d.weekHistory||[],
+    weekHistory:restoredWeekHistory,
     phaseWeeks:d.phaseWeeks||[0,0,0,0],
     currentPhaseWeek:d.currentPhaseWeek||0,
     modalEx:d.modalEx||{},
@@ -2663,16 +2708,42 @@ let APP=loadData();
 // ══════════════════════════════════════════════
 // WEEK RESET
 // ══════════════════════════════════════════════
-function checkWeekReset(){
-  const cur=getWeekKey();
-  if(APP.weekKey!==cur){
-    const pct=getOverallPct();
-    APP.weekHistory.unshift({week:APP.weekKey,pct,sessions:APP.totalSessions,notes:APP.sessionNotes||{}});
-    if(APP.weekHistory.length>12)APP.weekHistory.pop();
-    APP.weeksCompleted++;
-    if(APP.currentPhaseWeek<3){APP.phaseWeeks[APP.currentPhaseWeek]=pct;APP.currentPhaseWeek++;}
-    APP.weekKey=cur;APP.sessions={};APP.mentalSteps={};APP.recovery={};APP.pain={during:0,after:0};APP.sessionNotes={};APP.warmupSteps={};APP.exDone=0;APP.modalEx={};
-    saveData();
+function checkWeekReset() {
+  const cur = getWeekKey();
+  const dayOfWeek = new Date().getDay(); // 0=Sun, 1=Mon, ..., 6=Sat
+
+  // The weekly workouts and completed days ONLY reset on MONDAY (dayOfWeek === 1)!
+  // Saturday & Sunday NEVER wipe the week's workouts — allowing full review throughout the weekend.
+  if (APP.weekKey !== cur) {
+    if (dayOfWeek === 1) { // MONDAY ONLY
+      const pct = getOverallPct();
+      if (!APP.weekHistory) APP.weekHistory = [];
+      APP.weekHistory.unshift({
+        week: APP.weekKey,
+        pct,
+        sessions: APP.totalSessions,
+        completedSessions: Object.assign({}, APP.sessions),
+        customWorkouts: Object.assign({}, APP.customWorkouts || {}),
+        notes: APP.sessionNotes || {}
+      });
+      if (APP.weekHistory.length > 12) APP.weekHistory.pop();
+      APP.weeksCompleted++;
+      if (APP.currentPhaseWeek < 3) {
+        APP.phaseWeeks[APP.currentPhaseWeek] = pct;
+        APP.currentPhaseWeek++;
+      }
+      APP.weekKey = cur;
+      APP.sessions = {};
+      APP.sessionNotes = {};
+      APP.warmupSteps = {};
+      APP.exDone = 0;
+      APP.modalEx = {};
+      saveData();
+    } else {
+      // During the week or weekend, keep all completed days intact!
+      APP.weekKey = cur;
+      saveData();
+    }
   }
 }
 
