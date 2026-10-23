@@ -1486,6 +1486,47 @@ body>*{position:relative;z-index:1}
   letter-spacing: 1px;
   margin-top: 6px;
 }
+
+/* ── FULL DAY REST & RECOVERY BLUE THEME ── */
+.day-card.is-rest-recovery {
+  background: linear-gradient(180deg, #091428 0%, #060e1d 100%) !important;
+  border: 1px solid rgba(52, 120, 246, 0.55) !important;
+  box-shadow: 0 4px 26px rgba(52, 120, 246, 0.22), inset 0 0 35px rgba(52, 120, 246, 0.08) !important;
+  transition: all 0.35s ease;
+}
+.day-card.is-rest-recovery .day-card-top {
+  background: linear-gradient(135deg, rgba(52, 120, 246, 0.25) 0%, rgba(9, 20, 40, 0.95) 100%) !important;
+  border-bottom: 1px solid rgba(52, 120, 246, 0.35) !important;
+}
+.day-card.is-rest-recovery .day-card-top::after {
+  background: radial-gradient(circle, rgba(52, 120, 246, 0.35) 0%, transparent 70%) !important;
+}
+.day-card.is-rest-recovery .day-badge {
+  color: #3478F6 !important;
+  letter-spacing: 2.5px;
+}
+.day-card.is-rest-recovery .day-name {
+  color: #ffffff;
+}
+.day-card.is-rest-recovery .day-focus {
+  color: #9ac2ff !important;
+}
+.day-card.is-rest-recovery .day-prog-fill {
+  background: #3478F6 !important;
+}
+.day-card.is-rest-recovery .session-item {
+  background: rgba(14, 28, 54, 0.75) !important;
+  border-color: rgba(52, 120, 246, 0.25) !important;
+}
+.day-card.is-rest-recovery .session-item:hover,
+.day-card.is-rest-recovery .session-item:active {
+  border-color: #3478F6 !important;
+  background: rgba(52, 120, 246, 0.15) !important;
+}
+.day-card.is-rest-recovery .session-item.done {
+  background: rgba(52, 120, 246, 0.22) !important;
+  border-color: rgba(52, 120, 246, 0.5) !important;
+}
 </style>
 </head>
 <body>
@@ -3225,10 +3266,17 @@ const DEFAULT_DAY_FOCUS = [
   'Full Live Runs + Multi-Dir + Pool Flush'
 ];
 
+const DEFAULT_DAY_BADGES = [
+  '// MONDAY · HIGH CNS DAY',
+  '// TUESDAY · SKILL INTEGRATION',
+  '// WEDNESDAY · STRENGTH + POWER',
+  '// THURSDAY · PEAK PERFORMANCE',
+  '// FRIDAY · INTEGRATION DAY'
+];
+
 function applyCustomWorkouts() {
   if (!APP.customWorkouts) APP.customWorkouts = {};
 
-  // Track sessions per day to update the Day Card top focus
   const dayWorkouts = [[], [], [], [], []];
 
   Object.keys(DEFAULT_SESSIONS).forEach(sId => {
@@ -3252,7 +3300,10 @@ function applyCustomWorkouts() {
       if (name) {
         name.innerHTML = cleanTitle + ' <span class="swapped-badge">SWAPPED</span>';
       }
-      if (meta) meta.textContent = (w.meta ? w.meta.slice(0, 2).join(' · ') : 'SWAPPED WORKOUT');
+      if (meta) {
+        const newDrills = (w.meta ? w.meta.slice(0, 2).join(' · ') : '');
+        meta.innerHTML = '<span style="color:var(--text-dim);font-size:8.5px">PREVIOUS: ' + def.name + '</span> · <span style="color:var(--gold)">' + newDrills + '</span>';
+      }
       if (time && w.meta && w.meta[0]) time.textContent = w.meta[0].replace(' MIN','M');
       item.onclick = function(e) {
         if (window.__longPressFired) { window.__longPressFired = false; return; }
@@ -3290,19 +3341,32 @@ function applyCustomWorkouts() {
     }
   });
 
-  // Update Day Card focus text at the top of each day card
+  // Update Day Cards: Day Focus & Full Day Rest Blue Theme
+  const dayNames = ['MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY'];
   for (let d = 0; d < 5; d++) {
     const cardEl = document.getElementById('card-' + d);
-    if (cardEl) {
-      const focusEl = cardEl.querySelector('.day-focus');
-      if (focusEl) {
-        // If any session was customized on that day, show updated summary
-        const hasCustom = Object.keys(APP.customWorkouts).some(sId => DEFAULT_SESSIONS[sId] && DEFAULT_SESSIONS[sId].day === d);
-        if (hasCustom && dayWorkouts[d].length > 0) {
-          focusEl.textContent = dayWorkouts[d].join(' + ');
-        } else {
-          focusEl.textContent = DEFAULT_DAY_FOCUS[d] || focusEl.textContent;
-        }
+    if (!cardEl) continue;
+
+    const badgeEl = cardEl.querySelector('.day-badge');
+    const focusEl = cardEl.querySelector('.day-focus');
+
+    // Check if any session on this day was swapped to full rest
+    const hasRestDay = Object.keys(APP.customWorkouts).some(sId => DEFAULT_SESSIONS[sId] && DEFAULT_SESSIONS[sId].day === d && APP.customWorkouts[sId] === 'rest-day');
+
+    if (hasRestDay) {
+      cardEl.classList.add('is-rest-recovery');
+      if (badgeEl) badgeEl.textContent = '// ' + dayNames[d] + ' · RECOVERY & SLEEP PROTOCOL';
+      if (focusEl) focusEl.textContent = 'Full Day Rest & Recovery · Sleep Optimization · 0 CNS Load';
+    } else {
+      cardEl.classList.remove('is-rest-recovery');
+      if (badgeEl) badgeEl.textContent = DEFAULT_DAY_BADGES[d] || ('// ' + dayNames[d]);
+
+      // If any other session on this day was swapped, show updated summary
+      const hasCustom = Object.keys(APP.customWorkouts).some(sId => DEFAULT_SESSIONS[sId] && DEFAULT_SESSIONS[sId].day === d);
+      if (hasCustom && dayWorkouts[d].length > 0) {
+        focusEl.textContent = dayWorkouts[d].join(' + ');
+      } else {
+        focusEl.textContent = DEFAULT_DAY_FOCUS[d] || focusEl.textContent;
       }
     }
   }
