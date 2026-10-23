@@ -1335,6 +1335,15 @@ body>*{position:relative;z-index:1}
     {name:'Seated Bent-Knee Soleus Raise',sets:['4×10-12 heavy','4×10-12 heavy','4×10-12 heavy','3×10 heavy'],quality:'SOLEUS HSR',yt:true,why:'Isolates the soleus muscle which absorbs 6-8x bodyweight during basketball deceleration.',achilles:true},
     {name:'Slant Board Eccentric Drops (Pain-Free)',sets:['3×12 each leg','3×12 each leg','3×12 each leg','3×10 each leg'],quality:'ECCENTRIC',yt:true,why:'Lengthens muscle-tendon unit and increases tensile tolerance.',achilles:true},
     {name:'Tibialis Anterior Banded Dorsiflexion',sets:['3×20 each','3×20 each','3×20 each','3×15 each'],quality:'ANTAGONIST',yt:true,why:'Strengthens anterior compartment to balance ankle joint forces.',achilles:false}
+  ]},
+  'abs-stretch':{type:'// CORE & RECOVERY — ABS & STRETCH',color:'#00CEC9',title:'ABS & DEEP STRETCH PROTOCOL',meta:['35 MIN','CORE ARMOR & FLEXIBILITY','LOW CNS'],exercises:[
+    {name:'Hanging Leg Raises / Knees to Elbows',sets:['4×12-15 reps','4×12-15 reps','4×15 reps','3×12 reps'],quality:'CORE ANTERIOR',yt:true,why:'Direct rectus abdominis and deep hip flexor recruitment to stabilize lumbar-pelvic rhythm during sprinting and landing.',achilles:false},
+    {name:'Pallof Press Anti-Rotation Iso Hold',sets:['3×30s each side','3×30s each side','3×35s each side','3×25s each side'],quality:'ANTI-ROTATION',yt:true,why:'Anti-rotational stability prevents energy leaks through the core when absorbing physical contact on drives.',achilles:false},
+    {name:'Ab Wheel Rollouts (Neutral Spine)',sets:['3×10-12 reps','3×10-12 reps','3×12 reps','3×8-10 reps'],quality:'ANTI-EXTENSION',yt:true,why:'High eccentric core strength preventing lumbar hyperextension during deceleration.',achilles:false},
+    {name:'Standing Banded / Cable Woodchops',sets:['3×12 each side','3×12 each side','3×15 each side','3×10 each side'],quality:'ROTATIONAL POWER',yt:true,why:'Transfers transverse plane core power into explosive crossover and passing velocity.',achilles:false},
+    {name:'90/90 Hip Capsule & Glute Stretch',sets:['3×60s each side','3×60s each side','3×60s each side','3×45s each side'],quality:'HIP MOBILITY',yt:true,why:'Decompresses internal and external hip rotators to restore full triple-flexion depth.',achilles:false},
+    {name:'Banded Hamstring & Achilles Decomp',sets:['3×45s each leg','3×45s each leg','3×45s each leg','3×30s each leg'],quality:'POSTERIOR FLUSH',yt:true,why:'Gentle traction relieves neural and fascial tension along the entire superficial back line.',achilles:true},
+    {name:'Prone Cobra to Child's Pose Spinal Flush',sets:['3×60s flow','3×60s flow','3×60s flow','3×45s flow'],quality:'SPINAL RELAX',yt:true,why:'Restores spinal extension-flexion balance and downregulates paraspinal tension.',achilles:false}
   ]}
 }
 
@@ -1354,295 +1363,128 @@ body>*{position:relative;z-index:1}
   display: inline-block;
 }
 
-/* ── PIXAR 3D COACH FAB LAUNCHER ── */
-.coach-fab {
-  position: fixed;
-  bottom: 84px;
-  right: 20px;
-  width: 66px;
-  height: 66px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, #1e1d1a 0%, #101014 100%);
-  border: 2px solid var(--gold);
-  box-shadow: 0 8px 24px rgba(0,0,0,0.65), 0 0 20px rgba(212,168,67,0.3);
-  cursor: pointer;
+
+/* ── MENTAL PERFORMANCE VAULT ── */
+.mental-vault-tabs {
   display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 550;
-  transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.25s ease;
-  animation: coachFloat 4s ease-in-out infinite;
+  gap: 8px;
+  overflow-x: auto;
+  padding: 0 20px 14px;
+  scrollbar-width: none;
+}
+.mv-tab {
+  flex-shrink: 0;
+  background: var(--panel2);
+  border: 1px solid var(--border);
+  color: var(--text-dim);
+  font-family: 'DM Mono', monospace;
+  font-size: 8.5px;
+  letter-spacing: 1.5px;
+  padding: 8px 14px;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.2s ease;
   user-select: none;
 }
-.coach-fab:hover {
-  transform: scale(1.08);
-  box-shadow: 0 10px 28px rgba(0,0,0,0.7), 0 0 30px rgba(212,168,67,0.55);
+.mv-tab:hover, .mv-tab:active {
+  border-color: var(--gold);
+  color: #fff;
 }
-.coach-fab:active {
-  transform: scale(0.95);
+.mv-tab.active {
+  background: rgba(212, 168, 67, 0.15);
+  border-color: var(--gold);
+  color: var(--gold);
+  font-weight: 700;
 }
-@keyframes coachFloat {
-  0%, 100% { transform: translateY(0) rotate(0deg); }
-  50% { transform: translateY(-5px) rotate(1.5deg); }
-}
-.coach-pulse-dot {
-  position: absolute;
-  top: 2px;
-  right: 2px;
-  width: 13px;
-  height: 13px;
-  background: #30D158;
-  border: 2px solid var(--black);
-  border-radius: 50%;
-  box-shadow: 0 0 8px #30D158;
-  animation: pulseDot 2s infinite;
-}
-@keyframes pulseDot {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50% { opacity: 0.65; transform: scale(0.85); }
-}
-.coach-avatar-svg {
-  width: 52px;
-  height: 52px;
-  filter: drop-shadow(0 3px 6px rgba(0,0,0,0.6));
-}
-
-/* ── COACH MODAL OVERLAY ── */
-.coach-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.82);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  z-index: 800;
+.mv-panel {
   display: none;
-  align-items: flex-end;
-  justify-content: center;
+  padding: 0 20px;
+  flex-direction: column;
+  gap: 14px;
+  animation: fadeIn 0.25s ease;
 }
-.coach-overlay.open {
+.mv-panel.active {
   display: flex;
 }
-.coach-sheet {
+.mv-card {
   background: var(--panel);
   border: 1px solid var(--border);
-  border-radius: 24px 24px 0 0;
-  width: 100%;
-  max-width: 440px;
-  height: 82vh;
-  display: flex;
-  flex-direction: column;
-  box-shadow: 0 -10px 40px rgba(0,0,0,0.85);
-  animation: slideUpSheet 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-  overflow: hidden;
-}
-.co-header {
-  padding: 16px 20px 12px;
-  border-bottom: 1px solid var(--border);
-  background: rgba(17, 17, 21, 0.95);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-shrink: 0;
-}
-.co-profile {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-.co-avatar-wrap {
-  width: 42px;
-  height: 42px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, rgba(212,168,67,0.2), rgba(212,168,67,0.05));
-  border: 1.5px solid var(--gold);
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  border-radius: var(--r);
+  padding: 18px;
   position: relative;
+  overflow: hidden;
+  transition: border-color 0.2s;
 }
-.online-pulse-sm {
-  position: absolute;
-  top: -1px;
-  right: -1px;
-  width: 9px;
-  height: 9px;
-  background: #30D158;
-  border-radius: 50%;
-  border: 1.5px solid var(--black);
+.mv-card:hover {
+  border-color: rgba(212, 168, 67, 0.35);
 }
-.co-name {
+.mv-card-tag {
+  font-family: 'DM Mono', monospace;
+  font-size: 8px;
+  color: var(--gold);
+  letter-spacing: 2px;
+  margin-bottom: 6px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.mv-card-title {
   font-family: 'Bebas Neue', sans-serif;
   font-size: 20px;
   color: #fff;
   letter-spacing: 1px;
-  line-height: 1;
+  line-height: 1.15;
+  margin-bottom: 8px;
 }
-.co-sub {
+.mv-arabic {
+  font-size: 19px;
+  line-height: 1.6;
+  color: #F5E6C8;
+  direction: rtl;
+  text-align: right;
+  margin: 8px 0 10px;
+  font-family: 'Amiri', 'Traditional Arabic', serif;
+  background: rgba(212, 168, 67, 0.05);
+  padding: 10px 14px;
+  border-radius: 8px;
+  border-right: 3px solid var(--gold);
+}
+.mv-quote-text {
+  font-size: 13.5px;
+  line-height: 1.5;
+  color: var(--text);
+  font-style: italic;
+  margin-bottom: 10px;
+}
+.mv-body-text {
+  font-size: 12.5px;
+  line-height: 1.55;
+  color: var(--text-mid);
+  margin-bottom: 12px;
+}
+.mv-athlete-takeaway {
+  background: var(--panel2);
+  border-left: 2.5px solid var(--gold);
+  border-radius: 0 8px 8px 0;
+  padding: 10px 12px;
+  font-size: 11.5px;
+  line-height: 1.45;
+  color: var(--text);
+}
+.mv-athlete-label {
   font-family: 'DM Mono', monospace;
   font-size: 7.5px;
   color: var(--gold);
   letter-spacing: 1.5px;
-  margin-top: 2px;
-}
-.co-icon-btn {
-  background: var(--panel2);
-  border: 1px solid var(--border);
-  color: var(--text-dim);
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  font-size: 13px;
-  transition: all 0.2s;
-}
-.co-icon-btn:hover {
-  color: #fff;
-  border-color: var(--gold);
-}
-.co-body {
-  flex: 1;
-  overflow-y: auto;
-  padding: 16px 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-.coach-msg {
-  display: flex;
-  flex-direction: column;
-  max-width: 86%;
-  animation: msgFadeIn 0.25s ease;
-}
-@keyframes msgFadeIn {
-  from { opacity: 0; transform: translateY(6px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-.coach-msg.coach {
-  align-self: flex-start;
-}
-.coach-msg.user {
-  align-self: flex-end;
-}
-.cm-bubble {
-  padding: 12px 14px;
-  border-radius: 14px;
-  font-size: 13px;
-  line-height: 1.45;
-}
-.coach-msg.coach .cm-bubble {
-  background: var(--panel2);
-  border: 1px solid rgba(212, 168, 67, 0.25);
-  color: var(--text);
-  border-top-left-radius: 4px;
-}
-.coach-msg.user .cm-bubble {
-  background: var(--gold);
-  color: var(--black);
-  font-weight: 500;
-  border-top-right-radius: 4px;
-}
-.cm-time {
-  font-family: 'DM Mono', monospace;
-  font-size: 7.5px;
-  color: var(--text-dim);
-  margin-top: 4px;
-  letter-spacing: 1px;
-}
-.coach-msg.user .cm-time {
-  text-align: right;
-}
-.co-pills {
-  display: flex;
-  gap: 8px;
-  overflow-x: auto;
-  padding: 8px 20px;
-  border-top: 1px solid var(--border);
-  scrollbar-width: none;
-  flex-shrink: 0;
-}
-.co-pill {
-  flex-shrink: 0;
-  background: var(--panel2);
-  border: 1px solid var(--border);
-  color: var(--gold);
-  font-family: 'DM Mono', monospace;
-  font-size: 8.5px;
-  letter-spacing: 1px;
-  padding: 5px 11px;
-  border-radius: 16px;
-  cursor: pointer;
-  transition: all 0.2s;
-  white-space: nowrap;
-}
-.co-pill:hover, .co-pill:active {
-  background: rgba(212, 168, 67, 0.15);
-  border-color: var(--gold);
-}
-.co-footer {
-  padding: 10px 16px calc(var(--safe-bottom) + 14px);
-  border-top: 1px solid var(--border);
-  background: var(--panel);
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  flex-shrink: 0;
-}
-.co-input {
-  flex: 1;
-  background: var(--panel2);
-  border: 1px solid var(--border);
-  border-radius: 20px;
-  padding: 9px 14px;
-  font-size: 13px;
-  color: #fff;
-  font-family: 'Barlow', sans-serif;
-  outline: none;
-}
-.co-input:focus {
-  border-color: var(--gold);
-}
-.co-mic-btn {
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  background: var(--panel2);
-  border: 1px solid rgba(212, 168, 67, 0.35);
-  color: var(--gold);
-  font-size: 16px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  flex-shrink: 0;
-  transition: all 0.2s;
-}
-.co-mic-btn.recording {
-  background: #FF3B30;
-  border-color: #FF3B30;
-  color: #fff;
-  animation: micPulse 1.2s infinite;
-}
-@keyframes micPulse {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(255,59,48,0.5); }
-  50% { box-shadow: 0 0 0 8px rgba(255,59,48,0); }
-}
-.co-send-btn {
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  background: var(--gold);
-  border: none;
-  color: var(--black);
-  font-size: 15px;
+  margin-bottom: 3px;
   font-weight: 700;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  flex-shrink: 0;
+}
+.mv-source {
+  font-family: 'DM Mono', monospace;
+  font-size: 8px;
+  color: var(--text-dim);
+  letter-spacing: 1px;
+  margin-top: 6px;
 }
 </style>
 </head>
@@ -1970,6 +1812,225 @@ body>*{position:relative;z-index:1}
     </div>
   </div>
   <div style="height:16px"></div>
+
+  <div class="divider"></div>
+  <div class="sec-label">
+    <div class="sec-title">MENTAL PERFORMANCE VAULT</div>
+    <div class="sec-action">// SCRIPTURE · HISTORY · MASTERY</div>
+  </div>
+
+  <!-- Interactive Vault Tabs -->
+  <div class="mental-vault-tabs" id="mv-tabs">
+    <div class="mv-tab active" onclick="switchMentalVaultTab('quran', this)">📖 QURAN & TAWAKKUL</div>
+    <div class="mv-tab" onclick="switchMentalVaultTab('warriors', this)">⚔️ WARRIORS OF ISLAM</div>
+    <div class="mv-tab" onclick="switchMentalVaultTab('toughness', this)">🧠 DISCIPLINE & TOUGHNESS</div>
+    <div class="mv-tab" onclick="switchMentalVaultTab('behavior', this)">🎯 BEHAVIOR & INFLUENCE</div>
+  </div>
+
+  <!-- PANEL 1: QURAN & TAWAKKUL -->
+  <div class="mv-panel active" id="mv-panel-quran">
+    <!-- Verse 1: Hardship and Ease -->
+    <div class="mv-card">
+      <div class="mv-card-tag">// SURAH ASH-SHARH (94:5-6)</div>
+      <div class="mv-card-title">THE DIVINE LAW OF RESILIENCE</div>
+      <div class="mv-arabic">فَإِنَّ مَعَ الْعُسْرِ يُسْرًا • إِنَّ مَعَ الْعُسْرِ يُسْرًا</div>
+      <div class="mv-quote-text">"For indeed, with hardship [will be] ease. Indeed, with hardship [will be] ease."</div>
+      <div class="mv-body-text">In Arabic linguistic precision, the word for hardship (al-'usr) is definite and singular, while ease (yusr) is indefinite and duplicated. One singular hardship can never overcome twofold divine ease. Hardship does not merely precede ease; ease is embedded <em>within</em> the struggle itself.</div>
+      <div class="mv-athlete-takeaway">
+        <div class="mv-athlete-label">🏀 ATHLETE APPLICATION</div>
+        When your legs burn in the fourth quarter or an injury rehabilitation tests your patience, remember: tendon remodeling, muscular adaptation, and mental callous only happen inside the strain. The adaptation is literally inside the difficulty.
+      </div>
+    </div>
+
+    <!-- Verse 2: Capacity -->
+    <div class="mv-card">
+      <div class="mv-card-tag">// SURAH AL-BAQARAH (2:286)</div>
+      <div class="mv-card-title">YOU ARE BUILT FOR THIS LOAD</div>
+      <div class="mv-arabic">لَا يُكَلِّفُ اللَّهُ نَفْسًا إِلَّا وُسْعَهَا</div>
+      <div class="mv-quote-text">"Allah does not burden a soul beyond that it can bear."</div>
+      <div class="mv-body-text">A foundational truth of human capacity: whatever load, high-stakes game, pressure situation, or physical grind is placed in front of you, you possess the innate biological and spiritual capacity to endure and overcome it.</div>
+      <div class="mv-athlete-takeaway">
+        <div class="mv-athlete-label">🏀 ATHLETE APPLICATION</div>
+        Eliminate the victim mentality forever. If this heavy off-season cycle is on your shoulders, you were engineered to master it. Never ask for an easier load; develop broader shoulders.
+      </div>
+    </div>
+
+    <!-- Verse 3: Effort is the Currency -->
+    <div class="mv-card">
+      <div class="mv-card-tag">// SURAH AN-NAJM (53:39)</div>
+      <div class="mv-card-title">EFFORT IS YOUR SOLE TESTAMENT</div>
+      <div class="mv-arabic">وَأَن لَّيْسَ لِلْإِنسَانِ إِلَّا مَا سَعَىٰ</div>
+      <div class="mv-quote-text">"And that there is not for man except that [good] for which he strives."</div>
+      <div class="mv-body-text">Outcome is in the hands of the Creator; striving (Sa'y) is the sole duty of the warrior. Your rank, capability, and dignity are judged by the depth of your daily labor and honest sweat.</div>
+      <div class="mv-athlete-takeaway">
+        <div class="mv-athlete-label">🏀 ATHLETE APPLICATION</div>
+        Detach completely from vanity metrics, shooting slumps, and social media opinions. Lock in 100% on the execution of every single repetition, defensive slide, and recovery session.
+      </div>
+    </div>
+
+    <!-- Verse 4: The Command to Build Power -->
+    <div class="mv-card">
+      <div class="mv-card-tag">// SURAH AL-ANFAL (8:60)</div>
+      <div class="mv-card-title">THE MANDATE TO CULTIVATE POWER</div>
+      <div class="mv-arabic">وَأَعِدُّوا لَهُم مَّا اسْتَطَعْتُم مِّن قُوَّةٍ</div>
+      <div class="mv-quote-text">"And prepare against them whatever you are able of power and steeds of war..."</div>
+      <div class="mv-body-text">Physical strength, technical readiness, conditioning, and strategic prowess are not worldly distractions; they are explicit divine commandments for those who strive.</div>
+      <div class="mv-athlete-takeaway">
+        <div class="mv-athlete-label">🏀 ATHLETE APPLICATION</div>
+        Lifting weights, strengthening tendons, sprinting at maximum velocity, and eating with discipline are acts of stewardship over the temple Allah gave you. Approach your training with sacred dedication.
+      </div>
+    </div>
+  </div>
+
+  <!-- PANEL 2: WARRIORS OF ISLAM -->
+  <div class="mv-panel" id="mv-panel-warriors">
+    <!-- Story 1: Prophet's Physical Strength -->
+    <div class="mv-card">
+      <div class="mv-card-tag">// SUNNAH · PHYSICAL EXCELLENCE</div>
+      <div class="mv-card-title">THE PROPHET (ﷺ) & RUKANA THE UNDEFEATED WRESTLER</div>
+      <div class="mv-body-text">Rukana ibn Abd Yazid was known as the strongest, most formidable wrestler in all of Arabia whom no man had ever thrown to the ground. He challenged Prophet Muhammad (ﷺ), saying: <em>"If you can bring me down, I will acknowledge your truth."</em><br><br>The Prophet stepped forward without fear or hesitation, took hold of Rukana, and threw him forcefully to the dust. Stunned, Rukana demanded a rematch. The Prophet threw him down a second time, and then a third time consecutively. Rukana stood speechless at the combination of calm demeanor, immense physical grip strength, balance, and quiet poise.<br><br>The Prophet walked with a brisk, athletic forward lean, excelled in archery, rode horses bareback, and endured grueling marches in desert extremes without complaint.</div>
+      <div class="mv-athlete-takeaway">
+        <div class="mv-athlete-label">🏀 ATHLETE APPLICATION</div>
+        Strength and humility are twin pillars. The Prophet said: <em>"The strong believer is better and more beloved to Allah than the weak believer, though there is good in both."</em> (Sahih Muslim). Train to be physically formidable.
+      </div>
+    </div>
+
+    <!-- Story 2: Khalid ibn al-Walid -->
+    <div class="mv-card">
+      <div class="mv-card-tag">// SAYF ALLAH · THE DRAWN SWORD</div>
+      <div class="mv-card-title">KHALID IBN AL-WALID: THE UNDEFEATED GENERAL</div>
+      <div class="mv-body-text">Undefeated in over 50 major military campaigns against both the Persian and Byzantine empires. At the Battle of Mut'ah, outnumbered over 20-to-1, Khalid took command and broke <strong>nine swords</strong> in close-quarters hand-to-hand combat while maneuvering his men out of an impossible trap.<br><br>At the Battle of Yarmouk, facing 100,000 elite legionnaires, Khalid rode along the frontlines and proclaimed: <em>"By Allah, victory does not come from numbers; it comes from faith, discipline, and endurance."</em><br><br>On his deathbed, looking upon a body covered from chest to feet in spear scars and sword cuts, he famously stated: <em>"There is not the space of a hand on my body that has not received a sword cut, spear thrust, or arrow wound. And here I die upon my bed like an old camel. May the eyes of cowards never sleep."</em></div>
+      <div class="mv-athlete-takeaway">
+        <div class="mv-athlete-label">🏀 ATHLETE APPLICATION</div>
+        Relentless aggression combined with cold tactical intelligence. When you step onto the basketball court, be an unyielding physical presence. Play through contact, embrace the battle, and leave zero doubt.
+      </div>
+    </div>
+
+    <!-- Story 3: Ali ibn Abi Talib -->
+    <div class="mv-card">
+      <div class="mv-card-tag">// ASADULLAH · THE LION OF ALLAH</div>
+      <div class="mv-card-title">ALI IBN ABI TALIB & THE GATES OF KHAYBAR</div>
+      <div class="mv-body-text">At the fortress of Khaybar, the defenders were fortified behind massive iron-reinforced doors that no ram could shatter. The Prophet (ﷺ) declared: <em>"Tomorrow I shall give the banner to a man who loves Allah and His Messenger, and whom Allah and His Messenger love; an attacker who never retreats."</em><br><br>The next morning, Ali stepped forward. In single combat, he defeated Marhab, the giant champion of Khaybar. When his shield was knocked loose in battle, Ali reached out and tore the massive fortress iron door directly off its stone hinges with his bare hands, wielding it as a shield through the breach. Ali represented absolute courage, explosive physical power, and sublime moral restraint.</div>
+      <div class="mv-athlete-takeaway">
+        <div class="mv-athlete-label">🏀 ATHLETE APPLICATION</div>
+        Be the athlete who never retreats. When the defense presses you full court, lean into the challenge with explosive intent. Combine destructive physical power with cool-headed emotional discipline.
+      </div>
+    </div>
+
+    <!-- Story 4: Tariq ibn Ziyad -->
+    <div class="mv-card">
+      <div class="mv-card-tag">// JABAL TARIQ · THE RESOLUTE COMMANDER</div>
+      <div class="mv-card-title">TARIQ IBN ZIYAD: BURNING THE SHIPS</div>
+      <div class="mv-body-text">In 711 CE, Tariq crossed the straits into Spain with 7,000 men, only to find King Roderic marching toward him with an army of 100,000. Tariq ordered the fleet of ships that had brought them to be burned to the waterline.<br><br>He stood before his warriors and gave his historic speech: <em>"O my brothers! Where is the place of retreat? Behind you is the ocean; before you is the enemy! By Allah, you have now nothing to rely upon except your courage, your patience, and your faith."</em> By eliminating the option of retreat, he unlocked the ultimate psychological state of total commitment, routing an army ten times his size.</div>
+      <div class="mv-athlete-takeaway">
+        <div class="mv-athlete-label">🏀 ATHLETE APPLICATION</div>
+        Burn your mental retreat ships. If you keep a backup plan in your head of quitting or half-repping when fatigue sets in, you have already lost. Total commitment yields extraordinary performance.
+      </div>
+    </div>
+  </div>
+
+  <!-- PANEL 3: DISCIPLINE & TOUGHNESS -->
+  <div class="mv-panel" id="mv-panel-toughness">
+    <!-- Tim Grover -->
+    <div class="mv-card">
+      <div class="mv-card-tag">// TIM GROVER · RELENTLESS & WINNING</div>
+      <div class="mv-card-title">THE CLEANER MINDSET</div>
+      <div class="mv-quote-text">"Don't tell me that the sky is the limit when there are footprints on the moon. A Cleaner doesn't compete with anyone else; he makes everyone else compete with him."</div>
+      <div class="mv-body-text">Grover trained Michael Jordan and Kobe Bryant through their championship runs. His core doctrine: there are Coolers (good), Closers (great), and Cleaners (unstoppable). A Cleaner never asks for applause, never complains about conditions, and craves the end result so intensely that the grueling work is completely irrelevant.</div>
+      <div class="mv-athlete-takeaway">
+        <div class="mv-athlete-label">🏀 ATHLETE APPLICATION</div>
+        Stop seeking external motivation or pats on the back. When you step into the weight room or court at 6:00 AM, the work is simply what is required. Handle business with cold, ruthless consistency.
+      </div>
+    </div>
+
+    <!-- Kobe Bryant -->
+    <div class="mv-card">
+      <div class="mv-card-tag">// KOBE BRYANT · THE MAMBA MENTALITY</div>
+      <div class="mv-card-title">REST AT THE END, NOT IN THE MIDDLE</div>
+      <div class="mv-quote-text">"I have self-doubt. I have insecurity. I have fear of failure. We all have self-doubt. You don't deny it, but you also don't capitulate to it. You embrace it. Rest at the end, not in the middle."</div>
+      <div class="mv-body-text">Mamba Mentality is not about pretending you don't feel pain, soreness, or self-doubt. It is about acknowledging the tension and executing anyway. Kobe would shoot 800 made jumpers before breakfast because he knew that in Game 7 with dead legs, muscle memory and spiritual will take over.</div>
+      <div class="mv-athlete-takeaway">
+        <div class="mv-athlete-label">🏀 ATHLETE APPLICATION</div>
+        When your Achilles feels tight or your lungs burn, don't bargain with your workout. Stick to your sets, respect the load, and rest when the session is logged.
+      </div>
+    </div>
+
+    <!-- David Goggins -->
+    <div class="mv-card">
+      <div class="mv-card-tag">// DAVID GOGGINS · CAN'T HURT ME</div>
+      <div class="mv-card-title">THE 40% RULE & CALLOUSED MIND</div>
+      <div class="mv-quote-text">"When your mind is telling you you're done, that you're exhausted, that you cannot possibly take another step, you are only at 40% of your actual capacity."</div>
+      <div class="mv-body-text">The human brain has a built-in survival governor that sends alarm bells long before the body is actually depleted. By intentionally placing yourself in uncomfortable physical environments, you callous your mind against self-pity and weakness.</div>
+      <div class="mv-athlete-takeaway">
+        <div class="mv-athlete-label">🏀 ATHLETE APPLICATION</div>
+        The final 2 reps of every set and the final sprint of conditioning are where the governor kicks in. Recognize the voice of fatigue as an illusion and push past it with calm resolve.
+      </div>
+    </div>
+
+    <!-- James Clear -->
+    <div class="mv-card">
+      <div class="mv-card-tag">// JAMES CLEAR · ATOMIC HABITS</div>
+      <div class="mv-card-title">SYSTEMS OVER GOALS</div>
+      <div class="mv-quote-text">"You do not rise to the level of your goals. You fall to the level of your systems. Every action you take is a vote for the type of person you wish to become."</div>
+      <div class="mv-body-text">Everyone wants to be an elite champion; the goal does not separate the best from the rest. The separator is the boring, daily, unglamorous system: sleeping 8.5 hours, measuring load, foam rolling, hydration, and showing up every single day without fail.</div>
+      <div class="mv-athlete-takeaway">
+        <div class="mv-athlete-label">🏀 ATHLETE APPLICATION</div>
+        Fall in love with the unsexy daily habits. The championship is not won under the bright arena lights; it is decided in your quiet execution of the daily checklist.
+      </div>
+    </div>
+
+    <!-- Marcus Aurelius -->
+    <div class="mv-card">
+      <div class="mv-card-tag">// MARCUS AURELIUS · MEDITATIONS</div>
+      <div class="mv-card-title">THE IMPEDIMENT ADVANCES ACTION</div>
+      <div class="mv-quote-text">"The impediment to action advances action. What stands in the way becomes the way. You have power over your mind, not outside events. Realize this, and you will find strength."</div>
+      <div class="mv-body-text">Stoic philosophy at its highest level: bad referee calls, physical fatigue, opposing crowds, and injuries are not interruptions to your journey; they are the exact arena where your character is forged.</div>
+      <div class="mv-athlete-takeaway">
+        <div class="mv-athlete-label">🏀 ATHLETE APPLICATION</div>
+        Never waste emotional energy arguing with referees or complaining about travel schedule. Control what is within your control: your effort, your focus, your breathing, and your response.
+      </div>
+    </div>
+  </div>
+
+  <!-- PANEL 4: BEHAVIOR & INFLUENCE -->
+  <div class="mv-panel" id="mv-panel-behavior">
+    <!-- Robert Greene -->
+    <div class="mv-card">
+      <div class="mv-card-tag">// ROBERT GREENE · THE 33 STRATEGIES OF WAR & MASTERY</div>
+      <div class="mv-card-title">MASTER YOUR EMOTIONS BEFORE MASTERING OTHERS</div>
+      <div class="mv-quote-text">"When you complain or act out of anger, you forfeit all strategic leverage. Keep your mind calm in the center of the storm. Control your own emotional temperature."</div>
+      <div class="mv-body-text">In high-stakes sports and business, the first person to lose their temper is the first person who loses. When opponents try to bait you into fouls or technicals, realize they are trying to hijack your prefrontal cortex. Master cold, disciplined observation.</div>
+      <div class="mv-athlete-takeaway">
+        <div class="mv-athlete-label">🏀 ATHLETE APPLICATION</div>
+        When an opponent chirps or fouls you hard, smile and execute the next play. Cold precision demoralizes trash-talkers far more than emotional retaliation ever will.
+      </div>
+    </div>
+
+    <!-- Dale Carnegie -->
+    <div class="mv-card">
+      <div class="mv-card-tag">// DALE CARNEGIE · HOW TO WIN FRIENDS & INFLUENCE PEOPLE</div>
+      <div class="mv-card-title">HIGH-IQ COMMUNICATION & TEAM LEADERSHIP</div>
+      <div class="mv-quote-text">"You can make more friends in two months by becoming interested in other people than you can in two years by trying to get other people interested in you."</div>
+      <div class="mv-body-text">Elite point guards and locker-room leaders do not lead through tyrannical shouting. They lead by elevating those around them, praising specific efforts, listening intently, and holding teammates accountable with respect and clarity.</div>
+      <div class="mv-athlete-takeaway">
+        <div class="mv-athlete-label">🏀 ATHLETE APPLICATION</div>
+        On the court, celebrate your teammate's defensive stop as passionately as your own scoring. High-trust locker rooms consistently outperform collections of selfish individual talents.
+      </div>
+    </div>
+
+    <!-- Daniel Kahneman -->
+    <div class="mv-card">
+      <div class="mv-card-tag">// DANIEL KAHNEMAN · THINKING, FAST AND SLOW</div>
+      <div class="mv-card-title">SYSTEM 1 (FLOW) VS SYSTEM 2 (DELIBERATE PRACTICE)</div>
+      <div class="mv-quote-text">"A reliable way to make people believe in falsehoods is frequent repetition. True mastery is training System 2 so deliberately that under pressure, System 1 operates effortlessly."</div>
+      <div class="mv-body-text">Kahneman’s Nobel Prize-winning framework reveals how the brain processes information: System 1 is fast, automatic, and intuitive; System 2 is slow, analytical, and deliberate. In a live basketball game, you cannot afford slow analytical thinking; you must operate in pure instinctual flow (System 1).</div>
+      <div class="mv-athlete-takeaway">
+        <div class="mv-athlete-label">🏀 ATHLETE APPLICATION</div>
+        Use System 2 in film study and deliberate practice: break down every footwork angle, pick-and-roll read, and pass trajectory. Practice it so many thousands of times that in the game, you react without thinking.
+      </div>
+    </div>
+  </div>
+
 </div>
 
 <!-- ═══ PAGE: RECOVERY ═══ -->
@@ -3058,7 +3119,8 @@ const WORKOUT_TYPE_OPTIONS = [
     { key: 'rest-day', name: 'FULL REST DAY — OFF & SLEEP', meta: 'Zero CNS Load, Hydration, Breathwork', color: '#2ECC71', time: 'ALL DAY' },
     { key: 'pool-a', name: 'POOL A — CNS FLUSH & HYDRO DRAIN', meta: 'Contrast Water Therapy, Non-Impact Mobility', color: '#3498DB', time: '45 MIN' },
     { key: 'pool-b', name: 'POOL B — WEEK-END RECOVERY FLUSH', meta: 'Spinal Traction, Hydro Aqua Running', color: '#3498DB', time: '45 MIN' },
-    { key: 'recovery-mobility', name: 'ACTIVE MOBILITY & ANKLE DECOMP', meta: '90/90 Hips, Banded Ankle Glide, Couch Stretch', color: '#1ABC9C', time: '35 MIN' }
+    { key: 'recovery-mobility', name: 'ACTIVE MOBILITY & ANKLE DECOMP', meta: '90/90 Hips, Banded Ankle Glide, Couch Stretch', color: '#1ABC9C', time: '35 MIN' },
+    { key: 'abs-stretch', name: 'ABS & STRETCH — CORE & RECOVERY', meta: 'Hanging Leg Raises, Pallof Press, Hip Decomp', color: '#00CEC9', time: '35 MIN' }
   ]},
   { group: 'SPECIALIZED / REHAB', options: [
     { key: 'achilles-rehab', name: 'ACHILLES TENDON ISOMETRIC PROTOCOL', meta: 'Soleus Wall Iso, Heavy Calf HSR, Tibialis', color: '#E84393', time: '40 MIN' },
@@ -4746,268 +4808,13 @@ function renderWellnessUI(){
 
 // ══════════════════════════════════════════════════════════
 // BVMBINO AI COACH ENGINE — SPORT SCIENCE, PSYCHOLOGY, FINANCE
-// ══════════════════════════════════════════════════════════
 
-const COACH_SYSTEM_PROMPT = `You are BVMBINO AI Coach — an elite high-performance mentor, sports scientist, sports psychologist, and wealth advisor for a professional basketball athlete (Phase 3 Explosive Peak).
-
-Your expertise spans three core pillars:
-1. SPORTS SCIENCE & BIOMECHANICS:
-   - Tendon health: Achilles & patellar tendinopathy protocols (heavy isometrics at neutral ankle angles, 5x45s holds, heavy slow resistance HSR, eccentric control).
-   - Explosive power: Rate of Force Development (RFD), Compensatory Acceleration Training (CAT), plyometric stiffness, sprint acceleration mechanics.
-   - Recovery: Contrast water therapy, sleep optimization (deep/REM sleep, room temp 19°C), post-workout glycogen replenishment (4:1 carb-to-protein ratio within 45 mins), hydration and electrolyte balance.
-2. HUMAN PSYCHOLOGY & MENTAL TOUGHNESS:
-   - High-pressure execution: Clutch performance, free-throw routine, emotional regulation, managing referee frustration.
-   - Visualization: Vivid multi-sensory mental rehearsal before game speed reps.
-   - Mindset: Stoic discipline, handling injury rehabilitation patience, intrinsic vs extrinsic motivation, ego management.
-3. FINANCE & WEALTH STRATEGY FOR PRO ATHLETES:
-   - Wealth preservation: Living on 30-40% of net income, avoiding lifestyle creep and predatory friends/family requests.
-   - Contract management: Understanding gross vs net, taxes, escrow withholdings, agent fiduciary duties.
-   - Long-term assets: Low-cost broad-market index funds, real estate, equity over cash endorsements, building generational wealth for life after basketball.
-
-Style: Concise, sharp, high-IQ, encouraging, practical. Speak like a trusted NBA/EuroLeague director of high performance. Avoid long rambling disclaimers. Give direct, actionable advice with elite standards.`;
-
-// Local Offline Knowledge Brain for instant 0-latency offline replies
-const OFFLINE_KNOWLEDGE = [
-  {
-    keywords: ['achilles', 'tendon', 'calf', 'soleus', 'ankle', 'heel', 'plantar'],
-    topic: 'ACHILLES TENDON & ANKLE PROTOCOL',
-    reply: `Here is the elite Achilles Loading Protocol for court athletes:
-
-1. **Isometric Analgesia (Pain Relief)**:
-   - Single-leg Soleus wall sit or heavy calf iso hold at a neutral 90° ankle angle.
-   - 5 sets × 45 seconds holds. This reduces cortical inhibition and provides immediate pain relief without tendon compression.
-2. **Heavy Slow Resistance (HSR)**:
-   - 3 seconds concentric, 3 seconds eccentric under load (RPE 8). This stimulates collagen cross-linking and restores tendon spring stiffness.
-3. **Golden Rule**:
-   - Never aggressively stretch a reactive Achilles cold. Tendons hate tensile stretch under acute inflammation.`
-  },
-  {
-    keywords: ['psychology', 'mindset', 'pressure', 'clutch', 'anxiety', 'nervous', 'slump', 'mental', 'focus', 'confidence', 'head'],
-    topic: 'ELITE ATHLETE PSYCHOLOGY',
-    reply: `In crunch time, confidence is not a feeling — it is an active decision backed by preparation.
-
-1. **The 3-Second Breath Anchor**:
-   - Before taking the court or stepping to the free-throw line: 4-second inhale through the nose, 2-second hold, 6-second physiological sigh exhale. This resets your autonomic nervous system from panic to hyper-focus.
-2. **Process over Outcome**:
-   - You cannot control whether the ball bounces in; you control your release point, follow-through, and defensive stance. Detach from the scoreboard and lock into the next possession.
-3. **Identity Beyond the Game**:
-   - You are a complete, elite human being who plays basketball at the highest level. Your self-worth does not fluctuate with shooting percentages.`
-  },
-  {
-    keywords: ['finance', 'money', 'contract', 'invest', 'wealth', 'budget', 'tax', 'salary', 'rich', 'financial'],
-    topic: 'PRO ATHLETE WEALTH STRATEGY',
-    reply: `The golden rule of pro athlete wealth: **It's not what you make; it's what you keep.**
-
-1. **The 40% Living Rule**:
-   - Live on 30% to 40% of your net post-tax income. Automatically route the remaining 60% into wealth preservation before you ever see it.
-   - Remember: An athlete's high-earning window is typically 8–12 years, but retirement lasts 50+ years.
-2. **Asset Allocation**:
-   - Prioritize broad-market index funds (S&P 500 / Total World) and income-producing real estate. Say NO to friend ventures, unvetted nightclubs, or speculative crypto.
-3. **The 'No' Muscle**:
-   - Learn to say: "My financial advisor requires all investments to go through a strict vetting process." That takes the pressure off personal relationships.`
-  },
-  {
-    keywords: ['jump', 'vertical', 'dunk', 'bounce', 'plyo', 'power', 'explosive', 'cns'],
-    topic: 'VERTICAL JUMP & RATE OF FORCE DEVELOPMENT',
-    reply: `To increase vertical jump in Phase 3 (Explosive Peak):
-
-1. **RFD (Rate of Force Development)**:
-   - Lift with maximal intent on the concentric phase (CAT method). 85% load moved with maximum speed recruits high-threshold Type IIx motor units.
-2. **Ankle Stiffness over Leg Strength**:
-   - 40% of vertical jump rebound comes from elastic recoil of the Achilles tendon and plantar fascia. Pogo hops and drop jumps (30cm box) build that stiffness.
-3. **CNS Readiness**:
-   - Keep sets short (2-3 reps) with full rest (2.5 to 3 minutes). Jumping fatigued only trains slow velocity.`
-  },
-  {
-    keywords: ['sleep', 'recovery', 'tired', 'fatigue', 'sore', 'pool', 'contrast', 'eat', 'food', 'nutrition', 'shake'],
-    topic: 'RECOVERY ARCHITECTURE',
-    reply: `Elite recovery protocol for basketball athletes:
-
-1. **Sleep Architecture**:
-   - 8.5 to 9 hours. Room temperature at 19°C (66°F). 80% of human growth hormone (HGH) is released during slow-wave deep sleep.
-2. **The 45-Minute Post-Lift Window**:
-   - 40g high-quality whey protein + 60-80g fast-digesting carbohydrates (dextrose, rice cakes, or fruit) to spike insulin and shuttle amino acids into recovering muscle fibers.
-3. **Hydrotherapy Contrast**:
-   - 3 rounds: 60s cold plunge (10-12°C) followed by 2 minutes warm water. Flushes lactate and reduces nervous system tone.`
-  }
-];
-
-function getLocalOfflineReply(query) {
-  const q = query.toLowerCase();
-  for (const item of OFFLINE_KNOWLEDGE) {
-    if (item.keywords.some(k => q.includes(k))) {
-      return item.reply;
-    }
-  }
-  // Default general response
-  return `Yo Bvmbino! As your coach, remember that elite performance is built on 3 pillars:
-
-1. **Sports Science**: Train with maximal intent, respect tendon recovery, and keep your CNS fresh.
-2. **Psychology**: Stay stoic under pressure and lock into the process of each possession.
-3. **Finance & Longevity**: Protect your capital, live below your means, and invest for decades, not just this season.
-
-Ask me specifically about your Achilles, vertical jump mechanics, game mindset, or wealth strategies!`;
-}
-
-// Conversation History & Settings
-let coachChatHistory = [];
-let coachVoiceEnabled = true;
-let coachSpeechRec = null;
-
-function promptApiKey() {
-  const cur = localStorage.getItem('bvmbino_gemini_key') || '';
-  const input = prompt('Enter your Gemini API Key (stored safely in your local browser):', cur);
-  if (input !== null) {
-    localStorage.setItem('bvmbino_gemini_key', input.trim());
-    showToast('API KEY SAVED LOCALLY ✓', 'toast-success');
-  }
-}
-
-function toggleCoachModal() {
-  const m = document.getElementById('coach-modal');
-  if (m) m.classList.toggle('open');
-}
-
-function toggleCoachVoice() {
-  coachVoiceEnabled = !coachVoiceEnabled;
-  const btn = document.getElementById('coach-voice-btn');
-  if (btn) btn.textContent = coachVoiceEnabled ? '🔊' : '🔇';
-  showToast(coachVoiceEnabled ? 'COACH VOICE: ON' : 'COACH VOICE: MUTED', 'toast-success');
-}
-
-function speakCoachText(text) {
-  if (!coachVoiceEnabled || !('speechSynthesis' in window)) return;
-  try {
-    window.speechSynthesis.cancel();
-    // Clean text of markdown stars and bullets
-    const clean = text.replace(/[*_#`]/g, '').replace(/\[[^\]]+\]/g, '');
-    const utter = new SpeechSynthesisUtterance(clean);
-    utter.rate = 1.05;
-    utter.pitch = 0.95;
-    window.speechSynthesis.speak(utter);
-  } catch(e) {}
-}
-
-async function sendCoachMessage() {
-  const input = document.getElementById('coach-input');
-  if (!input) return;
-  const userText = input.value.trim();
-  if (!userText) return;
-
-  const chatContainer = document.getElementById('coach-messages');
-  
-  // Render user bubble
-  const userDiv = document.createElement('div');
-  userDiv.className = 'coach-msg user';
-  userDiv.innerHTML = `<div class="cm-bubble">${userText}</div><div class="cm-time">YOU • JUST NOW</div>`;
-  chatContainer.appendChild(userDiv);
-  input.value = '';
-  chatContainer.scrollTop = chatContainer.scrollHeight;
-
-  // Add typing indicator
-  const typingDiv = document.createElement('div');
-  typingDiv.className = 'coach-msg coach';
-  typingDiv.id = 'coach-typing-indicator';
-  typingDiv.innerHTML = `<div class="cm-bubble" style="color:var(--gold)">Thinking with elite coach brain...</div>`;
-  chatContainer.appendChild(typingDiv);
-  chatContainer.scrollTop = chatContainer.scrollHeight;
-
-  // Check online status and API key
-  const apiKey = localStorage.getItem('bvmbino_gemini_key') || '';
-  let replyText = '';
-  let isOffline = !navigator.onLine;
-
-  if (!isOffline && apiKey && apiKey.startsWith('AIzaSy')) {
-    try {
-      const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
-      const payload = {
-        contents: [
-          { role: 'user', parts: [{ text: COACH_SYSTEM_PROMPT + '\n\nAthlete query: ' + userText }] }
-        ]
-      };
-      const res = await fetch(endpoint, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-      });
-      if (res.ok) {
-        const data = await res.json();
-        replyText = data.candidates?.[0]?.content?.parts?.[0]?.text;
-      }
-    } catch(err) {
-      isOffline = true;
-    }
-  }
-
-  // Fallback to local offline intelligence
-  if (!replyText) {
-    replyText = getLocalOfflineReply(userText);
-  }
-
-  // Remove typing indicator
-  const indicator = document.getElementById('coach-typing-indicator');
-  if (indicator) indicator.remove();
-
-  // Render Coach response
-  const coachDiv = document.createElement('div');
-  coachDiv.className = 'coach-msg coach';
-  coachDiv.innerHTML = `
-    <div class="cm-bubble">
-      ${replyText.replace(/\n/g, '<br>')}
-      ${isOffline ? '<div style="margin-top:8px;font-family:\'DM Mono\',monospace;font-size:7.5px;color:var(--gold);opacity:0.8">⚡ LOCAL ATHLETE BRAIN (OFFLINE)</div>' : ''}
-    </div>
-    <div class="cm-time">COACH • JUST NOW</div>
-  `;
-  chatContainer.appendChild(coachDiv);
-  chatContainer.scrollTop = chatContainer.scrollHeight;
-
-  // Speak response
-  speakCoachText(replyText);
-}
-
-function promptCoach(text) {
-  const input = document.getElementById('coach-input');
-  if (input) {
-    input.value = text;
-    sendCoachMessage();
-  }
-}
-
-function toggleCoachMic() {
-  const btn = document.getElementById('coach-mic-btn');
-  const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
-  if (!SpeechRec) {
-    showToast('Speech recognition not supported in this browser', 'toast-warn');
-    return;
-  }
-  if (!coachSpeechRec) {
-    coachSpeechRec = new SpeechRec();
-    coachSpeechRec.continuous = false;
-    coachSpeechRec.interimResults = false;
-    coachSpeechRec.onstart = () => {
-      if (btn) btn.classList.add('recording');
-      showToast('LISTENING...', 'toast-success');
-    };
-    coachSpeechRec.onresult = (e) => {
-      const transcript = e.results[0][0].transcript;
-      const input = document.getElementById('coach-input');
-      if (input) {
-        input.value = transcript;
-        sendCoachMessage();
-      }
-    };
-    coachSpeechRec.onend = () => {
-      if (btn) btn.classList.remove('recording');
-    };
-    coachSpeechRec.onerror = () => {
-      if (btn) btn.classList.remove('recording');
-    };
-  }
-  try {
-    coachSpeechRec.start();
-  } catch(e) {
-    coachSpeechRec.stop();
-  }
+function switchMentalVaultTab(tabId, tabEl) {
+  document.querySelectorAll('.mv-tab').forEach(t => t.classList.remove('active'));
+  if (tabEl) tabEl.classList.add('active');
+  document.querySelectorAll('.mv-panel').forEach(p => p.classList.remove('active'));
+  const panel = document.getElementById('mv-panel-' + tabId);
+  if (panel) panel.classList.add('active');
 }
 
 </script>
@@ -5029,99 +4836,5 @@ function toggleCoachMic() {
   </div>
 </div>
 
-<!-- ── PIXAR 3D COACH FAB LAUNCHER ── -->
-<div class="coach-fab" id="coach-fab" onclick="toggleCoachModal()" title="Bvmbino AI Coach">
-  <div class="coach-pulse-dot"></div>
-  <svg class="coach-avatar-svg" viewBox="0 0 100 100" fill="none">
-    <defs>
-      <radialGradient id="cfSkinG" cx="40%" cy="35%" r="60%">
-        <stop offset="0%" stop-color="#C68652"/>
-        <stop offset="65%" stop-color="#8C532B"/>
-        <stop offset="100%" stop-color="#583115"/>
-      </radialGradient>
-      <linearGradient id="cfShadesG" x1="0%" y1="0%" x2="100%" y2="80%">
-        <stop offset="0%" stop-color="#D4A843"/>
-        <stop offset="40%" stop-color="#FF5500"/>
-        <stop offset="80%" stop-color="#222"/>
-        <stop offset="100%" stop-color="#000"/>
-      </linearGradient>
-      <radialGradient id="cfBallG" cx="35%" cy="30%" r="65%">
-        <stop offset="0%" stop-color="#FF8A3D"/>
-        <stop offset="70%" stop-color="#D04D00"/>
-        <stop offset="100%" stop-color="#7A2200"/>
-      </radialGradient>
-    </defs>
-    <ellipse cx="50" cy="46" rx="22" ry="24" fill="url(#cfSkinG)"/>
-    <path d="M28 42 C28 26 38 18 50 18 C62 18 72 26 72 42 C70 32 62 26 50 26 C38 26 30 32 28 42 Z" fill="#151210"/>
-    <circle cx="27" cy="47" r="5" fill="#8C532B"/>
-    <circle cx="73" cy="47" r="5" fill="#8C532B"/>
-    <path d="M28 33 Q50 30 72 33 L72 37 Q50 34 28 37 Z" fill="#D4A843" stroke="#8A6B20" stroke-width="0.5"/>
-    <path d="M33 42 C33 39 46 39 47 43 C48 46 45 49 37 49 C33 49 33 44 33 42 Z" fill="url(#cfShadesG)" stroke="#111" stroke-width="1"/>
-    <path d="M53 43 C54 39 67 39 67 42 C67 44 67 49 63 49 C55 49 52 46 53 43 Z" fill="url(#cfShadesG)" stroke="#111" stroke-width="1"/>
-    <path d="M47 42 Q50 40 53 42" stroke="#D4A843" stroke-width="1.5" stroke-linecap="round"/>
-    <line x1="36" y1="42" x2="43" y2="47" stroke="#FFF" stroke-width="1" stroke-linecap="round" opacity="0.6"/>
-    <line x1="56" y1="42" x2="63" y2="47" stroke="#FFF" stroke-width="1" stroke-linecap="round" opacity="0.6"/>
-    <path d="M42 58 Q50 63 58 58" stroke="#3D200E" stroke-width="2" stroke-linecap="round" fill="none"/>
-    <path d="M40 62 Q50 66 60 62" stroke="#1A1410" stroke-width="1.5" stroke-linecap="round" fill="none"/>
-    <path d="M22 80 C26 68 40 68 50 68 C60 68 74 68 78 80 L80 100 L20 100 Z" fill="#141418"/>
-    <path d="M36 68 L50 78 L64 68" stroke="#D4A843" stroke-width="2" fill="none"/>
-    <path d="M41 73 Q50 82 59 73" stroke="#FFD700" stroke-width="1.2" fill="none"/>
-    <circle cx="75" cy="74" r="12" fill="url(#cfBallG)"/>
-    <ellipse cx="75" cy="74" rx="12" ry="4" stroke="#4A1800" stroke-width="0.8" fill="none"/>
-    <ellipse cx="75" cy="74" rx="4" ry="12" stroke="#4A1800" stroke-width="0.8" fill="none"/>
-  </svg>
-</div>
-
-<!-- ── COACH MODAL OVERLAY ── -->
-<div class="coach-overlay" id="coach-modal" onclick="if(event.target===this)toggleCoachModal()">
-  <div class="coach-sheet">
-    <div class="co-header">
-      <div class="co-profile">
-        <div class="co-avatar-wrap">
-          <svg viewBox="0 0 100 100" style="width:34px;height:34px">
-            <ellipse cx="50" cy="46" rx="22" ry="24" fill="#8C532B"/>
-            <path d="M28 33 Q50 30 72 33 L72 37 Q50 34 28 37 Z" fill="#D4A843"/>
-            <path d="M33 42 C33 39 46 39 47 43 C48 46 45 49 37 49 C33 49 33 44 33 42 Z" fill="#D4A843"/>
-            <path d="M53 43 C54 39 67 39 67 42 C67 44 67 49 63 49 C55 49 52 46 53 43 Z" fill="#D4A843"/>
-            <path d="M42 58 Q50 63 58 58" stroke="#3D200E" stroke-width="2" fill="none"/>
-          </svg>
-          <div class="online-pulse-sm"></div>
-        </div>
-        <div>
-          <div class="co-name">BVMBINO AI COACH</div>
-          <div class="co-sub">// SPORT SCIENCE · PSYCHOLOGY · WEALTH</div>
-        </div>
-      </div>
-      <div style="display:flex;align-items:center;gap:6px">
-        <button class="co-icon-btn" onclick="promptApiKey()" title="Configure Gemini API Key">🔑</button>
-        <button class="co-icon-btn" id="coach-voice-btn" onclick="toggleCoachVoice()" title="Toggle voice read-aloud">🔊</button>
-        <button class="co-icon-btn" onclick="toggleCoachModal()">✕</button>
-      </div>
-    </div>
-
-    <div class="co-body" id="coach-messages">
-      <div class="coach-msg coach">
-        <div class="cm-bubble">
-          Yo Bvmbino! 🏀 I'm your dedicated 24/7 AI mentor. I cover <strong>Sport Science & Tendon Biomechanics</strong>, <strong>Human Psychology & Clutch Mindset</strong>, and <strong>Pro Athlete Wealth & Finance</strong>.<br><br>What are we locking in on today?
-        </div>
-        <div class="cm-time">COACH • JUST NOW</div>
-      </div>
-    </div>
-
-    <div class="co-pills">
-      <div class="co-pill" onclick="promptCoach('How do I manage Achilles tension after heavy jump sessions?')">⚡ Achilles Protocol</div>
-      <div class="co-pill" onclick="promptCoach('How to stay mentally locked in during high-pressure crunch time?')">🧠 Clutch Psychology</div>
-      <div class="co-pill" onclick="promptCoach('How should a pro basketball player invest and preserve wealth?')">💰 Athlete Wealth</div>
-      <div class="co-pill" onclick="promptCoach('What are the best methods to maximize vertical jump and RFD?')">🚀 Vertical Jump RFD</div>
-      <div class="co-pill" onclick="promptCoach('What should my post-game sleep and nutrition timing look like?')">🥩 Sleep & Recovery</div>
-    </div>
-
-    <div class="co-footer">
-      <button class="co-mic-btn" id="coach-mic-btn" onclick="toggleCoachMic()" title="Tap to speak">🎙</button>
-      <input type="text" class="co-input" id="coach-input" placeholder="Ask about sport science, mindset, wealth..." onkeydown="if(event.key==='Enter')sendCoachMessage()">
-      <button class="co-send-btn" onclick="sendCoachMessage()">➔</button>
-    </div>
-  </div>
-</div>
 </body>
 </html>
