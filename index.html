@@ -1337,6 +1337,313 @@ body>*{position:relative;z-index:1}
     {name:'Tibialis Anterior Banded Dorsiflexion',sets:['3×20 each','3×20 each','3×20 each','3×15 each'],quality:'ANTAGONIST',yt:true,why:'Strengthens anterior compartment to balance ankle joint forces.',achilles:false}
   ]}
 }
+
+/* ── SWAPPED WORKOUT BADGE ── */
+.swapped-badge {
+  font-family: 'DM Mono', monospace;
+  font-size: 7.5px;
+  color: var(--gold);
+  border: 1px solid rgba(212, 168, 67, 0.4);
+  background: rgba(212, 168, 67, 0.12);
+  padding: 1px 5px;
+  border-radius: 4px;
+  margin-left: 6px;
+  vertical-align: middle;
+  letter-spacing: 1px;
+  font-weight: 400;
+  display: inline-block;
+}
+
+/* ── PIXAR 3D COACH FAB LAUNCHER ── */
+.coach-fab {
+  position: fixed;
+  bottom: 84px;
+  right: 20px;
+  width: 66px;
+  height: 66px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #1e1d1a 0%, #101014 100%);
+  border: 2px solid var(--gold);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.65), 0 0 20px rgba(212,168,67,0.3);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 550;
+  transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.25s ease;
+  animation: coachFloat 4s ease-in-out infinite;
+  user-select: none;
+}
+.coach-fab:hover {
+  transform: scale(1.08);
+  box-shadow: 0 10px 28px rgba(0,0,0,0.7), 0 0 30px rgba(212,168,67,0.55);
+}
+.coach-fab:active {
+  transform: scale(0.95);
+}
+@keyframes coachFloat {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-5px) rotate(1.5deg); }
+}
+.coach-pulse-dot {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  width: 13px;
+  height: 13px;
+  background: #30D158;
+  border: 2px solid var(--black);
+  border-radius: 50%;
+  box-shadow: 0 0 8px #30D158;
+  animation: pulseDot 2s infinite;
+}
+@keyframes pulseDot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.65; transform: scale(0.85); }
+}
+.coach-avatar-svg {
+  width: 52px;
+  height: 52px;
+  filter: drop-shadow(0 3px 6px rgba(0,0,0,0.6));
+}
+
+/* ── COACH MODAL OVERLAY ── */
+.coach-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.82);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  z-index: 800;
+  display: none;
+  align-items: flex-end;
+  justify-content: center;
+}
+.coach-overlay.open {
+  display: flex;
+}
+.coach-sheet {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 24px 24px 0 0;
+  width: 100%;
+  max-width: 440px;
+  height: 82vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 -10px 40px rgba(0,0,0,0.85);
+  animation: slideUpSheet 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  overflow: hidden;
+}
+.co-header {
+  padding: 16px 20px 12px;
+  border-bottom: 1px solid var(--border);
+  background: rgba(17, 17, 21, 0.95);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-shrink: 0;
+}
+.co-profile {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.co-avatar-wrap {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, rgba(212,168,67,0.2), rgba(212,168,67,0.05));
+  border: 1.5px solid var(--gold);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+.online-pulse-sm {
+  position: absolute;
+  top: -1px;
+  right: -1px;
+  width: 9px;
+  height: 9px;
+  background: #30D158;
+  border-radius: 50%;
+  border: 1.5px solid var(--black);
+}
+.co-name {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 20px;
+  color: #fff;
+  letter-spacing: 1px;
+  line-height: 1;
+}
+.co-sub {
+  font-family: 'DM Mono', monospace;
+  font-size: 7.5px;
+  color: var(--gold);
+  letter-spacing: 1.5px;
+  margin-top: 2px;
+}
+.co-icon-btn {
+  background: var(--panel2);
+  border: 1px solid var(--border);
+  color: var(--text-dim);
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 13px;
+  transition: all 0.2s;
+}
+.co-icon-btn:hover {
+  color: #fff;
+  border-color: var(--gold);
+}
+.co-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.coach-msg {
+  display: flex;
+  flex-direction: column;
+  max-width: 86%;
+  animation: msgFadeIn 0.25s ease;
+}
+@keyframes msgFadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.coach-msg.coach {
+  align-self: flex-start;
+}
+.coach-msg.user {
+  align-self: flex-end;
+}
+.cm-bubble {
+  padding: 12px 14px;
+  border-radius: 14px;
+  font-size: 13px;
+  line-height: 1.45;
+}
+.coach-msg.coach .cm-bubble {
+  background: var(--panel2);
+  border: 1px solid rgba(212, 168, 67, 0.25);
+  color: var(--text);
+  border-top-left-radius: 4px;
+}
+.coach-msg.user .cm-bubble {
+  background: var(--gold);
+  color: var(--black);
+  font-weight: 500;
+  border-top-right-radius: 4px;
+}
+.cm-time {
+  font-family: 'DM Mono', monospace;
+  font-size: 7.5px;
+  color: var(--text-dim);
+  margin-top: 4px;
+  letter-spacing: 1px;
+}
+.coach-msg.user .cm-time {
+  text-align: right;
+}
+.co-pills {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding: 8px 20px;
+  border-top: 1px solid var(--border);
+  scrollbar-width: none;
+  flex-shrink: 0;
+}
+.co-pill {
+  flex-shrink: 0;
+  background: var(--panel2);
+  border: 1px solid var(--border);
+  color: var(--gold);
+  font-family: 'DM Mono', monospace;
+  font-size: 8.5px;
+  letter-spacing: 1px;
+  padding: 5px 11px;
+  border-radius: 16px;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.co-pill:hover, .co-pill:active {
+  background: rgba(212, 168, 67, 0.15);
+  border-color: var(--gold);
+}
+.co-footer {
+  padding: 10px 16px calc(var(--safe-bottom) + 14px);
+  border-top: 1px solid var(--border);
+  background: var(--panel);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+.co-input {
+  flex: 1;
+  background: var(--panel2);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 9px 14px;
+  font-size: 13px;
+  color: #fff;
+  font-family: 'Barlow', sans-serif;
+  outline: none;
+}
+.co-input:focus {
+  border-color: var(--gold);
+}
+.co-mic-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--panel2);
+  border: 1px solid rgba(212, 168, 67, 0.35);
+  color: var(--gold);
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: all 0.2s;
+}
+.co-mic-btn.recording {
+  background: #FF3B30;
+  border-color: #FF3B30;
+  color: #fff;
+  animation: micPulse 1.2s infinite;
+}
+@keyframes micPulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(255,59,48,0.5); }
+  50% { box-shadow: 0 0 0 8px rgba(255,59,48,0); }
+}
+.co-send-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--gold);
+  border: none;
+  color: var(--black);
+  font-size: 15px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+}
 </style>
 </head>
 <body>
@@ -2830,8 +3137,37 @@ function selectWorkoutType(sessionId, newKey) {
   closeChangeWorkoutModal();
 }
 
+const WORKOUT_DISPLAY_NAMES = {
+  'weight-a': 'WEIGHT ROOM A — MAX POWER',
+  'weight-b': 'WEIGHT ROOM B — POSTERIOR CHAIN',
+  'weight-c': 'WEIGHT ROOM C — EXPLOSIVE LIFT',
+  'fascia-a': 'FASCIA A — ELASTIC RECOIL',
+  'fascia-b': 'FASCIA B — ROTATIONAL FORCE',
+  'fascia-c': 'FASCIA C — MULTI-DIR AGILITY',
+  'bball-a': 'BASKETBALL A — SKILLS & SHOOTING',
+  'bball-b': 'BASKETBALL B — PICK & ROLL / ISO',
+  'bball-c': 'BASKETBALL C — LIVE RUNS 5v5',
+  'pool-a': 'POOL A — CNS FLUSH & RECOVERY',
+  'pool-b': 'POOL B — WEEKEND HYDRO FLUSH',
+  'rest-day': 'FULL REST DAY — OFF & SLEEP',
+  'recovery-mobility': 'ACTIVE MOBILITY & ANKLE DECOMP',
+  'track-speed': 'TRACK & SPEED — MAX VELOCITY',
+  'achilles-rehab': 'ACHILLES TENDON ISOMETRIC PROTOCOL'
+};
+
+const DEFAULT_DAY_FOCUS = [
+  'Max Power + Fascia Elastic + Visualization',
+  'Game Speed Skills + CNS Pool Flush + Focus',
+  'Posterior Chain + Rotational Fascia + Breath',
+  'Pick & Roll / Iso + Explosive Lift',
+  'Full Live Runs + Multi-Dir + Pool Flush'
+];
+
 function applyCustomWorkouts() {
   if (!APP.customWorkouts) APP.customWorkouts = {};
+
+  // Track sessions per day to update the Day Card top focus
+  const dayWorkouts = [[], [], [], [], []];
 
   Object.keys(DEFAULT_SESSIONS).forEach(sId => {
     const item = document.getElementById(sId);
@@ -2847,16 +3183,21 @@ function applyCustomWorkouts() {
     const meta = item.querySelector('.session-meta');
     const time = item.querySelector('.session-time');
 
+    const cleanTitle = (WORKOUT_DISPLAY_NAMES[key] || (w ? w.title : def.name));
+
     if (customKey && w) {
       if (dot) dot.style.background = w.color;
-      if (name) name.textContent = w.title.replace('DEVELOPMENT','').replace('PROTOCOL','').trim();
-      if (meta) meta.textContent = (w.meta ? w.meta[1] || w.meta[0] : 'CUSTOM') + ' • SWAPPED';
+      if (name) {
+        name.innerHTML = cleanTitle + ' <span class="swapped-badge">SWAPPED</span>';
+      }
+      if (meta) meta.textContent = (w.meta ? w.meta.slice(0, 2).join(' · ') : 'SWAPPED WORKOUT');
       if (time && w.meta && w.meta[0]) time.textContent = w.meta[0].replace(' MIN','M');
       item.onclick = function(e) {
         if (window.__longPressFired) { window.__longPressFired = false; return; }
         openModal(key, sId, def.day);
       };
       item.classList.add('is-customized');
+      dayWorkouts[def.day].push(cleanTitle.split('—')[0].trim());
     } else {
       if (dot) dot.style.background = def.color;
       if (name) name.textContent = def.name;
@@ -2869,6 +3210,7 @@ function applyCustomWorkouts() {
         };
       }
       item.classList.remove('is-customized');
+      dayWorkouts[def.day].push(def.name);
     }
 
     if (!item.querySelector('.session-swap-btn')) {
@@ -2885,6 +3227,23 @@ function applyCustomWorkouts() {
       else item.appendChild(swapBtn);
     }
   });
+
+  // Update Day Card focus text at the top of each day card
+  for (let d = 0; d < 5; d++) {
+    const cardEl = document.getElementById('card-' + d);
+    if (cardEl) {
+      const focusEl = cardEl.querySelector('.day-focus');
+      if (focusEl) {
+        // If any session was customized on that day, show updated summary
+        const hasCustom = Object.keys(APP.customWorkouts).some(sId => DEFAULT_SESSIONS[sId] && DEFAULT_SESSIONS[sId].day === d);
+        if (hasCustom && dayWorkouts[d].length > 0) {
+          focusEl.textContent = dayWorkouts[d].join(' + ');
+        } else {
+          focusEl.textContent = DEFAULT_DAY_FOCUS[d] || focusEl.textContent;
+        }
+      }
+    }
+  }
 }
 
 function attachLongPressHandlers() {
@@ -4384,6 +4743,273 @@ function renderWellnessUI(){
   });
 }
 
+
+// ══════════════════════════════════════════════════════════
+// BVMBINO AI COACH ENGINE — SPORT SCIENCE, PSYCHOLOGY, FINANCE
+// ══════════════════════════════════════════════════════════
+
+const COACH_SYSTEM_PROMPT = `You are BVMBINO AI Coach — an elite high-performance mentor, sports scientist, sports psychologist, and wealth advisor for a professional basketball athlete (Phase 3 Explosive Peak).
+
+Your expertise spans three core pillars:
+1. SPORTS SCIENCE & BIOMECHANICS:
+   - Tendon health: Achilles & patellar tendinopathy protocols (heavy isometrics at neutral ankle angles, 5x45s holds, heavy slow resistance HSR, eccentric control).
+   - Explosive power: Rate of Force Development (RFD), Compensatory Acceleration Training (CAT), plyometric stiffness, sprint acceleration mechanics.
+   - Recovery: Contrast water therapy, sleep optimization (deep/REM sleep, room temp 19°C), post-workout glycogen replenishment (4:1 carb-to-protein ratio within 45 mins), hydration and electrolyte balance.
+2. HUMAN PSYCHOLOGY & MENTAL TOUGHNESS:
+   - High-pressure execution: Clutch performance, free-throw routine, emotional regulation, managing referee frustration.
+   - Visualization: Vivid multi-sensory mental rehearsal before game speed reps.
+   - Mindset: Stoic discipline, handling injury rehabilitation patience, intrinsic vs extrinsic motivation, ego management.
+3. FINANCE & WEALTH STRATEGY FOR PRO ATHLETES:
+   - Wealth preservation: Living on 30-40% of net income, avoiding lifestyle creep and predatory friends/family requests.
+   - Contract management: Understanding gross vs net, taxes, escrow withholdings, agent fiduciary duties.
+   - Long-term assets: Low-cost broad-market index funds, real estate, equity over cash endorsements, building generational wealth for life after basketball.
+
+Style: Concise, sharp, high-IQ, encouraging, practical. Speak like a trusted NBA/EuroLeague director of high performance. Avoid long rambling disclaimers. Give direct, actionable advice with elite standards.`;
+
+// Local Offline Knowledge Brain for instant 0-latency offline replies
+const OFFLINE_KNOWLEDGE = [
+  {
+    keywords: ['achilles', 'tendon', 'calf', 'soleus', 'ankle', 'heel', 'plantar'],
+    topic: 'ACHILLES TENDON & ANKLE PROTOCOL',
+    reply: `Here is the elite Achilles Loading Protocol for court athletes:
+
+1. **Isometric Analgesia (Pain Relief)**:
+   - Single-leg Soleus wall sit or heavy calf iso hold at a neutral 90° ankle angle.
+   - 5 sets × 45 seconds holds. This reduces cortical inhibition and provides immediate pain relief without tendon compression.
+2. **Heavy Slow Resistance (HSR)**:
+   - 3 seconds concentric, 3 seconds eccentric under load (RPE 8). This stimulates collagen cross-linking and restores tendon spring stiffness.
+3. **Golden Rule**:
+   - Never aggressively stretch a reactive Achilles cold. Tendons hate tensile stretch under acute inflammation.`
+  },
+  {
+    keywords: ['psychology', 'mindset', 'pressure', 'clutch', 'anxiety', 'nervous', 'slump', 'mental', 'focus', 'confidence', 'head'],
+    topic: 'ELITE ATHLETE PSYCHOLOGY',
+    reply: `In crunch time, confidence is not a feeling — it is an active decision backed by preparation.
+
+1. **The 3-Second Breath Anchor**:
+   - Before taking the court or stepping to the free-throw line: 4-second inhale through the nose, 2-second hold, 6-second physiological sigh exhale. This resets your autonomic nervous system from panic to hyper-focus.
+2. **Process over Outcome**:
+   - You cannot control whether the ball bounces in; you control your release point, follow-through, and defensive stance. Detach from the scoreboard and lock into the next possession.
+3. **Identity Beyond the Game**:
+   - You are a complete, elite human being who plays basketball at the highest level. Your self-worth does not fluctuate with shooting percentages.`
+  },
+  {
+    keywords: ['finance', 'money', 'contract', 'invest', 'wealth', 'budget', 'tax', 'salary', 'rich', 'financial'],
+    topic: 'PRO ATHLETE WEALTH STRATEGY',
+    reply: `The golden rule of pro athlete wealth: **It's not what you make; it's what you keep.**
+
+1. **The 40% Living Rule**:
+   - Live on 30% to 40% of your net post-tax income. Automatically route the remaining 60% into wealth preservation before you ever see it.
+   - Remember: An athlete's high-earning window is typically 8–12 years, but retirement lasts 50+ years.
+2. **Asset Allocation**:
+   - Prioritize broad-market index funds (S&P 500 / Total World) and income-producing real estate. Say NO to friend ventures, unvetted nightclubs, or speculative crypto.
+3. **The 'No' Muscle**:
+   - Learn to say: "My financial advisor requires all investments to go through a strict vetting process." That takes the pressure off personal relationships.`
+  },
+  {
+    keywords: ['jump', 'vertical', 'dunk', 'bounce', 'plyo', 'power', 'explosive', 'cns'],
+    topic: 'VERTICAL JUMP & RATE OF FORCE DEVELOPMENT',
+    reply: `To increase vertical jump in Phase 3 (Explosive Peak):
+
+1. **RFD (Rate of Force Development)**:
+   - Lift with maximal intent on the concentric phase (CAT method). 85% load moved with maximum speed recruits high-threshold Type IIx motor units.
+2. **Ankle Stiffness over Leg Strength**:
+   - 40% of vertical jump rebound comes from elastic recoil of the Achilles tendon and plantar fascia. Pogo hops and drop jumps (30cm box) build that stiffness.
+3. **CNS Readiness**:
+   - Keep sets short (2-3 reps) with full rest (2.5 to 3 minutes). Jumping fatigued only trains slow velocity.`
+  },
+  {
+    keywords: ['sleep', 'recovery', 'tired', 'fatigue', 'sore', 'pool', 'contrast', 'eat', 'food', 'nutrition', 'shake'],
+    topic: 'RECOVERY ARCHITECTURE',
+    reply: `Elite recovery protocol for basketball athletes:
+
+1. **Sleep Architecture**:
+   - 8.5 to 9 hours. Room temperature at 19°C (66°F). 80% of human growth hormone (HGH) is released during slow-wave deep sleep.
+2. **The 45-Minute Post-Lift Window**:
+   - 40g high-quality whey protein + 60-80g fast-digesting carbohydrates (dextrose, rice cakes, or fruit) to spike insulin and shuttle amino acids into recovering muscle fibers.
+3. **Hydrotherapy Contrast**:
+   - 3 rounds: 60s cold plunge (10-12°C) followed by 2 minutes warm water. Flushes lactate and reduces nervous system tone.`
+  }
+];
+
+function getLocalOfflineReply(query) {
+  const q = query.toLowerCase();
+  for (const item of OFFLINE_KNOWLEDGE) {
+    if (item.keywords.some(k => q.includes(k))) {
+      return item.reply;
+    }
+  }
+  // Default general response
+  return `Yo Bvmbino! As your coach, remember that elite performance is built on 3 pillars:
+
+1. **Sports Science**: Train with maximal intent, respect tendon recovery, and keep your CNS fresh.
+2. **Psychology**: Stay stoic under pressure and lock into the process of each possession.
+3. **Finance & Longevity**: Protect your capital, live below your means, and invest for decades, not just this season.
+
+Ask me specifically about your Achilles, vertical jump mechanics, game mindset, or wealth strategies!`;
+}
+
+// Conversation History & Settings
+let coachChatHistory = [];
+let coachVoiceEnabled = true;
+let coachSpeechRec = null;
+
+function promptApiKey() {
+  const cur = localStorage.getItem('bvmbino_gemini_key') || '';
+  const input = prompt('Enter your Gemini API Key (stored safely in your local browser):', cur);
+  if (input !== null) {
+    localStorage.setItem('bvmbino_gemini_key', input.trim());
+    showToast('API KEY SAVED LOCALLY ✓', 'toast-success');
+  }
+}
+
+function toggleCoachModal() {
+  const m = document.getElementById('coach-modal');
+  if (m) m.classList.toggle('open');
+}
+
+function toggleCoachVoice() {
+  coachVoiceEnabled = !coachVoiceEnabled;
+  const btn = document.getElementById('coach-voice-btn');
+  if (btn) btn.textContent = coachVoiceEnabled ? '🔊' : '🔇';
+  showToast(coachVoiceEnabled ? 'COACH VOICE: ON' : 'COACH VOICE: MUTED', 'toast-success');
+}
+
+function speakCoachText(text) {
+  if (!coachVoiceEnabled || !('speechSynthesis' in window)) return;
+  try {
+    window.speechSynthesis.cancel();
+    // Clean text of markdown stars and bullets
+    const clean = text.replace(/[*_#`]/g, '').replace(/\[[^\]]+\]/g, '');
+    const utter = new SpeechSynthesisUtterance(clean);
+    utter.rate = 1.05;
+    utter.pitch = 0.95;
+    window.speechSynthesis.speak(utter);
+  } catch(e) {}
+}
+
+async function sendCoachMessage() {
+  const input = document.getElementById('coach-input');
+  if (!input) return;
+  const userText = input.value.trim();
+  if (!userText) return;
+
+  const chatContainer = document.getElementById('coach-messages');
+  
+  // Render user bubble
+  const userDiv = document.createElement('div');
+  userDiv.className = 'coach-msg user';
+  userDiv.innerHTML = `<div class="cm-bubble">${userText}</div><div class="cm-time">YOU • JUST NOW</div>`;
+  chatContainer.appendChild(userDiv);
+  input.value = '';
+  chatContainer.scrollTop = chatContainer.scrollHeight;
+
+  // Add typing indicator
+  const typingDiv = document.createElement('div');
+  typingDiv.className = 'coach-msg coach';
+  typingDiv.id = 'coach-typing-indicator';
+  typingDiv.innerHTML = `<div class="cm-bubble" style="color:var(--gold)">Thinking with elite coach brain...</div>`;
+  chatContainer.appendChild(typingDiv);
+  chatContainer.scrollTop = chatContainer.scrollHeight;
+
+  // Check online status and API key
+  const apiKey = localStorage.getItem('bvmbino_gemini_key') || '';
+  let replyText = '';
+  let isOffline = !navigator.onLine;
+
+  if (!isOffline && apiKey && apiKey.startsWith('AIzaSy')) {
+    try {
+      const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+      const payload = {
+        contents: [
+          { role: 'user', parts: [{ text: COACH_SYSTEM_PROMPT + '\n\nAthlete query: ' + userText }] }
+        ]
+      };
+      const res = await fetch(endpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      if (res.ok) {
+        const data = await res.json();
+        replyText = data.candidates?.[0]?.content?.parts?.[0]?.text;
+      }
+    } catch(err) {
+      isOffline = true;
+    }
+  }
+
+  // Fallback to local offline intelligence
+  if (!replyText) {
+    replyText = getLocalOfflineReply(userText);
+  }
+
+  // Remove typing indicator
+  const indicator = document.getElementById('coach-typing-indicator');
+  if (indicator) indicator.remove();
+
+  // Render Coach response
+  const coachDiv = document.createElement('div');
+  coachDiv.className = 'coach-msg coach';
+  coachDiv.innerHTML = `
+    <div class="cm-bubble">
+      ${replyText.replace(/\n/g, '<br>')}
+      ${isOffline ? '<div style="margin-top:8px;font-family:\'DM Mono\',monospace;font-size:7.5px;color:var(--gold);opacity:0.8">⚡ LOCAL ATHLETE BRAIN (OFFLINE)</div>' : ''}
+    </div>
+    <div class="cm-time">COACH • JUST NOW</div>
+  `;
+  chatContainer.appendChild(coachDiv);
+  chatContainer.scrollTop = chatContainer.scrollHeight;
+
+  // Speak response
+  speakCoachText(replyText);
+}
+
+function promptCoach(text) {
+  const input = document.getElementById('coach-input');
+  if (input) {
+    input.value = text;
+    sendCoachMessage();
+  }
+}
+
+function toggleCoachMic() {
+  const btn = document.getElementById('coach-mic-btn');
+  const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SpeechRec) {
+    showToast('Speech recognition not supported in this browser', 'toast-warn');
+    return;
+  }
+  if (!coachSpeechRec) {
+    coachSpeechRec = new SpeechRec();
+    coachSpeechRec.continuous = false;
+    coachSpeechRec.interimResults = false;
+    coachSpeechRec.onstart = () => {
+      if (btn) btn.classList.add('recording');
+      showToast('LISTENING...', 'toast-success');
+    };
+    coachSpeechRec.onresult = (e) => {
+      const transcript = e.results[0][0].transcript;
+      const input = document.getElementById('coach-input');
+      if (input) {
+        input.value = transcript;
+        sendCoachMessage();
+      }
+    };
+    coachSpeechRec.onend = () => {
+      if (btn) btn.classList.remove('recording');
+    };
+    coachSpeechRec.onerror = () => {
+      if (btn) btn.classList.remove('recording');
+    };
+  }
+  try {
+    coachSpeechRec.start();
+  } catch(e) {
+    coachSpeechRec.stop();
+  }
+}
+
 </script>
 
 <!-- ── CHANGE WORKOUT TYPE SHEET MODAL ── -->
@@ -4399,6 +5025,101 @@ function renderWellnessUI(){
     </div>
     <div class="cws-body" id="cws-options-list">
       <!-- Options dynamically rendered by openChangeWorkoutModal() -->
+    </div>
+  </div>
+</div>
+
+<!-- ── PIXAR 3D COACH FAB LAUNCHER ── -->
+<div class="coach-fab" id="coach-fab" onclick="toggleCoachModal()" title="Bvmbino AI Coach">
+  <div class="coach-pulse-dot"></div>
+  <svg class="coach-avatar-svg" viewBox="0 0 100 100" fill="none">
+    <defs>
+      <radialGradient id="cfSkinG" cx="40%" cy="35%" r="60%">
+        <stop offset="0%" stop-color="#C68652"/>
+        <stop offset="65%" stop-color="#8C532B"/>
+        <stop offset="100%" stop-color="#583115"/>
+      </radialGradient>
+      <linearGradient id="cfShadesG" x1="0%" y1="0%" x2="100%" y2="80%">
+        <stop offset="0%" stop-color="#D4A843"/>
+        <stop offset="40%" stop-color="#FF5500"/>
+        <stop offset="80%" stop-color="#222"/>
+        <stop offset="100%" stop-color="#000"/>
+      </linearGradient>
+      <radialGradient id="cfBallG" cx="35%" cy="30%" r="65%">
+        <stop offset="0%" stop-color="#FF8A3D"/>
+        <stop offset="70%" stop-color="#D04D00"/>
+        <stop offset="100%" stop-color="#7A2200"/>
+      </radialGradient>
+    </defs>
+    <ellipse cx="50" cy="46" rx="22" ry="24" fill="url(#cfSkinG)"/>
+    <path d="M28 42 C28 26 38 18 50 18 C62 18 72 26 72 42 C70 32 62 26 50 26 C38 26 30 32 28 42 Z" fill="#151210"/>
+    <circle cx="27" cy="47" r="5" fill="#8C532B"/>
+    <circle cx="73" cy="47" r="5" fill="#8C532B"/>
+    <path d="M28 33 Q50 30 72 33 L72 37 Q50 34 28 37 Z" fill="#D4A843" stroke="#8A6B20" stroke-width="0.5"/>
+    <path d="M33 42 C33 39 46 39 47 43 C48 46 45 49 37 49 C33 49 33 44 33 42 Z" fill="url(#cfShadesG)" stroke="#111" stroke-width="1"/>
+    <path d="M53 43 C54 39 67 39 67 42 C67 44 67 49 63 49 C55 49 52 46 53 43 Z" fill="url(#cfShadesG)" stroke="#111" stroke-width="1"/>
+    <path d="M47 42 Q50 40 53 42" stroke="#D4A843" stroke-width="1.5" stroke-linecap="round"/>
+    <line x1="36" y1="42" x2="43" y2="47" stroke="#FFF" stroke-width="1" stroke-linecap="round" opacity="0.6"/>
+    <line x1="56" y1="42" x2="63" y2="47" stroke="#FFF" stroke-width="1" stroke-linecap="round" opacity="0.6"/>
+    <path d="M42 58 Q50 63 58 58" stroke="#3D200E" stroke-width="2" stroke-linecap="round" fill="none"/>
+    <path d="M40 62 Q50 66 60 62" stroke="#1A1410" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+    <path d="M22 80 C26 68 40 68 50 68 C60 68 74 68 78 80 L80 100 L20 100 Z" fill="#141418"/>
+    <path d="M36 68 L50 78 L64 68" stroke="#D4A843" stroke-width="2" fill="none"/>
+    <path d="M41 73 Q50 82 59 73" stroke="#FFD700" stroke-width="1.2" fill="none"/>
+    <circle cx="75" cy="74" r="12" fill="url(#cfBallG)"/>
+    <ellipse cx="75" cy="74" rx="12" ry="4" stroke="#4A1800" stroke-width="0.8" fill="none"/>
+    <ellipse cx="75" cy="74" rx="4" ry="12" stroke="#4A1800" stroke-width="0.8" fill="none"/>
+  </svg>
+</div>
+
+<!-- ── COACH MODAL OVERLAY ── -->
+<div class="coach-overlay" id="coach-modal" onclick="if(event.target===this)toggleCoachModal()">
+  <div class="coach-sheet">
+    <div class="co-header">
+      <div class="co-profile">
+        <div class="co-avatar-wrap">
+          <svg viewBox="0 0 100 100" style="width:34px;height:34px">
+            <ellipse cx="50" cy="46" rx="22" ry="24" fill="#8C532B"/>
+            <path d="M28 33 Q50 30 72 33 L72 37 Q50 34 28 37 Z" fill="#D4A843"/>
+            <path d="M33 42 C33 39 46 39 47 43 C48 46 45 49 37 49 C33 49 33 44 33 42 Z" fill="#D4A843"/>
+            <path d="M53 43 C54 39 67 39 67 42 C67 44 67 49 63 49 C55 49 52 46 53 43 Z" fill="#D4A843"/>
+            <path d="M42 58 Q50 63 58 58" stroke="#3D200E" stroke-width="2" fill="none"/>
+          </svg>
+          <div class="online-pulse-sm"></div>
+        </div>
+        <div>
+          <div class="co-name">BVMBINO AI COACH</div>
+          <div class="co-sub">// SPORT SCIENCE · PSYCHOLOGY · WEALTH</div>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:6px">
+        <button class="co-icon-btn" onclick="promptApiKey()" title="Configure Gemini API Key">🔑</button>
+        <button class="co-icon-btn" id="coach-voice-btn" onclick="toggleCoachVoice()" title="Toggle voice read-aloud">🔊</button>
+        <button class="co-icon-btn" onclick="toggleCoachModal()">✕</button>
+      </div>
+    </div>
+
+    <div class="co-body" id="coach-messages">
+      <div class="coach-msg coach">
+        <div class="cm-bubble">
+          Yo Bvmbino! 🏀 I'm your dedicated 24/7 AI mentor. I cover <strong>Sport Science & Tendon Biomechanics</strong>, <strong>Human Psychology & Clutch Mindset</strong>, and <strong>Pro Athlete Wealth & Finance</strong>.<br><br>What are we locking in on today?
+        </div>
+        <div class="cm-time">COACH • JUST NOW</div>
+      </div>
+    </div>
+
+    <div class="co-pills">
+      <div class="co-pill" onclick="promptCoach('How do I manage Achilles tension after heavy jump sessions?')">⚡ Achilles Protocol</div>
+      <div class="co-pill" onclick="promptCoach('How to stay mentally locked in during high-pressure crunch time?')">🧠 Clutch Psychology</div>
+      <div class="co-pill" onclick="promptCoach('How should a pro basketball player invest and preserve wealth?')">💰 Athlete Wealth</div>
+      <div class="co-pill" onclick="promptCoach('What are the best methods to maximize vertical jump and RFD?')">🚀 Vertical Jump RFD</div>
+      <div class="co-pill" onclick="promptCoach('What should my post-game sleep and nutrition timing look like?')">🥩 Sleep & Recovery</div>
+    </div>
+
+    <div class="co-footer">
+      <button class="co-mic-btn" id="coach-mic-btn" onclick="toggleCoachMic()" title="Tap to speak">🎙</button>
+      <input type="text" class="co-input" id="coach-input" placeholder="Ask about sport science, mindset, wealth..." onkeydown="if(event.key==='Enter')sendCoachMessage()">
+      <button class="co-send-btn" onclick="sendCoachMessage()">➔</button>
     </div>
   </div>
 </div>
