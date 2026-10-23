@@ -1343,7 +1343,7 @@ body>*{position:relative;z-index:1}
     {name:'Standing Banded / Cable Woodchops',sets:['3×12 each side','3×12 each side','3×15 each side','3×10 each side'],quality:'ROTATIONAL POWER',yt:true,why:'Transfers transverse plane core power into explosive crossover and passing velocity.',achilles:false},
     {name:'90/90 Hip Capsule & Glute Stretch',sets:['3×60s each side','3×60s each side','3×60s each side','3×45s each side'],quality:'HIP MOBILITY',yt:true,why:'Decompresses internal and external hip rotators to restore full triple-flexion depth.',achilles:false},
     {name:'Banded Hamstring & Achilles Decomp',sets:['3×45s each leg','3×45s each leg','3×45s each leg','3×30s each leg'],quality:'POSTERIOR FLUSH',yt:true,why:'Gentle traction relieves neural and fascial tension along the entire superficial back line.',achilles:true},
-    {name:'Prone Cobra to Child's Pose Spinal Flush',sets:['3×60s flow','3×60s flow','3×60s flow','3×45s flow'],quality:'SPINAL RELAX',yt:true,why:'Restores spinal extension-flexion balance and downregulates paraspinal tension.',achilles:false}
+    {name:'Prone Cobra to Child\'s Pose Spinal Flush',sets:['3×60s flow','3×60s flow','3×60s flow','3×45s flow'],quality:'SPINAL RELAX',yt:true,why:'Restores spinal extension-flexion balance and downregulates paraspinal tension.',achilles:false}
   ]}
 }
 
@@ -1363,129 +1363,6 @@ body>*{position:relative;z-index:1}
   display: inline-block;
 }
 
-
-/* ── MENTAL PERFORMANCE VAULT ── */
-.mental-vault-tabs {
-  display: flex;
-  gap: 8px;
-  overflow-x: auto;
-  padding: 0 20px 14px;
-  scrollbar-width: none;
-}
-.mv-tab {
-  flex-shrink: 0;
-  background: var(--panel2);
-  border: 1px solid var(--border);
-  color: var(--text-dim);
-  font-family: 'DM Mono', monospace;
-  font-size: 8.5px;
-  letter-spacing: 1.5px;
-  padding: 8px 14px;
-  border-radius: 20px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  user-select: none;
-}
-.mv-tab:hover, .mv-tab:active {
-  border-color: var(--gold);
-  color: #fff;
-}
-.mv-tab.active {
-  background: rgba(212, 168, 67, 0.15);
-  border-color: var(--gold);
-  color: var(--gold);
-  font-weight: 700;
-}
-.mv-panel {
-  display: none;
-  padding: 0 20px;
-  flex-direction: column;
-  gap: 14px;
-  animation: fadeIn 0.25s ease;
-}
-.mv-panel.active {
-  display: flex;
-}
-.mv-card {
-  background: var(--panel);
-  border: 1px solid var(--border);
-  border-radius: var(--r);
-  padding: 18px;
-  position: relative;
-  overflow: hidden;
-  transition: border-color 0.2s;
-}
-.mv-card:hover {
-  border-color: rgba(212, 168, 67, 0.35);
-}
-.mv-card-tag {
-  font-family: 'DM Mono', monospace;
-  font-size: 8px;
-  color: var(--gold);
-  letter-spacing: 2px;
-  margin-bottom: 6px;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-.mv-card-title {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: 20px;
-  color: #fff;
-  letter-spacing: 1px;
-  line-height: 1.15;
-  margin-bottom: 8px;
-}
-.mv-arabic {
-  font-size: 19px;
-  line-height: 1.6;
-  color: #F5E6C8;
-  direction: rtl;
-  text-align: right;
-  margin: 8px 0 10px;
-  font-family: 'Amiri', 'Traditional Arabic', serif;
-  background: rgba(212, 168, 67, 0.05);
-  padding: 10px 14px;
-  border-radius: 8px;
-  border-right: 3px solid var(--gold);
-}
-.mv-quote-text {
-  font-size: 13.5px;
-  line-height: 1.5;
-  color: var(--text);
-  font-style: italic;
-  margin-bottom: 10px;
-}
-.mv-body-text {
-  font-size: 12.5px;
-  line-height: 1.55;
-  color: var(--text-mid);
-  margin-bottom: 12px;
-}
-.mv-athlete-takeaway {
-  background: var(--panel2);
-  border-left: 2.5px solid var(--gold);
-  border-radius: 0 8px 8px 0;
-  padding: 10px 12px;
-  font-size: 11.5px;
-  line-height: 1.45;
-  color: var(--text);
-}
-.mv-athlete-label {
-  font-family: 'DM Mono', monospace;
-  font-size: 7.5px;
-  color: var(--gold);
-  letter-spacing: 1.5px;
-  margin-bottom: 3px;
-  font-weight: 700;
-}
-.mv-source {
-  font-family: 'DM Mono', monospace;
-  font-size: 8px;
-  color: var(--text-dim);
-  letter-spacing: 1px;
-  margin-top: 6px;
-}
 
 /* ── FULL DAY REST & RECOVERY BLUE THEME ── */
 .day-card.is-rest-recovery {
@@ -1526,6 +1403,235 @@ body>*{position:relative;z-index:1}
 .day-card.is-rest-recovery .session-item.done {
   background: rgba(52, 120, 246, 0.22) !important;
   border-color: rgba(52, 120, 246, 0.5) !important;
+}
+
+/* ── COLOR-CODED MENTAL PERFORMANCE SECTION ── */
+.mental-days-strip {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding: 0 20px 14px;
+  scrollbar-width: none;
+}
+.md-day-pill {
+  flex-shrink: 0;
+  background: var(--panel2);
+  border: 1px solid var(--border);
+  color: var(--text-dim);
+  font-family: 'DM Mono', monospace;
+  font-size: 8.5px;
+  letter-spacing: 1.5px;
+  padding: 6px 14px;
+  border-radius: 16px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  user-select: none;
+}
+.md-day-pill:hover, .md-day-pill:active {
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.25);
+}
+.md-day-pill.active {
+  background: var(--panel);
+  border-color: var(--gold);
+  color: var(--gold);
+  font-weight: 700;
+}
+
+/* 4 DISTINCT COLOR CARDS */
+.mental-card-col {
+  padding: 0 20px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* 1. LIGHT BLUE: Quote of the Day */
+.mc-light-blue {
+  background: linear-gradient(135deg, rgba(52, 120, 246, 0.08) 0%, var(--panel) 100%);
+  border: 1.5px solid rgba(52, 120, 246, 0.45);
+  border-radius: var(--r);
+  padding: 16px 18px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(52, 120, 246, 0.12);
+}
+.mc-light-blue .mc-badge {
+  font-family: 'DM Mono', monospace;
+  font-size: 8px;
+  color: #5AC8FA;
+  letter-spacing: 2px;
+  margin-bottom: 6px;
+}
+.mc-light-blue .mc-quote {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 21px;
+  color: #fff;
+  letter-spacing: 0.5px;
+  line-height: 1.2;
+  margin-bottom: 6px;
+}
+.mc-light-blue .mc-author {
+  font-family: 'DM Mono', monospace;
+  font-size: 8.5px;
+  color: #5AC8FA;
+  letter-spacing: 1.5px;
+}
+
+/* 2. PURPLE: Quote & Mantra of the Week */
+.mc-purple {
+  background: linear-gradient(135deg, rgba(191, 90, 242, 0.08) 0%, var(--panel) 100%);
+  border: 1.5px solid rgba(191, 90, 242, 0.45);
+  border-radius: var(--r);
+  padding: 16px 18px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(191, 90, 242, 0.12);
+}
+.mc-purple .mc-badge {
+  font-family: 'DM Mono', monospace;
+  font-size: 8px;
+  color: #BF5AF2;
+  letter-spacing: 2px;
+  margin-bottom: 6px;
+}
+.mc-purple .mc-quote {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 21px;
+  color: #fff;
+  letter-spacing: 0.5px;
+  line-height: 1.2;
+  margin-bottom: 6px;
+}
+.mc-purple .mc-author {
+  font-family: 'DM Mono', monospace;
+  font-size: 8.5px;
+  color: #BF5AF2;
+  letter-spacing: 1.5px;
+}
+
+
+.mc-tab-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+.mc-tabs {
+  display: flex;
+  gap: 4px;
+  background: rgba(0, 0, 0, 0.4);
+  border-radius: 20px;
+  padding: 2px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+.mc-tab-btn {
+  font-family: 'DM Mono', monospace;
+  font-size: 8px;
+  letter-spacing: 1px;
+  padding: 3px 8px;
+  border-radius: 12px;
+  border: none;
+  background: transparent;
+  color: var(--text-dim);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.mc-green .mc-tab-btn.active {
+  background: rgba(48, 209, 88, 0.25);
+  color: #30D158;
+}
+.mc-orange .mc-tab-btn.active {
+  background: rgba(255, 159, 10, 0.25);
+  color: #FF9F0A;
+}
+
+/* 3. GREEN: Islamic Quote of the Day & Week */
+.mc-green {
+  background: linear-gradient(135deg, rgba(48, 209, 88, 0.08) 0%, var(--panel) 100%);
+  border: 1.5px solid rgba(48, 209, 88, 0.45);
+  border-radius: var(--r);
+  padding: 16px 18px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(48, 209, 88, 0.12);
+}
+.mc-green .mc-badge {
+  font-family: 'DM Mono', monospace;
+  font-size: 8px;
+  color: #30D158;
+  letter-spacing: 2px;
+  margin-bottom: 6px;
+}
+.mc-green .mc-arabic {
+  font-size: 18px;
+  color: #E2F9E5;
+  direction: rtl;
+  text-align: right;
+  margin-bottom: 6px;
+  font-family: 'Amiri', 'Traditional Arabic', serif;
+}
+.mc-green .mc-quote {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 20px;
+  color: #fff;
+  letter-spacing: 0.5px;
+  line-height: 1.2;
+  margin-bottom: 6px;
+}
+.mc-green .mc-author {
+  font-family: 'DM Mono', monospace;
+  font-size: 8.5px;
+  color: #30D158;
+  letter-spacing: 1.5px;
+}
+.mc-green .mc-takeaway {
+  font-size: 11.5px;
+  color: var(--text-mid);
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid rgba(48, 209, 88, 0.2);
+  line-height: 1.4;
+}
+
+/* 4. ORANGE: Book Quote of the Day & Week */
+.mc-orange {
+  background: linear-gradient(135deg, rgba(255, 159, 10, 0.08) 0%, var(--panel) 100%);
+  border: 1.5px solid rgba(255, 159, 10, 0.45);
+  border-radius: var(--r);
+  padding: 16px 18px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(255, 159, 10, 0.12);
+}
+.mc-orange .mc-badge {
+  font-family: 'DM Mono', monospace;
+  font-size: 8px;
+  color: #FF9F0A;
+  letter-spacing: 2px;
+  margin-bottom: 6px;
+}
+.mc-orange .mc-quote {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 20px;
+  color: #fff;
+  letter-spacing: 0.5px;
+  line-height: 1.2;
+  margin-bottom: 6px;
+}
+.mc-orange .mc-author {
+  font-family: 'DM Mono', monospace;
+  font-size: 8.5px;
+  color: #FF9F0A;
+  letter-spacing: 1.5px;
+}
+.mc-orange .mc-takeaway {
+  font-size: 11.5px;
+  color: var(--text-mid);
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid rgba(255, 159, 10, 0.2);
+  line-height: 1.4;
 }
 </style>
 </head>
@@ -1840,238 +1946,101 @@ body>*{position:relative;z-index:1}
     </div>
   </div>
   <div class="divider"></div>
-  <div style="padding:0 20px 12px">
-    <div style="background:rgba(52,120,246,0.06);border:1px solid rgba(52,120,246,0.2);border-radius:var(--r);padding:14px 16px;margin-bottom:10px">
-      <div style="font-family:'DM Mono',monospace;font-size:9px;color:#3478F6;letter-spacing:2px;margin-bottom:6px">// TODAY'S QUOTE</div>
-      <div style="font-family:'Bebas Neue',sans-serif;font-size:18px;color:#fff;letter-spacing:0.5px;line-height:1.25;margin-bottom:4px" id="daily-quote-text">"Champions are built in the off-season."</div>
-      <div style="font-family:'DM Mono',monospace;font-size:9px;color:rgba(255,255,255,0.45);letter-spacing:1px" id="daily-quote-author">— KOBE BRYANT</div>
-    </div>
-    <div style="background:rgba(191,90,242,0.06);border:1px solid rgba(191,90,242,0.2);border-radius:var(--r);padding:18px 16px">
-      <div style="font-family:'DM Mono',monospace;font-size:9px;color:var(--purple);letter-spacing:2px;margin-bottom:4px">// THIS WEEK'S MANTRA</div>
-      <div style="font-family:'DM Mono',monospace;font-size:8px;color:rgba(191,90,242,0.6);letter-spacing:1px;margin-bottom:8px" id="weekly-mantra-theme">EXPLOSIVE FOUNDATION</div>
-      <div style="font-family:'Bebas Neue',sans-serif;font-size:28px;color:#fff;letter-spacing:1px;line-height:1.1" id="weekly-mantra-text">"I TRUST MY BODY.<br>I BUILD THE FOUNDATION."</div>
-    </div>
-  </div>
-  <div style="height:16px"></div>
-
-  <div class="divider"></div>
   <div class="sec-label">
-    <div class="sec-title">MENTAL PERFORMANCE VAULT</div>
-    <div class="sec-action">// SCRIPTURE · HISTORY · MASTERY</div>
+    <div class="sec-title">DAILY & WEEKLY QUOTES</div>
+    <div class="sec-action" id="mental-day-indicator">// TODAY</div>
   </div>
 
-  <!-- Interactive Vault Tabs -->
-  <div class="mental-vault-tabs" id="mv-tabs">
-    <div class="mv-tab active" onclick="switchMentalVaultTab('quran', this)">📖 QURAN & TAWAKKUL</div>
-    <div class="mv-tab" onclick="switchMentalVaultTab('warriors', this)">⚔️ WARRIORS OF ISLAM</div>
-    <div class="mv-tab" onclick="switchMentalVaultTab('toughness', this)">🧠 DISCIPLINE & TOUGHNESS</div>
-    <div class="mv-tab" onclick="switchMentalVaultTab('behavior', this)">🎯 BEHAVIOR & INFLUENCE</div>
+  <!-- Day Selector Strip (Mon - Sun) -->
+  <div class="mental-days-strip" id="mental-days-strip">
+    <div class="md-day-pill" data-d="1" onclick="setMentalDay(1, this)">MON</div>
+    <div class="md-day-pill" data-d="2" onclick="setMentalDay(2, this)">TUE</div>
+    <div class="md-day-pill" data-d="3" onclick="setMentalDay(3, this)">WED</div>
+    <div class="md-day-pill" data-d="4" onclick="setMentalDay(4, this)">THU</div>
+    <div class="md-day-pill" data-d="5" onclick="setMentalDay(5, this)">FRI</div>
+    <div class="md-day-pill" data-d="6" onclick="setMentalDay(6, this)">SAT</div>
+    <div class="md-day-pill" data-d="0" onclick="setMentalDay(0, this)">SUN</div>
   </div>
 
-  <!-- PANEL 1: QURAN & TAWAKKUL -->
-  <div class="mv-panel active" id="mv-panel-quran">
-    <!-- Verse 1: Hardship and Ease -->
-    <div class="mv-card">
-      <div class="mv-card-tag">// SURAH ASH-SHARH (94:5-6)</div>
-      <div class="mv-card-title">THE DIVINE LAW OF RESILIENCE</div>
-      <div class="mv-arabic">فَإِنَّ مَعَ الْعُسْرِ يُسْرًا • إِنَّ مَعَ الْعُسْرِ يُسْرًا</div>
-      <div class="mv-quote-text">"For indeed, with hardship [will be] ease. Indeed, with hardship [will be] ease."</div>
-      <div class="mv-body-text">In Arabic linguistic precision, the word for hardship (al-'usr) is definite and singular, while ease (yusr) is indefinite and duplicated. One singular hardship can never overcome twofold divine ease. Hardship does not merely precede ease; ease is embedded <em>within</em> the struggle itself.</div>
-      <div class="mv-athlete-takeaway">
-        <div class="mv-athlete-label">🏀 ATHLETE APPLICATION</div>
-        When your legs burn in the fourth quarter or an injury rehabilitation tests your patience, remember: tendon remodeling, muscular adaptation, and mental callous only happen inside the strain. The adaptation is literally inside the difficulty.
+  <div class="mental-card-col">
+    <!-- 1. LIGHT BLUE: Quote of the Day -->
+    <div class="mc-light-blue" id="card-quote-day">
+      <div class="mc-badge" id="qb-day-badge">// LIGHT BLUE · QUOTE OF THE DAY</div>
+      <div class="mc-quote" id="qb-day-text">"You don't have to be great to start, but you have to start to be great."</div>
+      <div class="mc-author" id="qb-day-author">— LES BROWN</div>
+      <div class="mc-takeaway" id="qb-day-takeaway" style="font-size:11.5px;color:var(--text-mid);margin-top:8px;padding-top:8px;border-top:1px solid rgba(90,200,250,0.2);line-height:1.4">
+        Every championship run starts with showing up and attacking rep one.
       </div>
     </div>
 
-    <!-- Verse 2: Capacity -->
-    <div class="mv-card">
-      <div class="mv-card-tag">// SURAH AL-BAQARAH (2:286)</div>
-      <div class="mv-card-title">YOU ARE BUILT FOR THIS LOAD</div>
-      <div class="mv-arabic">لَا يُكَلِّفُ اللَّهُ نَفْسًا إِلَّا وُسْعَهَا</div>
-      <div class="mv-quote-text">"Allah does not burden a soul beyond that it can bear."</div>
-      <div class="mv-body-text">A foundational truth of human capacity: whatever load, high-stakes game, pressure situation, or physical grind is placed in front of you, you possess the innate biological and spiritual capacity to endure and overcome it.</div>
-      <div class="mv-athlete-takeaway">
-        <div class="mv-athlete-label">🏀 ATHLETE APPLICATION</div>
-        Eliminate the victim mentality forever. If this heavy off-season cycle is on your shoulders, you were engineered to master it. Never ask for an easier load; develop broader shoulders.
+    <!-- 2. PURPLE: Quote & Mantra of the Week -->
+    <div class="mc-purple">
+      <div class="mc-badge">// PURPLE · QUOTE & MANTRA OF THE WEEK</div>
+      <div class="mc-quote">"I TRUST MY BODY FULLY. I BUILD THE RECOIL. I AM UNBREAKABLE."</div>
+      <div class="mc-author">— BVMBINO · PHASE 3 EXPLOSIVE PERFORMANCE MANTRA</div>
+      <div class="mc-takeaway" style="font-size:11.5px;color:var(--text-mid);margin-top:8px;padding-top:8px;border-top:1px solid rgba(191,90,242,0.2);line-height:1.4">
+        Anchor: Maximum Ground Reaction Force · Pure Elastic Recoil · Absolute Mental Dominance
       </div>
     </div>
 
-    <!-- Verse 3: Effort is the Currency -->
-    <div class="mv-card">
-      <div class="mv-card-tag">// SURAH AN-NAJM (53:39)</div>
-      <div class="mv-card-title">EFFORT IS YOUR SOLE TESTAMENT</div>
-      <div class="mv-arabic">وَأَن لَّيْسَ لِلْإِنسَانِ إِلَّا مَا سَعَىٰ</div>
-      <div class="mv-quote-text">"And that there is not for man except that [good] for which he strives."</div>
-      <div class="mv-body-text">Outcome is in the hands of the Creator; striving (Sa'y) is the sole duty of the warrior. Your rank, capability, and dignity are judged by the depth of your daily labor and honest sweat.</div>
-      <div class="mv-athlete-takeaway">
-        <div class="mv-athlete-label">🏀 ATHLETE APPLICATION</div>
-        Detach completely from vanity metrics, shooting slumps, and social media opinions. Lock in 100% on the execution of every single repetition, defensive slide, and recovery session.
+    <!-- 3. GREEN: Islamic Wisdom (Daily Verse + Weekly Warrior Story) -->
+    <div class="mc-green" id="card-islamic">
+      <div class="mc-tab-row">
+        <div class="mc-badge" id="qb-islam-badge" style="margin-bottom:0">// GREEN · ISLAMIC REFLECTION</div>
+        <div class="mc-tabs">
+          <button class="mc-tab-btn active" id="tab-btn-islam-day" onclick="switchMentalTab('islam','day')">DAY QUOTE</button>
+          <button class="mc-tab-btn" id="tab-btn-islam-week" onclick="switchMentalTab('islam','week')">QUOTE OF THE WEEK</button>
+        </div>
+      </div>
+
+      <!-- Islam Day View -->
+      <div id="islam-view-day">
+        <div class="mc-arabic" id="qb-islam-arabic">إِنَّ مَعَ الْعُسْرِ يُسْرًا</div>
+        <div class="mc-quote" id="qb-islam-text">"Indeed, with hardship comes ease."</div>
+        <div class="mc-author" id="qb-islam-author">— SURAH ASH-SHARH (94:6)</div>
+        <div class="mc-takeaway" id="qb-islam-takeaway">Adaptation only occurs under tension. The ease is forged inside the struggle.</div>
+      </div>
+
+      <!-- Islam Week View (Warrior Story & Quote) -->
+      <div id="islam-view-week" style="display:none">
+        <div style="font-family:'DM Mono',monospace;font-size:9.5px;color:#30D158;letter-spacing:1px;margin-bottom:6px">KHALID IBN AL-WALID · THE SWORD OF ALLAH (SAIFULLAH)</div>
+        <div class="mc-arabic" style="font-size:16px;margin-bottom:4px">فَلَا نَامَتْ أَعْيُنُ الْجُبَنَاءِ</div>
+        <div class="mc-quote" style="font-size:19px">"May the eyes of cowards never sleep."</div>
+        <div class="mc-author">— KHALID IBN AL-WALID (BATTLE OF MU'TAH)</div>
+        <div class="mc-takeaway">
+          Outnumbered 3,000 to over 100,000, Khalid broke 9 swords in combat, then engineered a calm dawn flank maneuver to extract his army without defeat. True power is cold tactical calm inside overwhelming adversity.
+        </div>
       </div>
     </div>
 
-    <!-- Verse 4: The Command to Build Power -->
-    <div class="mv-card">
-      <div class="mv-card-tag">// SURAH AL-ANFAL (8:60)</div>
-      <div class="mv-card-title">THE MANDATE TO CULTIVATE POWER</div>
-      <div class="mv-arabic">وَأَعِدُّوا لَهُم مَّا اسْتَطَعْتُم مِّن قُوَّةٍ</div>
-      <div class="mv-quote-text">"And prepare against them whatever you are able of power and steeds of war..."</div>
-      <div class="mv-body-text">Physical strength, technical readiness, conditioning, and strategic prowess are not worldly distractions; they are explicit divine commandments for those who strive.</div>
-      <div class="mv-athlete-takeaway">
-        <div class="mv-athlete-label">🏀 ATHLETE APPLICATION</div>
-        Lifting weights, strengthening tendons, sprinting at maximum velocity, and eating with discipline are acts of stewardship over the temple Allah gave you. Approach your training with sacred dedication.
+    <!-- 4. ORANGE: Book Wisdom (Daily Principle + Weekly Masterclass) -->
+    <div class="mc-orange" id="card-book">
+      <div class="mc-tab-row">
+        <div class="mc-badge" id="qb-book-badge" style="margin-bottom:0">// ORANGE · BOOK MASTERY</div>
+        <div class="mc-tabs">
+          <button class="mc-tab-btn active" id="tab-btn-book-day" onclick="switchMentalTab('book','day')">DAY QUOTE</button>
+          <button class="mc-tab-btn" id="tab-btn-book-week" onclick="switchMentalTab('book','week')">QUOTE OF THE WEEK</button>
+        </div>
       </div>
-    </div>
-  </div>
 
-  <!-- PANEL 2: WARRIORS OF ISLAM -->
-  <div class="mv-panel" id="mv-panel-warriors">
-    <!-- Story 1: Prophet's Physical Strength -->
-    <div class="mv-card">
-      <div class="mv-card-tag">// SUNNAH · PHYSICAL EXCELLENCE</div>
-      <div class="mv-card-title">THE PROPHET (ﷺ) & RUKANA THE UNDEFEATED WRESTLER</div>
-      <div class="mv-body-text">Rukana ibn Abd Yazid was known as the strongest, most formidable wrestler in all of Arabia whom no man had ever thrown to the ground. He challenged Prophet Muhammad (ﷺ), saying: <em>"If you can bring me down, I will acknowledge your truth."</em><br><br>The Prophet stepped forward without fear or hesitation, took hold of Rukana, and threw him forcefully to the dust. Stunned, Rukana demanded a rematch. The Prophet threw him down a second time, and then a third time consecutively. Rukana stood speechless at the combination of calm demeanor, immense physical grip strength, balance, and quiet poise.<br><br>The Prophet walked with a brisk, athletic forward lean, excelled in archery, rode horses bareback, and endured grueling marches in desert extremes without complaint.</div>
-      <div class="mv-athlete-takeaway">
-        <div class="mv-athlete-label">🏀 ATHLETE APPLICATION</div>
-        Strength and humility are twin pillars. The Prophet said: <em>"The strong believer is better and more beloved to Allah than the weak believer, though there is good in both."</em> (Sahih Muslim). Train to be physically formidable.
+      <!-- Book Day View -->
+      <div id="book-view-day">
+        <div class="mc-quote" id="qb-book-text">"Rest at the end, not in the middle."</div>
+        <div class="mc-author" id="qb-book-author">— KOBE BRYANT · THE MAMBA MENTALITY</div>
+        <div class="mc-takeaway" id="qb-book-takeaway">Never bargain with your workout while fatigued. Finish every repetition with intent.</div>
       </div>
-    </div>
 
-    <!-- Story 2: Khalid ibn al-Walid -->
-    <div class="mv-card">
-      <div class="mv-card-tag">// SAYF ALLAH · THE DRAWN SWORD</div>
-      <div class="mv-card-title">KHALID IBN AL-WALID: THE UNDEFEATED GENERAL</div>
-      <div class="mv-body-text">Undefeated in over 50 major military campaigns against both the Persian and Byzantine empires. At the Battle of Mut'ah, outnumbered over 20-to-1, Khalid took command and broke <strong>nine swords</strong> in close-quarters hand-to-hand combat while maneuvering his men out of an impossible trap.<br><br>At the Battle of Yarmouk, facing 100,000 elite legionnaires, Khalid rode along the frontlines and proclaimed: <em>"By Allah, victory does not come from numbers; it comes from faith, discipline, and endurance."</em><br><br>On his deathbed, looking upon a body covered from chest to feet in spear scars and sword cuts, he famously stated: <em>"There is not the space of a hand on my body that has not received a sword cut, spear thrust, or arrow wound. And here I die upon my bed like an old camel. May the eyes of cowards never sleep."</em></div>
-      <div class="mv-athlete-takeaway">
-        <div class="mv-athlete-label">🏀 ATHLETE APPLICATION</div>
-        Relentless aggression combined with cold tactical intelligence. When you step onto the basketball court, be an unyielding physical presence. Play through contact, embrace the battle, and leave zero doubt.
-      </div>
-    </div>
-
-    <!-- Story 3: Ali ibn Abi Talib -->
-    <div class="mv-card">
-      <div class="mv-card-tag">// ASADULLAH · THE LION OF ALLAH</div>
-      <div class="mv-card-title">ALI IBN ABI TALIB & THE GATES OF KHAYBAR</div>
-      <div class="mv-body-text">At the fortress of Khaybar, the defenders were fortified behind massive iron-reinforced doors that no ram could shatter. The Prophet (ﷺ) declared: <em>"Tomorrow I shall give the banner to a man who loves Allah and His Messenger, and whom Allah and His Messenger love; an attacker who never retreats."</em><br><br>The next morning, Ali stepped forward. In single combat, he defeated Marhab, the giant champion of Khaybar. When his shield was knocked loose in battle, Ali reached out and tore the massive fortress iron door directly off its stone hinges with his bare hands, wielding it as a shield through the breach. Ali represented absolute courage, explosive physical power, and sublime moral restraint.</div>
-      <div class="mv-athlete-takeaway">
-        <div class="mv-athlete-label">🏀 ATHLETE APPLICATION</div>
-        Be the athlete who never retreats. When the defense presses you full court, lean into the challenge with explosive intent. Combine destructive physical power with cool-headed emotional discipline.
-      </div>
-    </div>
-
-    <!-- Story 4: Tariq ibn Ziyad -->
-    <div class="mv-card">
-      <div class="mv-card-tag">// JABAL TARIQ · THE RESOLUTE COMMANDER</div>
-      <div class="mv-card-title">TARIQ IBN ZIYAD: BURNING THE SHIPS</div>
-      <div class="mv-body-text">In 711 CE, Tariq crossed the straits into Spain with 7,000 men, only to find King Roderic marching toward him with an army of 100,000. Tariq ordered the fleet of ships that had brought them to be burned to the waterline.<br><br>He stood before his warriors and gave his historic speech: <em>"O my brothers! Where is the place of retreat? Behind you is the ocean; before you is the enemy! By Allah, you have now nothing to rely upon except your courage, your patience, and your faith."</em> By eliminating the option of retreat, he unlocked the ultimate psychological state of total commitment, routing an army ten times his size.</div>
-      <div class="mv-athlete-takeaway">
-        <div class="mv-athlete-label">🏀 ATHLETE APPLICATION</div>
-        Burn your mental retreat ships. If you keep a backup plan in your head of quitting or half-repping when fatigue sets in, you have already lost. Total commitment yields extraordinary performance.
+      <!-- Book Week View (Relentless Masterclass) -->
+      <div id="book-view-week" style="display:none">
+        <div style="font-family:'DM Mono',monospace;font-size:9.5px;color:#FF9F0A;letter-spacing:1px;margin-bottom:6px">TIM S. GROVER · RELENTLESS: FROM GOOD TO GREAT TO UNSTOPPABLE</div>
+        <div class="mc-quote" style="font-size:19px">"Cleaners don't compete with anyone; they make everyone compete with them."</div>
+        <div class="mc-author">— TIM GROVER (TRAINER TO KOBE BRYANT & MICHAEL JORDAN)</div>
+        <div class="mc-takeaway">
+          When the pressure spikes and everyone else begins to panic, a Cleaner gets colder and calmer. You don't perform for credit, social media, or praise. Your preparation creates an automated instinct that cannot be shaken.
+        </div>
       </div>
     </div>
   </div>
-
-  <!-- PANEL 3: DISCIPLINE & TOUGHNESS -->
-  <div class="mv-panel" id="mv-panel-toughness">
-    <!-- Tim Grover -->
-    <div class="mv-card">
-      <div class="mv-card-tag">// TIM GROVER · RELENTLESS & WINNING</div>
-      <div class="mv-card-title">THE CLEANER MINDSET</div>
-      <div class="mv-quote-text">"Don't tell me that the sky is the limit when there are footprints on the moon. A Cleaner doesn't compete with anyone else; he makes everyone else compete with him."</div>
-      <div class="mv-body-text">Grover trained Michael Jordan and Kobe Bryant through their championship runs. His core doctrine: there are Coolers (good), Closers (great), and Cleaners (unstoppable). A Cleaner never asks for applause, never complains about conditions, and craves the end result so intensely that the grueling work is completely irrelevant.</div>
-      <div class="mv-athlete-takeaway">
-        <div class="mv-athlete-label">🏀 ATHLETE APPLICATION</div>
-        Stop seeking external motivation or pats on the back. When you step into the weight room or court at 6:00 AM, the work is simply what is required. Handle business with cold, ruthless consistency.
-      </div>
-    </div>
-
-    <!-- Kobe Bryant -->
-    <div class="mv-card">
-      <div class="mv-card-tag">// KOBE BRYANT · THE MAMBA MENTALITY</div>
-      <div class="mv-card-title">REST AT THE END, NOT IN THE MIDDLE</div>
-      <div class="mv-quote-text">"I have self-doubt. I have insecurity. I have fear of failure. We all have self-doubt. You don't deny it, but you also don't capitulate to it. You embrace it. Rest at the end, not in the middle."</div>
-      <div class="mv-body-text">Mamba Mentality is not about pretending you don't feel pain, soreness, or self-doubt. It is about acknowledging the tension and executing anyway. Kobe would shoot 800 made jumpers before breakfast because he knew that in Game 7 with dead legs, muscle memory and spiritual will take over.</div>
-      <div class="mv-athlete-takeaway">
-        <div class="mv-athlete-label">🏀 ATHLETE APPLICATION</div>
-        When your Achilles feels tight or your lungs burn, don't bargain with your workout. Stick to your sets, respect the load, and rest when the session is logged.
-      </div>
-    </div>
-
-    <!-- David Goggins -->
-    <div class="mv-card">
-      <div class="mv-card-tag">// DAVID GOGGINS · CAN'T HURT ME</div>
-      <div class="mv-card-title">THE 40% RULE & CALLOUSED MIND</div>
-      <div class="mv-quote-text">"When your mind is telling you you're done, that you're exhausted, that you cannot possibly take another step, you are only at 40% of your actual capacity."</div>
-      <div class="mv-body-text">The human brain has a built-in survival governor that sends alarm bells long before the body is actually depleted. By intentionally placing yourself in uncomfortable physical environments, you callous your mind against self-pity and weakness.</div>
-      <div class="mv-athlete-takeaway">
-        <div class="mv-athlete-label">🏀 ATHLETE APPLICATION</div>
-        The final 2 reps of every set and the final sprint of conditioning are where the governor kicks in. Recognize the voice of fatigue as an illusion and push past it with calm resolve.
-      </div>
-    </div>
-
-    <!-- James Clear -->
-    <div class="mv-card">
-      <div class="mv-card-tag">// JAMES CLEAR · ATOMIC HABITS</div>
-      <div class="mv-card-title">SYSTEMS OVER GOALS</div>
-      <div class="mv-quote-text">"You do not rise to the level of your goals. You fall to the level of your systems. Every action you take is a vote for the type of person you wish to become."</div>
-      <div class="mv-body-text">Everyone wants to be an elite champion; the goal does not separate the best from the rest. The separator is the boring, daily, unglamorous system: sleeping 8.5 hours, measuring load, foam rolling, hydration, and showing up every single day without fail.</div>
-      <div class="mv-athlete-takeaway">
-        <div class="mv-athlete-label">🏀 ATHLETE APPLICATION</div>
-        Fall in love with the unsexy daily habits. The championship is not won under the bright arena lights; it is decided in your quiet execution of the daily checklist.
-      </div>
-    </div>
-
-    <!-- Marcus Aurelius -->
-    <div class="mv-card">
-      <div class="mv-card-tag">// MARCUS AURELIUS · MEDITATIONS</div>
-      <div class="mv-card-title">THE IMPEDIMENT ADVANCES ACTION</div>
-      <div class="mv-quote-text">"The impediment to action advances action. What stands in the way becomes the way. You have power over your mind, not outside events. Realize this, and you will find strength."</div>
-      <div class="mv-body-text">Stoic philosophy at its highest level: bad referee calls, physical fatigue, opposing crowds, and injuries are not interruptions to your journey; they are the exact arena where your character is forged.</div>
-      <div class="mv-athlete-takeaway">
-        <div class="mv-athlete-label">🏀 ATHLETE APPLICATION</div>
-        Never waste emotional energy arguing with referees or complaining about travel schedule. Control what is within your control: your effort, your focus, your breathing, and your response.
-      </div>
-    </div>
-  </div>
-
-  <!-- PANEL 4: BEHAVIOR & INFLUENCE -->
-  <div class="mv-panel" id="mv-panel-behavior">
-    <!-- Robert Greene -->
-    <div class="mv-card">
-      <div class="mv-card-tag">// ROBERT GREENE · THE 33 STRATEGIES OF WAR & MASTERY</div>
-      <div class="mv-card-title">MASTER YOUR EMOTIONS BEFORE MASTERING OTHERS</div>
-      <div class="mv-quote-text">"When you complain or act out of anger, you forfeit all strategic leverage. Keep your mind calm in the center of the storm. Control your own emotional temperature."</div>
-      <div class="mv-body-text">In high-stakes sports and business, the first person to lose their temper is the first person who loses. When opponents try to bait you into fouls or technicals, realize they are trying to hijack your prefrontal cortex. Master cold, disciplined observation.</div>
-      <div class="mv-athlete-takeaway">
-        <div class="mv-athlete-label">🏀 ATHLETE APPLICATION</div>
-        When an opponent chirps or fouls you hard, smile and execute the next play. Cold precision demoralizes trash-talkers far more than emotional retaliation ever will.
-      </div>
-    </div>
-
-    <!-- Dale Carnegie -->
-    <div class="mv-card">
-      <div class="mv-card-tag">// DALE CARNEGIE · HOW TO WIN FRIENDS & INFLUENCE PEOPLE</div>
-      <div class="mv-card-title">HIGH-IQ COMMUNICATION & TEAM LEADERSHIP</div>
-      <div class="mv-quote-text">"You can make more friends in two months by becoming interested in other people than you can in two years by trying to get other people interested in you."</div>
-      <div class="mv-body-text">Elite point guards and locker-room leaders do not lead through tyrannical shouting. They lead by elevating those around them, praising specific efforts, listening intently, and holding teammates accountable with respect and clarity.</div>
-      <div class="mv-athlete-takeaway">
-        <div class="mv-athlete-label">🏀 ATHLETE APPLICATION</div>
-        On the court, celebrate your teammate's defensive stop as passionately as your own scoring. High-trust locker rooms consistently outperform collections of selfish individual talents.
-      </div>
-    </div>
-
-    <!-- Daniel Kahneman -->
-    <div class="mv-card">
-      <div class="mv-card-tag">// DANIEL KAHNEMAN · THINKING, FAST AND SLOW</div>
-      <div class="mv-card-title">SYSTEM 1 (FLOW) VS SYSTEM 2 (DELIBERATE PRACTICE)</div>
-      <div class="mv-quote-text">"A reliable way to make people believe in falsehoods is frequent repetition. True mastery is training System 2 so deliberately that under pressure, System 1 operates effortlessly."</div>
-      <div class="mv-body-text">Kahneman’s Nobel Prize-winning framework reveals how the brain processes information: System 1 is fast, automatic, and intuitive; System 2 is slow, analytical, and deliberate. In a live basketball game, you cannot afford slow analytical thinking; you must operate in pure instinctual flow (System 1).</div>
-      <div class="mv-athlete-takeaway">
-        <div class="mv-athlete-label">🏀 ATHLETE APPLICATION</div>
-        Use System 2 in film study and deliberate practice: break down every footwork angle, pick-and-roll read, and pass trajectory. Practice it so many thousands of times that in the game, you react without thinking.
-      </div>
-    </div>
-  </div>
-
 </div>
 
 <!-- ═══ PAGE: RECOVERY ═══ -->
@@ -2595,8 +2564,42 @@ const WORKOUTS={
     {name:'Single-Leg Balance — Underwater',sets:['2×20 SEC each','3×30 SEC each','3×40 SEC each','2×20 SEC each'],quality:'PROPRIOCEPTION',yt:true,why:'Ankle stability — safely challenges neuromuscular system.',achilles:true},
     {name:'Pool Wall Hip Flexor Stretch',sets:['45 SEC each','60 SEC each','60 SEC each','90 SEC each'],quality:'MOBILITY',   yt:true,why:'Hip flexor lengthening — counters position from sprinting.',achilles:false},
     {name:'Breathing Reset — Submerged', sets:['4 CYCLES','5 CYCLES','5 CYCLES','6 CYCLES'],           quality:'CNS DOWN',   yt:true,why:'Parasympathetic activation — drops cortisol after peak week.',achilles:false},
-    {name:'End of Week Full Float',      sets:['4 MIN','5 MIN','5 MIN','8 MIN'],                        quality:'SYSTEMIC REC',yt:true,why:'Total systemic decompression — nervous system downregulation.',achilles:false},
+    {name:'End of Week Full Float',      sets:['4 MIN','5 MIN','5 MIN','8 MIN'],                        quality:'SYSTEMIC REC',yt:true,why:'Total systemic decompression — nervous system downregulation.',achilles:false},  ]},
+  'rest-day':{type:'// RECOVERY — FULL REST DAY',color:'#3478F6',title:'FULL REST DAY — OFF & SLEEP',meta:['ALL DAY','PASSIVE RECOVERY','0 CNS LOAD'],exercises:[
+    {name:'Hydration & Electrolytes (3.5L)',sets:['Goal: 3.5L water + 1500mg sodium + magnesium','Goal: 3.5L water + 1500mg sodium + magnesium','Goal: 3.5L water + 1500mg sodium + magnesium','Goal: 3.5L water + 1500mg sodium + magnesium'],quality:'HYDRATION',yt:false,why:'Restores intracellular fluid balance and muscle glycogen synthesis.',achilles:false},
+    {name:'Contrast Shower / Cold Plunge',sets:['3 rounds: 60s cold / 2m warm','3 rounds: 60s cold / 2m warm','3 rounds: 60s cold / 2m warm','3 rounds: 60s cold / 2m warm'],quality:'VASCULAR',yt:true,why:'Stimulates peripheral vasoconstriction and lymphatic drainage.',achilles:false},
+    {name:'Diaphragmatic Parasympathetic Breathwork',sets:['15–20 min box breathing','15–20 min box breathing','15–20 min box breathing','15–20 min box breathing'],quality:'CNS RESET',yt:true,why:'Shifts nervous system from sympathetic fight-or-flight to parasympathetic recovery.',achilles:false},
+    {name:'8.5+ Hours Deep Sleep Window',sets:['Dark room, 19°C, no blue light 60m pre-bed','Dark room, 19°C, no blue light 60m pre-bed','Dark room, 19°C, no blue light 60m pre-bed','Dark room, 19°C, no blue light 60m pre-bed'],quality:'ANABOLIC',yt:false,why:'Peak human growth hormone (HGH) release and tendon collagen remodeling.',achilles:false}
   ]},
+  'abs-stretch':{type:'// CORE & RECOVERY — ABS & STRETCH',color:'#00CEC9',title:'ABS & DEEP STRETCH PROTOCOL',meta:['35 MIN','CORE ARMOR & FLEXIBILITY','LOW CNS'],exercises:[
+    {name:'Hanging Leg Raises / Knees to Elbows',sets:['4×12-15 reps','4×12-15 reps','4×15 reps','3×12 reps'],quality:'CORE ANTERIOR',yt:true,why:'Direct rectus abdominis and deep hip flexor recruitment to stabilize lumbar-pelvic rhythm during sprinting and landing.',achilles:false},
+    {name:'Pallof Press Anti-Rotation Iso Hold',sets:['3×30s each side','3×30s each side','3×35s each side','3×25s each side'],quality:'ANTI-ROTATION',yt:true,why:'Anti-rotational stability prevents energy leaks through the core when absorbing physical contact on drives.',achilles:false},
+    {name:'Ab Wheel Rollouts (Neutral Spine)',sets:['3×10-12 reps','3×10-12 reps','3×12 reps','3×8-10 reps'],quality:'ANTI-EXTENSION',yt:true,why:'High eccentric core strength preventing lumbar hyperextension during deceleration.',achilles:false},
+    {name:'Standing Banded / Cable Woodchops',sets:['3×12 each side','3×12 each side','3×15 each side','3×10 each side'],quality:'ROTATIONAL POWER',yt:true,why:'Transfers transverse plane core power into explosive crossover and passing velocity.',achilles:false},
+    {name:'90/90 Hip Capsule & Glute Stretch',sets:['3×60s each side','3×60s each side','3×60s each side','3×45s each side'],quality:'HIP MOBILITY',yt:true,why:'Decompresses internal and external hip rotators to restore full triple-flexion depth.',achilles:false},
+    {name:'Banded Hamstring & Achilles Decomp',sets:['3×45s each leg','3×45s each leg','3×45s each leg','3×30s each leg'],quality:'POSTERIOR FLUSH',yt:true,why:'Gentle traction relieves neural and fascial tension along the entire superficial back line.',achilles:true},
+    {name:'Prone Cobra to Child\'s Pose Spinal Flush',sets:['3×60s flow','3×60s flow','3×60s flow','3×45s flow'],quality:'SPINAL RELAX',yt:true,why:'Restores spinal extension-flexion balance and downregulates paraspinal tension.',achilles:false}
+  ]},
+  'recovery-mobility':{type:'// RECOVERY — MOBILITY & FLUSH',color:'#1ABC9C',title:'FULL BODY MOBILITY & ANKLE DECOMPRESSION',meta:['35–40 MIN','LOW CNS','TISSUE QUALITY'],exercises:[
+    {name:'90/90 Hip Flow & Internal Rotation',sets:['3×60s each side','3×60s each side','3×60s each side','3×60s each side'],quality:'HIP CAPSULE',yt:true,why:'Frees femoral head rotation to prevent compensatory pelvic tilt during sprinting.',achilles:false},
+    {name:'Banded Ankle Joint Mobilization',sets:['3×15 pulses each','3×15 pulses each','3×15 pulses each','3×15 pulses each'],quality:'DORSIFLEXION',yt:true,why:'Restores talocrural posterior glide for knee-over-toe ankle dorsiflexion.',achilles:true},
+    {name:'Couch Stretch (Hip Flexor & Quad)',sets:['3×45s each side','3×45s each side','3×45s each side','3×45s each side'],quality:'PSOAS',yt:true,why:'Decompresses lumbar spine and anterior hip capsule.',achilles:false},
+    {name:'Thoracic Extension & Lat Opener',sets:['3×12 extensions','3×12 extensions','3×12 extensions','3×12 extensions'],quality:'T-SPINE',yt:true,why:'Improves overhead reach, shoulder mobility, and upright landing mechanics.',achilles:false},
+    {name:'Elevated Legs Wall Drain',sets:['10–15 min hold','10–15 min hold','10–15 min hold','10–15 min hold'],quality:'LYMPHATIC',yt:true,why:'Gravitational venous return flushes metabolic waste from calf and quads.',achilles:true}
+  ]},
+  'track-speed':{type:'// SPEED — TRACK & ACCELERATION',color:'#E67E22',title:'LINEAR SPEED & MAXIMUM VELOCITY',meta:['50–60 MIN','HIGH CNS','MAX POWER'],exercises:[
+    {name:'10m Resisted Sled Sprints',sets:['5×10m @ 25% BW','5×10m @ 25% BW','6×10m @ 25% BW','4×10m @ 20% BW'],quality:'ACCEL',yt:true,why:'Teaches forward horizontal force application and aggressive shin angles.',achilles:true},
+    {name:'Flying 20m Sprints (20m build + 20m fly)',sets:['4×20m fly','4×20m fly','5×20m fly','3×20m fly'],quality:'MAX VEL',yt:true,why:'Recruits highest threshold motor units without deceleration strain.',achilles:true},
+    {name:'Single-Leg Bounding for Distance',sets:['3×20m each','3×20m each','4×20m each','3×15m each'],quality:'ELASTIC',yt:true,why:'Elastic tendon recoil and unilateral stiffness upon ground contact.',achilles:true},
+    {name:'Curved Acceleration 30m',sets:['4×30m (2L/2R)','4×30m (2L/2R)','4×30m (2L/2R)','3×30m (2L/1R)'],quality:'AGILITY',yt:true,why:'Transfers linear velocity into court curvature and basketball cut angles.',achilles:false}
+  ]},
+  'achilles-rehab':{type:'// REHAB — ACHILLES TENDON',color:'#E84393',title:'ACHILLES HEAVY ISOMETRICS & HSR',meta:['40–45 MIN','TENDON STIFFNESS','PAIN-FREE ADAPTATION'],exercises:[
+    {name:'Single-Leg Soleus Wall Sit Iso Hold',sets:['5×45s @ neutral angle','5×45s @ neutral angle','5×45s @ neutral angle','4×45s @ neutral angle'],quality:'ISOMETRIC',yt:true,why:'Induces tendon stress relaxation and cortical inhibition reduction without compression.',achilles:true},
+    {name:'Heavy Standing Single-Leg Calf Raise',sets:['4×6-8 heavy (RPE 8)','4×6-8 heavy (RPE 8)','4×6-8 heavy (RPE 8)','3×6-8 moderate'],quality:'HSR',yt:true,why:'Heavy Slow Resistance stimulates tendon collagen fibril synthesis and cross-linking.',achilles:true},
+    {name:'Seated Bent-Knee Soleus Raise',sets:['4×10-12 heavy','4×10-12 heavy','4×10-12 heavy','3×10 heavy'],quality:'SOLEUS HSR',yt:true,why:'Isolates the soleus muscle which absorbs 6-8x bodyweight during basketball deceleration.',achilles:true},
+    {name:'Slant Board Eccentric Drops (Pain-Free)',sets:['3×12 each leg','3×12 each leg','3×12 each leg','3×10 each leg'],quality:'ECCENTRIC',yt:true,why:'Lengthens muscle-tendon unit and increases tensile tolerance.',achilles:true},
+    {name:'Tibialis Anterior Banded Dorsiflexion',sets:['3×20 each','3×20 each','3×20 each','3×15 each'],quality:'ANTAGONIST',yt:true,why:'Strengthens anterior compartment to balance ankle joint forces.',achilles:false}
+  ]}
 };
 
 // Helper to get current week's sets for an exercise
@@ -2889,6 +2892,7 @@ function updateDots(did,idx){document.querySelectorAll(`#${did} .dot`).forEach((
 
 document.addEventListener('DOMContentLoaded',()=>{
   applyCustomWorkouts();
+  initMentalQuotes();
   attachLongPressHandlers();
   [['day-carousel','day-dots'],['mental-carousel','mental-dots'],['pool-carousel','pool-dots'],['gallery-carousel','gallery-dots']].forEach(([cid,did])=>{
     const el=document.getElementById(cid);if(!el)return;
@@ -3253,6 +3257,7 @@ const WORKOUT_DISPLAY_NAMES = {
   'pool-a': 'POOL A — CNS FLUSH & RECOVERY',
   'pool-b': 'POOL B — WEEKEND HYDRO FLUSH',
   'rest-day': 'FULL REST DAY — OFF & SLEEP',
+  'abs-stretch': 'ABS & DEEP STRETCH PROTOCOL',
   'recovery-mobility': 'ACTIVE MOBILITY & ANKLE DECOMP',
   'track-speed': 'TRACK & SPEED — MAX VELOCITY',
   'achilles-rehab': 'ACHILLES TENDON ISOMETRIC PROTOCOL'
@@ -4873,12 +4878,129 @@ function renderWellnessUI(){
 // ══════════════════════════════════════════════════════════
 // BVMBINO AI COACH ENGINE — SPORT SCIENCE, PSYCHOLOGY, FINANCE
 
-function switchMentalVaultTab(tabId, tabEl) {
-  document.querySelectorAll('.mv-tab').forEach(t => t.classList.remove('active'));
-  if (tabEl) tabEl.classList.add('active');
-  document.querySelectorAll('.mv-panel').forEach(p => p.classList.remove('active'));
-  const panel = document.getElementById('mv-panel-' + tabId);
-  if (panel) panel.classList.add('active');
+
+
+
+// ══════════════════════════════════════════════
+// COLOR-CODED MENTAL PERFORMANCE QUOTES ENGINE
+// ══════════════════════════════════════════════
+const DAILY_MENTAL_QUOTES = {
+  1: { // MON
+    dayQuote: { text: '"You don\'t have to be great to start, but you have to start to be great."', author: '— LES BROWN' },
+    islamQuote: { arabic: 'الْمُؤْمِنُ الْقَوِيُّ خَيْرٌ وَأَحَبُّ إِلَى اللَّهِ مِنَ الْمُؤْمِنِ الضَّعِيفِ', text: '"The strong believer is better and more beloved to Allah than the weak believer."', author: '— PROPHET MUHAMMAD ﷺ (SAHIH MUSLIM)', takeaway: 'Physical power, conditioning, and discipline are acts of devotion. Train to be formidable.' },
+    bookQuote: { text: '"Rest at the end, not in the middle."', author: '— KOBE BRYANT (THE MAMBA MENTALITY)', takeaway: 'Never bargain with your training while fatigued. Complete every rep with intent.' }
+  },
+  2: { // TUE
+    dayQuote: { text: '"The separation is in the preparation. Every rep in the dark echoes under the lights."', author: '— RUSSELL WILSON' },
+    islamQuote: { arabic: 'لَا يُكَلِّفُ اللَّهُ نَفْسًا إِلَّا وُسْعَهَا', text: '"Allah does not burden a soul beyond that it can bear."', author: '— SURAH AL-BAQARAH (2:286)', takeaway: 'You were engineered to endure this load. Do not ask for an easier path; develop broader shoulders.' },
+    bookQuote: { text: '"You fall to the level of your systems. Fall in love with the daily process."', author: '— JAMES CLEAR (ATOMIC HABITS)', takeaway: 'Championships are not won under arena lights; they are forged in the quiet execution of habits.' }
+  },
+  3: { // WED
+    dayQuote: { text: '"Pain is temporary. Quitting lasts forever."', author: '— LANCE ARMSTRONG' },
+    islamQuote: { arabic: 'وَأَن لَّيْسَ لِلْإِنسَانِ إِلَّا مَا سَعَىٰ', text: '"And that there is not for man except that for which he strives."', author: '— SURAH AN-NAJM (53:39)', takeaway: 'Outcomes are written; effort is your only testament. Sweat is the currency of growth.' },
+    bookQuote: { text: '"When your mind says you are done, you are only at 40% of your actual capacity."', author: '— DAVID GOGGINS (CAN\'T HURT ME)', takeaway: 'Callous your mind against the inner governor of fatigue. Push past the initial alarm.' }
+  },
+  4: { // THU
+    dayQuote: { text: '"Pressure is a privilege. It only comes to those who earn it."', author: '— BILLIE JEAN KING' },
+    islamQuote: { arabic: 'وَأَعِدُّوا لَهُم مَّا اسْتَطَعْتُم مِّن قُوَّةٍ', text: '"And prepare against them whatever you are able of power."', author: '— SURAH AL-ANFAL (8:60)', takeaway: 'Cultivating explosive speed and tendon resilience is an explicit mandate. Honor your preparation.' },
+    bookQuote: { text: '"The impediment to action advances action. What stands in the way becomes the way."', author: '— MARCUS AURELIUS (MEDITATIONS)', takeaway: 'Obstacles and heavy defenders are not interruptions; they are the exact arena to prove your craft.' }
+  },
+  5: { // FRI
+    dayQuote: { text: '"Hard work beats talent when talent doesn\'t work hard."', author: '— TIM NOTKE' },
+    islamQuote: { arabic: 'إِنَّ مَعَ الْعُسْرِ يُسْرًا', text: '"Indeed, with hardship comes ease."', author: '— SURAH ASH-SHARH (94:6)', takeaway: 'Tendon remodeling and mental callous only happen inside the strain. The breakthrough is in the difficulty.' },
+    bookQuote: { text: '"When emotions take over, intelligence departs. Keep your cool in the storm."', author: '— ROBERT GREENE (33 STRATEGIES OF WAR)', takeaway: 'Subordinate anger to cold tactical strategy. A calm point guard controls the tempo of the game.' }
+  },
+  6: { // SAT
+    dayQuote: { text: '"Greatness is not a destiny; it is a daily compound interest of standards."', author: '— NICK SABAN' },
+    islamQuote: { arabic: 'فَلَا نَامَتْ أَعْيُنُ الْجُبَنَاءِ', text: '"May the eyes of cowards never sleep."', author: '— KHALID IBN AL-WALID (SAYF ALLAH)', takeaway: 'Breaking nine swords in close combat against 10-to-1 odds. Relentless grit over external numbers.' },
+    bookQuote: { text: '"Crave the result so intensely that the grueling work is completely irrelevant."', author: '— TIM GROVER (RELENTLESS & WINNING)', takeaway: 'A Cleaner doesn\'t ask for pats on the back. Step onto the court and handle business.' }
+  },
+  0: { // SUN
+    dayQuote: { text: '"Don\'t count the days; make the days count."', author: '— MUHAMMAD ALI' },
+    islamQuote: { arabic: 'اعْقِلْهَا وَتَوَكَّلْ', text: '"Tie your camel, then place your trust in Allah."', author: '— PROPHET MUHAMMAD ﷺ (AT-TIRMIDHI)', takeaway: 'Execute 100% of your nutrition, sleep, and recovery habits first — then step on the floor with peace.' },
+    bookQuote: { text: '"The highest-IQ communicators speak last, listen first, and lead with poise."', author: '— DALE CARNEGIE (HOW TO WIN FRIENDS)', takeaway: 'Locker room leaders elevate teammates. High trust on the court yields championship execution.' }
+  }
+};
+
+
+function switchMentalTab(cat, tab) {
+  if (cat === 'islam') {
+    const vDay = document.getElementById('islam-view-day');
+    const vWeek = document.getElementById('islam-view-week');
+    const bDay = document.getElementById('tab-btn-islam-day');
+    const bWeek = document.getElementById('tab-btn-islam-week');
+    if (tab === 'day') {
+      if (vDay) vDay.style.display = 'block';
+      if (vWeek) vWeek.style.display = 'none';
+      if (bDay) bDay.classList.add('active');
+      if (bWeek) bWeek.classList.remove('active');
+    } else {
+      if (vDay) vDay.style.display = 'none';
+      if (vWeek) vWeek.style.display = 'block';
+      if (bDay) bDay.classList.remove('active');
+      if (bWeek) bWeek.classList.add('active');
+    }
+  } else if (cat === 'book') {
+    const vDay = document.getElementById('book-view-day');
+    const vWeek = document.getElementById('book-view-week');
+    const bDay = document.getElementById('tab-btn-book-day');
+    const bWeek = document.getElementById('tab-btn-book-week');
+    if (tab === 'day') {
+      if (vDay) vDay.style.display = 'block';
+      if (vWeek) vWeek.style.display = 'none';
+      if (bDay) bDay.classList.add('active');
+      if (bWeek) bWeek.classList.remove('active');
+    } else {
+      if (vDay) vDay.style.display = 'none';
+      if (vWeek) vWeek.style.display = 'block';
+      if (bDay) bDay.classList.remove('active');
+      if (bWeek) bWeek.classList.add('active');
+    }
+  }
+}
+
+function setMentalDay(dayNum, btnEl) {
+  document.querySelectorAll('.md-day-pill').forEach(b => b.classList.remove('active'));
+  if (btnEl) btnEl.classList.add('active');
+
+  const q = DAILY_MENTAL_QUOTES[dayNum] || DAILY_MENTAL_QUOTES[1];
+  const dayNames = ['SUNDAY','MONDAY','TUESDAY','WEDNESDAY','THURSDAY','FRIDAY','SATURDAY'];
+
+  // Light Blue: Day Quote
+  const dBadge = document.getElementById('qb-day-badge');
+  const dText = document.getElementById('qb-day-text');
+  const dAuthor = document.getElementById('qb-day-author');
+  if (dBadge) dBadge.textContent = '// LIGHT BLUE · ' + dayNames[dayNum] + ' QUOTE';
+  if (dText) dText.textContent = q.dayQuote.text;
+  if (dAuthor) dAuthor.textContent = q.dayQuote.author;
+
+  // Green: Islamic Quote
+  const iBadge = document.getElementById('qb-islam-badge');
+  const iArabic = document.getElementById('qb-islam-arabic');
+  const iText = document.getElementById('qb-islam-text');
+  const iAuthor = document.getElementById('qb-islam-author');
+  const iTakeaway = document.getElementById('qb-islam-takeaway');
+  if (iBadge) iBadge.textContent = '// GREEN · ' + dayNames[dayNum] + ' ISLAMIC REFLECTION';
+  if (iArabic) iArabic.textContent = q.islamQuote.arabic;
+  if (iText) iText.textContent = q.islamQuote.text;
+  if (iAuthor) iAuthor.textContent = q.islamQuote.author;
+  if (iTakeaway) iTakeaway.textContent = q.islamQuote.takeaway;
+
+  // Orange: Book Quote
+  const bBadge = document.getElementById('qb-book-badge');
+  const bText = document.getElementById('qb-book-text');
+  const bAuthor = document.getElementById('qb-book-author');
+  const bTakeaway = document.getElementById('qb-book-takeaway');
+  if (bBadge) bBadge.textContent = '// ORANGE · ' + dayNames[dayNum] + ' BOOK MASTERY';
+  if (bText) bText.textContent = q.bookQuote.text;
+  if (bAuthor) bAuthor.textContent = q.bookQuote.author;
+  if (bTakeaway) bTakeaway.textContent = q.bookQuote.takeaway;
+}
+
+function initMentalQuotes() {
+  const today = new Date().getDay();
+  const activeBtn = document.querySelector('.md-day-pill[data-d="' + today + '"]');
+  setMentalDay(today, activeBtn);
 }
 
 </script>
