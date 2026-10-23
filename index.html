@@ -1847,10 +1847,10 @@ body>*{position:relative;z-index:1}
   <div class="phase-card">
     <div class="phase-header"><div class="phase-title">PHASE 3 — 4 WEEKS</div><div class="phase-weeks">WEEKS 9–12</div></div>
     <div class="phase-weeks-grid">
-      <div class="pw-item active"><div class="pw-num">WEEK 9</div><div class="pw-focus">Explosive Foundation</div><div class="pw-bar"><div class="pw-fill" id="pw-0" style="width:0%"></div></div><div class="pw-pct" id="pw-pct-0">0%</div></div>
-      <div class="pw-item"><div class="pw-num">WEEK 10</div><div class="pw-focus">Peak Loading</div><div class="pw-bar"><div class="pw-fill" id="pw-1" style="width:0%"></div></div><div class="pw-pct" id="pw-pct-1">0%</div></div>
-      <div class="pw-item"><div class="pw-num">WEEK 11</div><div class="pw-focus">Sport Integration</div><div class="pw-bar"><div class="pw-fill" id="pw-2" style="width:0%"></div></div><div class="pw-pct" id="pw-pct-2">0%</div></div>
-      <div class="pw-item"><div class="pw-num">WEEK 12</div><div class="pw-focus">Peak + Deload</div><div class="pw-bar"><div class="pw-fill" id="pw-3" style="width:0%"></div></div><div class="pw-pct" id="pw-pct-3">0%</div></div>
+      <div class="pw-item active" onclick="openReportForPhaseWeek(0)" style="cursor:pointer" title="Tap to view Week 9 report"><div class="pw-num">WEEK 9</div><div class="pw-focus">Explosive Foundation</div><div class="pw-bar"><div class="pw-fill" id="pw-0" style="width:0%"></div></div><div class="pw-pct" id="pw-pct-0">0%</div></div>
+      <div class="pw-item" onclick="openReportForPhaseWeek(1)" style="cursor:pointer" title="Tap to view Week 10 report"><div class="pw-num">WEEK 10</div><div class="pw-focus">Peak Loading</div><div class="pw-bar"><div class="pw-fill" id="pw-1" style="width:0%"></div></div><div class="pw-pct" id="pw-pct-1">0%</div></div>
+      <div class="pw-item" onclick="openReportForPhaseWeek(2)" style="cursor:pointer" title="Tap to view Week 11 report"><div class="pw-num">WEEK 11</div><div class="pw-focus">Sport Integration</div><div class="pw-bar"><div class="pw-fill" id="pw-2" style="width:0%"></div></div><div class="pw-pct" id="pw-pct-2">0%</div></div>
+      <div class="pw-item" onclick="openReportForPhaseWeek(3)" style="cursor:pointer" title="Tap to view Week 12 report"><div class="pw-num">WEEK 12</div><div class="pw-focus">Peak + Deload</div><div class="pw-bar"><div class="pw-fill" id="pw-3" style="width:0%"></div></div><div class="pw-pct" id="pw-pct-3">0%</div></div>
     </div>
   </div>
   <div style="height:16px"></div>
@@ -2646,25 +2646,36 @@ function loadData(){
   const curWeek = getWeekKey();
   const dayOfWeek = new Date().getDay(); // 0=Sun, 1=Mon, ..., 6=Sat
 
-  // Auto-heal if premature weekend reset occurred (Saturday or Sunday with 0 sessions but archived history):
-  if ((dayOfWeek === 6 || dayOfWeek === 0) && Object.keys(restoredSessions).length === 0 && restoredWeekHistory.length > 0) {
-    const topArchived = restoredWeekHistory[0];
-    if (topArchived && (topArchived.week === curWeek || topArchived.pct > 0 || topArchived.sessions > 0)) {
-      const ALL_SESSION_IDS = [
-        's-0-0', 's-0-1', 's-0-2',
-        's-1-0', 's-1-1', 's-1-2',
-        's-2-0', 's-2-1', 's-2-2',
-        's-3-0', 's-3-1',
-        's-4-0', 's-4-1', 's-4-2'
-      ];
-      if (topArchived.completedSessions && Object.keys(topArchived.completedSessions).length > 0) {
-        restoredSessions = Object.assign({}, topArchived.completedSessions);
-      } else {
-        const count = topArchived.sessions || Math.round(((topArchived.pct || 100) / 100) * 14) || 14;
-        ALL_SESSION_IDS.slice(0, Math.min(14, count)).forEach(id => { restoredSessions[id] = true; });
+  // Auto-heal if premature weekend reset occurred (Saturday or Sunday):
+  let restoredPhaseWeeks = d.phaseWeeks ? d.phaseWeeks.slice() : [0, 0, 0, 0];
+  let restoredCurrentPhaseWeek = d.currentPhaseWeek || 0;
+
+  if (dayOfWeek === 6 || dayOfWeek === 0) {
+    if (Object.keys(restoredSessions).length === 0 && restoredWeekHistory.length > 0) {
+      const topArchived = restoredWeekHistory[0];
+      if (topArchived && (topArchived.week === curWeek || topArchived.pct > 0 || topArchived.sessions > 0)) {
+        const ALL_SESSION_IDS = [
+          's-0-0', 's-0-1', 's-0-2',
+          's-1-0', 's-1-1', 's-1-2',
+          's-2-0', 's-2-1', 's-2-2',
+          's-3-0', 's-3-1',
+          's-4-0', 's-4-1', 's-4-2'
+        ];
+        if (topArchived.completedSessions && Object.keys(topArchived.completedSessions).length > 0) {
+          restoredSessions = Object.assign({}, topArchived.completedSessions);
+        } else {
+          const count = topArchived.sessions || Math.round(((topArchived.pct || 100) / 100) * 14) || 14;
+          ALL_SESSION_IDS.slice(0, Math.min(14, count)).forEach(id => { restoredSessions[id] = true; });
+        }
+        restoredWeekHistory.shift();
+        restoredWeeksCompleted = Math.max(0, restoredWeeksCompleted - 1);
       }
-      restoredWeekHistory.shift();
-      restoredWeeksCompleted = Math.max(0, restoredWeeksCompleted - 1);
+    }
+    // Fix current week index: we are in Phase 3 Week 9 (index 0)
+    // Prevents counting this week and next week both as complete
+    if (restoredCurrentPhaseWeek > 0 && restoredWeekHistory.length === 0) {
+      restoredCurrentPhaseWeek = 0;
+      restoredPhaseWeeks = [0, 0, 0, 0];
     }
   }
 
@@ -2682,8 +2693,8 @@ function loadData(){
     recoveryHistory:d.recoveryHistory||{},
     pain:d.pain||{during:0,after:0},
     weekHistory:restoredWeekHistory,
-    phaseWeeks:d.phaseWeeks||[0,0,0,0],
-    currentPhaseWeek:d.currentPhaseWeek||0,
+    phaseWeeks:restoredPhaseWeeks,
+    currentPhaseWeek:restoredCurrentPhaseWeek,
     modalEx:d.modalEx||{},
     customWorkouts:d.customWorkouts||{},
     exDone:d.exDone||0,
@@ -2734,11 +2745,13 @@ function checkWeekReset() {
       }
       APP.weekKey = cur;
       APP.sessions = {};
+      APP.customWorkouts = {}; // Reset all workouts back to default pre-programmed schedule
       APP.sessionNotes = {};
       APP.warmupSteps = {};
       APP.exDone = 0;
       APP.modalEx = {};
       saveData();
+      applyCustomWorkouts();
     } else {
       // During the week or weekend, keep all completed days intact!
       APP.weekKey = cur;
@@ -3114,8 +3127,22 @@ function updatePhaseUI(){
 
 function updateHistory(){
   const list=document.getElementById('history-list');if(!list)return;
-  if(!APP.weekHistory.length){list.innerHTML='<div style="padding:20px;text-align:center;font-family:\'DM Mono\',monospace;font-size:10px;color:var(--text-dim);letter-spacing:1px">NO HISTORY YET — COMPLETE YOUR FIRST WEEK</div>';return;}
-  list.innerHTML=APP.weekHistory.map(h=>`<div class="history-item"><div><div class="hi-date">${h.week}</div><div class="hi-bar"><div class="hi-fill" style="width:${h.pct}%"></div></div></div><div style="text-align:right"><div class="hi-val">${h.pct}%</div><div style="font-family:'DM Mono',monospace;font-size:9px;color:var(--text-dim);letter-spacing:1px">${h.sessions} SESSIONS</div></div></div>`).join('');
+  if(!APP.weekHistory.length){
+    list.innerHTML='<div style="padding:20px;text-align:center;font-family:\'DM Mono\',monospace;font-size:10px;color:var(--text-dim);letter-spacing:1px">NO HISTORY YET — COMPLETE YOUR FIRST WEEK</div>';
+    return;
+  }
+  list.innerHTML=APP.weekHistory.map((h, idx)=>`
+    <div class="history-item" onclick="openReportForHistory(${idx})" style="cursor:pointer" title="Click to view weekly report">
+      <div>
+        <div class="hi-date">${h.week} <span style="font-family:'DM Mono',monospace;font-size:7.5px;color:var(--gold);border:1px solid rgba(212,168,67,0.35);padding:1px 5px;border-radius:3px;margin-left:6px;letter-spacing:1px">VIEW REPORT →</span></div>
+        <div class="hi-bar"><div class="hi-fill" style="width:${h.pct}%"></div></div>
+      </div>
+      <div style="text-align:right">
+        <div class="hi-val">${h.pct}%</div>
+        <div style="font-family:'DM Mono',monospace;font-size:9px;color:var(--gold);letter-spacing:1px">${h.sessions} SESSIONS · VIEW →</div>
+      </div>
+    </div>
+  `).join('');
 }
 
 // ══════════════════════════════════════════════
@@ -3709,21 +3736,129 @@ function toggleWarmup(el,id){
 // ══════════════════════════════════════════════
 // WEEKLY REPORT
 // ══════════════════════════════════════════════
-function openReport(){
+function openReport(context){
   const overlay=document.getElementById('report-overlay');
-  const wNum=9+APP.currentPhaseWeek;
-  document.getElementById('rp-sub').textContent=`Phase 3 · Week ${wNum} · ${APP.weekKey}`;
-  buildReport();overlay.classList.add('open');document.body.style.overflow='hidden';
+  if(!overlay)return;
+
+  if (typeof context === 'object' && context !== null) {
+    // Archived historical week
+    document.getElementById('rp-sub').textContent = `Phase 3 · Archived Week · ${context.week}`;
+    buildReport(context);
+  } else if (typeof context === 'number') {
+    // Phase week index (0=W9, 1=W10, 2=W11, 3=W12)
+    const wNum = 9 + context;
+    if (context === (APP.currentPhaseWeek || 0)) {
+      document.getElementById('rp-sub').textContent = `Phase 3 · Week ${wNum} · ${APP.weekKey} (Active Training Week)`;
+      buildReport();
+    } else if (context < (APP.currentPhaseWeek || 0)) {
+      const pastItem = (APP.weekHistory || []).find(h => h.week && h.week.includes(`W${wNum}`)) || {
+        week: `Phase 3 · Week ${wNum}`,
+        pct: (APP.phaseWeeks && APP.phaseWeeks[context]) || 100,
+        sessions: 14
+      };
+      document.getElementById('rp-sub').textContent = `Phase 3 · Week ${wNum} · Completed Dossier`;
+      buildReport(pastItem);
+    } else {
+      document.getElementById('rp-sub').textContent = `Phase 3 · Week ${wNum} · Upcoming Training Dossier`;
+      buildUpcomingWeekPreview(context);
+    }
+  } else {
+    // Live active week report
+    const wNum = 9 + (APP.currentPhaseWeek || 0);
+    document.getElementById('rp-sub').textContent = `Phase 3 · Week ${wNum} · ${APP.weekKey}`;
+    buildReport();
+  }
+
+  overlay.classList.add('open');
+  document.body.style.overflow = 'hidden';
 }
 
-function closeReport(){document.getElementById('report-overlay').classList.remove('open');document.body.style.overflow='';}
+function openReportForHistory(idx) {
+  const item = APP.weekHistory && APP.weekHistory[idx];
+  if (item) openReport(item);
+}
 
-function buildReport(){
-  const pct=getOverallPct();
-  let done=0,total=0;
-  for(let d=0;d<5;d++){total+=DAY_TOTALS[d];for(let j=0;j<DAY_TOTALS[d];j++)if(APP.sessions[`s-${d}-${j}`])done++;}
-  const mDone=Object.keys(APP.mentalSteps).length;
-  const rcDone=Object.keys(APP.recovery).length;
+function openReportForPhaseWeek(phaseIdx) {
+  openReport(phaseIdx);
+}
+
+function closeReport(){
+  const overlay = document.getElementById('report-overlay');
+  if (overlay) overlay.classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function buildUpcomingWeekPreview(phaseIdx) {
+  const wNum = 9 + phaseIdx;
+  const cfg = (typeof WEEK_CONFIG !== 'undefined' && WEEK_CONFIG[phaseIdx]) || {
+    name: 'ELITE TRAINING',
+    intensity: 'HIGH',
+    plyo: '80–90 contacts'
+  };
+  const focusTitles = [
+    'Explosive Foundation — Tendon Stiffness & Elastic Priming',
+    'Peak Loading — Maximum Mechanical Tension & CAT Speed',
+    'Sport Integration — Game-Speed Acceleration & Live Reads',
+    'Peak + Deload — Supercompensation & Maximum Vertical Pop'
+  ];
+
+  const htmlContent = `
+    <div style="background:linear-gradient(135deg,rgba(212,168,67,0.12),var(--panel));border:1px solid rgba(212,168,67,0.3);border-radius:var(--r);padding:18px;margin-bottom:16px">
+      <div style="font-family:'DM Mono',monospace;font-size:9px;color:var(--gold);letter-spacing:2px;margin-bottom:6px">// UPCOMING TRAINING DOSSIER</div>
+      <div style="font-family:'Bebas Neue',sans-serif;font-size:26px;color:#fff;letter-spacing:1px;line-height:1.15;margin-bottom:6px">${focusTitles[phaseIdx] || cfg.name}</div>
+      <div style="font-size:12px;color:var(--text-mid);line-height:1.4">This week initiates on Monday. All training loads, sets, and recovery protocols will be active upon weekly rollover.</div>
+      <div style="display:flex;gap:12px;margin-top:12px">
+        <div style="background:var(--panel2);border:1px solid var(--border);border-radius:var(--r-sm);padding:8px 12px;flex:1">
+          <div style="font-family:'DM Mono',monospace;font-size:8px;color:var(--text-dim);letter-spacing:1px">TARGET INTENSITY</div>
+          <div style="font-family:'Bebas Neue',sans-serif;font-size:18px;color:var(--red);letter-spacing:0.5px">${cfg.intensity} INTENSITY</div>
+        </div>
+        <div style="background:var(--panel2);border:1px solid var(--border);border-radius:var(--r-sm);padding:8px 12px;flex:1">
+          <div style="font-family:'DM Mono',monospace;font-size:8px;color:var(--text-dim);letter-spacing:1px">PLYOMETRIC VOLUME</div>
+          <div style="font-family:'Bebas Neue',sans-serif;font-size:18px;color:var(--purple);letter-spacing:0.5px">${cfg.plyo}</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sec-label" style="padding:0;margin-bottom:12px"><div class="sec-title">SCHEDULED SESSIONS BREAKDOWN</div></div>
+    <div style="display:flex;flex-direction:column;gap:8px">
+      <div style="background:var(--panel);border:1px solid var(--border);border-radius:var(--r-sm);padding:12px 14px">
+        <div style="font-family:'DM Mono',monospace;font-size:9px;color:var(--gold);letter-spacing:1px">MONDAY · HIGH CNS DAY</div>
+        <div style="font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:600;color:#fff;margin-top:2px">Weight Room A · Fascia Elastic · Visualization</div>
+      </div>
+      <div style="background:var(--panel);border:1px solid var(--border);border-radius:var(--r-sm);padding:12px 14px">
+        <div style="font-family:'DM Mono',monospace;font-size:9px;color:var(--gold);letter-spacing:1px">TUESDAY · SKILL INTEGRATION</div>
+        <div style="font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:600;color:#fff;margin-top:2px">Basketball A (Game Speed) · Pool Session A · Focus Routine</div>
+      </div>
+      <div style="background:var(--panel);border:1px solid var(--border);border-radius:var(--r-sm);padding:12px 14px">
+        <div style="font-family:'DM Mono',monospace;font-size:9px;color:var(--gold);letter-spacing:1px">WEDNESDAY · STRENGTH & ROTATIONAL FORCE</div>
+        <div style="font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:600;color:#fff;margin-top:2px">Weight Room B (Posterior Chain) · Fascia Rotational · Breath Control</div>
+      </div>
+      <div style="background:var(--panel);border:1px solid var(--border);border-radius:var(--r-sm);padding:12px 14px">
+        <div style="font-family:'DM Mono',monospace;font-size:9px;color:var(--gold);letter-spacing:1px">THURSDAY · PEAK DAY & ISO CONTACT</div>
+        <div style="font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:600;color:#fff;margin-top:2px">Basketball B (Pick & Roll) · Weight Room C (Explosive Lift)</div>
+      </div>
+      <div style="background:var(--panel);border:1px solid var(--border);border-radius:var(--r-sm);padding:12px 14px">
+        <div style="font-family:'DM Mono',monospace;font-size:9px;color:var(--gold);letter-spacing:1px">FRIDAY · INTEGRATION & RECOVERY</div>
+        <div style="font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:600;color:#fff;margin-top:2px">Basketball C (5v5 Scrimmage) · Fascia Multi-Dir · Pool Session B</div>
+      </div>
+    </div>
+  `;
+
+  document.getElementById('rp-body').innerHTML = htmlContent;
+}
+
+function buildReport(historyItem){
+  const isHistory = !!historyItem;
+  const pct = isHistory ? (historyItem.pct || 0) : getOverallPct();
+  let done = 0, total = 0;
+  if (isHistory) {
+    total = 14;
+    done = historyItem.sessions || Math.round((pct / 100) * 14);
+  } else {
+    for(let d=0;d<5;d++){total+=DAY_TOTALS[d];for(let j=0;j<DAY_TOTALS[d];j++)if(APP.sessions[`s-${d}-${j}`])done++;}
+  }
+  const mDone = isHistory ? (historyItem.mDone || 0) : Object.keys(APP.mentalSteps).length;
+  const rcDone = isHistory ? (historyItem.rcDone || 0) : Object.keys(APP.recovery).length;
   
   // Day-by-day completion including Sat/Sun
   const dayNames=['MON','TUE','WED','THU','FRI','SAT','SUN'];
@@ -4121,6 +4256,36 @@ function deleteEvent(id){
 function toggleEventDone(id){
   const ev=(APP.bizEvents||[]).find(e=>e.id===id);
   if(ev){ev.done=!ev.done;saveData();renderEvents();}
+}
+
+
+function filterEvents(type) {
+  const list = document.getElementById('events-list');
+  if (!list) return;
+  const evs = APP.bizEvents || [];
+  if (!evs.length) {
+    list.innerHTML = '<div class="empty-state">NO EVENTS YET<br>TAP + ADD EVENT TO GET STARTED</div>';
+    return;
+  }
+  const today = getTodayDateStr();
+  let filtered = evs;
+  if (type === 'upcoming') {
+    filtered = evs.filter(e => !e.date || e.date >= today);
+    if (!filtered.length) {
+      list.innerHTML = '<div class="empty-state">NO UPCOMING EVENTS<br>TAP + ADD EVENT TO CREATE ONE</div>';
+      return;
+    }
+  }
+  const sorted = [...filtered].sort((a,b)=>{
+    if(!a.date&&!b.date)return 0;if(!a.date)return 1;if(!b.date)return -1;
+    return a.date.localeCompare(b.date);
+  });
+  list.innerHTML = sorted.map(ev => {
+    const badgeCls = 'badge-' + (ev.type || 'other');
+    const typeLabel = (ev.type || 'other').toUpperCase();
+    const dateStr = ev.date ? new Date(ev.date + 'T12:00:00').toLocaleDateString('en-US', {month:'short', day:'numeric'}) : 'NO DATE';
+    return `<div class="event-item"><div class="event-badge ${badgeCls}">${typeLabel}</div><div class="event-info"><div class="event-title">${ev.title||'Untitled'}</div><div class="event-date">${dateStr}</div></div><button class="event-del" onclick="deleteEvent('${ev.id}')">✕</button></div>`;
+  }).join('');
 }
 
 function renderEvents(){
