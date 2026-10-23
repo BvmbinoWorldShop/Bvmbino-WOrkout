@@ -2047,7 +2047,7 @@ body>*{position:relative;z-index:1}
   </div>
   <div class="divider"></div>
 
-  <div class="sec-label"><div class="sec-title">RECOVERY CHECKLIST</div></div>
+  <div class="sec-label"><div class="sec-title">RECOVERY CHECKLIST</div><div class="sec-action" id="rec-day-label" style="font-family:'DM Mono',monospace;font-size:8.5px;color:var(--gold);letter-spacing:1.5px">// TODAY · 0/8 LOGGED</div></div>
   <div class="rec-grid">
     <div class="rec-card" id="rc-0" onclick="toggleRec(this,'rc-0')"><div class="rc-icon">❄️</div><div class="rc-title">Cold Immersion</div><div class="rc-meta">10–12°C · 10–12 MIN</div><div class="rc-check"></div></div>
     <div class="rec-card" id="rc-1" onclick="toggleRec(this,'rc-1')"><div class="rc-icon">😴</div><div class="rc-title">Sleep Target</div><div class="rc-meta">9 HOURS · CONSISTENT</div><div class="rc-check"></div></div>
@@ -2611,6 +2611,8 @@ function loadData(){
     sessions:d.sessions||{},
     mentalSteps:d.mentalSteps||{},
     recovery:d.recovery||{},
+    recoveryDate:d.recoveryDate||new Date().toISOString().slice(0,10),
+    recoveryHistory:d.recoveryHistory||{},
     pain:d.pain||{during:0,after:0},
     weekHistory:d.weekHistory||[],
     phaseWeeks:d.phaseWeeks||[0,0,0,0],
@@ -2687,7 +2689,7 @@ function restoreState(){
   Object.keys(APP.sessions).forEach(id=>{const el=document.getElementById(id);if(el)el.classList.add('done');});
   for(let d=0;d<5;d++)recalcDayProgress(d);
   Object.keys(APP.mentalSteps).forEach(id=>{const el=document.getElementById(id);if(el)el.classList.add('done');});
-  Object.keys(APP.recovery).forEach(id=>{const el=document.getElementById(id);if(el){el.classList.add('done');const ch=el.querySelector('.rc-check');if(ch)ch.textContent='✓';}});
+  checkDailyRecoveryReset(); renderRecoveryChecklist();
   Object.keys(APP.warmupSteps||{}).forEach(id=>{const el=document.getElementById(id);if(el)el.classList.add('done');});
   if(APP.pain.during)setPainSilent('during',APP.pain.during);
   if(APP.pain.after)setPainSilent('after',APP.pain.after);
@@ -3035,12 +3037,55 @@ function toggleMental(el,id){
 // ══════════════════════════════════════════════
 // RECOVERY
 // ══════════════════════════════════════════════
-function toggleRec(el,id){
-  const was=el.classList.contains('done');el.classList.toggle('done');
-  const ch=el.querySelector('.rc-check');
-  if(!was){APP.recovery[id]=true;if(ch)ch.textContent='✓';showToast('RECOVERY LOGGED ✓','toast-success');}
-  else{delete APP.recovery[id];if(ch)ch.textContent='';}
+function checkDailyRecoveryReset() {
+  const today = new Date().toISOString().slice(0, 10);
+  if (!APP.recoveryDate) {
+    APP.recoveryDate = today;
+    return false;
+  }
+  if (APP.recoveryDate !== today) {
+    if (!APP.recoveryHistory) APP.recoveryHistory = {};
+    if (APP.recovery && Object.keys(APP.recovery).length > 0) {
+      APP.recoveryHistory[APP.recoveryDate] = Object.assign({}, APP.recovery);
+    }
+    APP.recovery = {};
+    APP.recoveryDate = today;
+    saveData();
+    renderRecoveryChecklist();
+    return true;
+  }
+  return false;
+}
+
+function renderRecoveryChecklist() {
+  const count = Object.keys(APP.recovery || {}).length;
+  document.querySelectorAll('.rec-card').forEach(el => {
+    const isDone = !!(APP.recovery && APP.recovery[el.id]);
+    el.classList.toggle('done', isDone);
+    const ch = el.querySelector('.rc-check');
+    if (ch) ch.textContent = isDone ? '✓' : '';
+  });
+  const badgeEl = document.getElementById('rec-day-label');
+  if (badgeEl) {
+    badgeEl.textContent = '// TODAY · ' + count + '/8 LOGGED';
+  }
+}
+
+function toggleRec(el, id) {
+  checkDailyRecoveryReset();
+  const was = el.classList.contains('done');
+  el.classList.toggle('done');
+  const ch = el.querySelector('.rc-check');
+  if (!was) {
+    APP.recovery[id] = true;
+    if (ch) ch.textContent = '✓';
+    showToast('RECOVERY LOGGED ✓', 'toast-success');
+  } else {
+    delete APP.recovery[id];
+    if (ch) ch.textContent = '';
+  }
   saveData();
+  renderRecoveryChecklist();
 }
 
 // ══════════════════════════════════════════════
@@ -4952,6 +4997,19 @@ function setMentalDay(dayNum, btnEl) {
   if (bAuthor) bAuthor.textContent = q.bookQuote.author;
   if (bTakeaway) bTakeaway.textContent = q.bookQuote.takeaway;
 }
+
+
+// Auto-refresh daily recovery when switching back to app
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'visible') {
+    if (checkDailyRecoveryReset()) {
+      showToast('NEW DAY · RECOVERY RESET ✓', 'toast-success');
+    }
+  }
+});
+window.addEventListener('focus', () => {
+  checkDailyRecoveryReset();
+});
 
 function initMentalQuotes() {
   const today = new Date().getDay();
