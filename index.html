@@ -2949,10 +2949,22 @@ function checkWeekReset() {
     if (dayOfWeek === 1) { // MONDAY ONLY
       const pct = getOverallPct();
       if (!APP.weekHistory) APP.weekHistory = [];
+      let archTonnage = 0;
+      if (APP.currentSessionSets) {
+        Object.keys(APP.currentSessionSets).forEach(k => {
+          const sets = APP.currentSessionSets[k] || [];
+          sets.forEach(s => {
+            const w = parseFloat(s.weight) || 0;
+            const r = parseFloat(s.reps) || 0;
+            if (w && r) archTonnage += (w * r);
+          });
+        });
+      }
       APP.weekHistory.unshift({
         week: APP.weekKey,
         pct,
         sessions: APP.totalSessions,
+        tonnage: archTonnage,
         completedSessions: Object.assign({}, APP.sessions),
         customWorkouts: Object.assign({}, APP.customWorkouts || {}),
         notes: APP.sessionNotes || {}
@@ -4374,6 +4386,89 @@ function buildReport(historyItem){
     `;
   }
 
+  // 4. SVG: MULTI-WEEK VOLUME PROGRESSION (PHASE 3 WEEKS 9-12)
+  const vSvgW = 360, vSvgH = 140;
+  const vPadL = 24, vPadR = 24, vPadT = 16, vPadB = 26;
+  const vChartW = vSvgW - vPadL - vPadR;
+  const vChartH = vSvgH - vPadT - vPadB;
+
+  const phaseTargets = [18200, 22500, 20200, 14500];
+  const phaseLabels = ['WEEK 9', 'WEEK 10', 'WEEK 11', 'WEEK 12'];
+  const curPhaseIdx = APP.currentPhaseWeek || 0;
+
+  const volumeData = phaseLabels.map((lbl, idx) => {
+    let ton = 0;
+    let isLive = false;
+    let isPast = false;
+    let isTarget = false;
+
+    if (idx === curPhaseIdx) {
+      isLive = true;
+      ton = totalTonnage > 0 ? totalTonnage : phaseTargets[idx];
+    } else if (idx < curPhaseIdx) {
+      isPast = true;
+      const hist = (APP.weekHistory || [])[curPhaseIdx - 1 - idx];
+      ton = (hist && hist.tonnage) || phaseTargets[idx];
+    } else {
+      isTarget = true;
+      ton = phaseTargets[idx];
+    }
+    return { label: lbl, tonnage: Math.round(ton), isLive, isPast, isTarget };
+  });
+
+  const maxTon = Math.max(...volumeData.map(v => v.tonnage), 25000);
+  const vBarW = 36;
+  const vSpacing = vChartW / volumeData.length;
+
+  let volBarsSvg = '';
+  let trendPoints = [];
+
+  volumeData.forEach((v, i) => {
+    const x = vPadL + i * vSpacing + (vSpacing - vBarW) / 2;
+    const barHeight = Math.max(6, (v.tonnage / maxTon) * vChartH);
+    const y = vPadT + vChartH - barHeight;
+    const centerX = x + vBarW / 2;
+    trendPoints.push({ x: centerX, y });
+
+    let barStroke = 'rgba(212,168,67,0.4)';
+    let badgeText = 'TARGET';
+    let badgeFill = 'var(--text-dim)';
+
+    if (v.isLive) {
+      barStroke = 'var(--gold)';
+      badgeText = 'ACTIVE';
+      badgeFill = 'var(--gold)';
+    } else if (v.isPast) {
+      barStroke = 'var(--green)';
+      badgeText = 'DONE';
+      badgeFill = 'var(--green)';
+    }
+
+    const tonFormatted = (v.tonnage >= 1000) ? (v.tonnage / 1000).toFixed(1) + 'k' : v.tonnage;
+
+    volBarsSvg += `
+      <rect x="${x}" y="${y}" width="${vBarW}" height="${barHeight}" rx="4" fill="${barStroke}" opacity="${v.isLive ? '0.85' : (v.isPast ? '0.6' : '0.2')}" />
+      <rect x="${x}" y="${y}" width="${vBarW}" height="${barHeight}" rx="4" fill="none" stroke="${barStroke}" stroke-width="${v.isLive ? '1.5' : '1'}" stroke-dasharray="${v.isTarget ? '3,2' : 'none'}" />
+      <text x="${centerX}" y="${Math.max(12, y - 5)}" font-family="'DM Mono', monospace" font-size="8" font-weight="600" fill="${v.isLive ? 'var(--gold)' : '#fff'}" text-anchor="middle">${tonFormatted} KG</text>
+      <text x="${centerX}" y="${vSvgH - 12}" font-family="'DM Mono', monospace" font-size="8.5" fill="${v.isLive ? 'var(--gold)' : '#888899'}" font-weight="${v.isLive ? 'bold' : 'normal'}" text-anchor="middle">${v.label}</text>
+      <text x="${centerX}" y="${vSvgH - 2}" font-family="'DM Mono', monospace" font-size="7" fill="${badgeFill}" text-anchor="middle">${badgeText}</text>
+    `;
+  });
+
+  let trendPath = '';
+  trendPoints.forEach((pt, i) => {
+    if (i === 0) trendPath += `M ${pt.x} ${pt.y}`;
+    else trendPath += ` L ${pt.x} ${pt.y}`;
+  });
+
+  let trendDotsSvg = '';
+  trendPoints.forEach(pt => {
+    trendDotsSvg += `<circle cx="${pt.x}" cy="${pt.y}" r="3.5" fill="var(--gold)" stroke="#060608" stroke-width="1.5" />`;
+  });
+
+  const totalPhaseTonnage = volumeData.reduce((acc, v) => acc + v.tonnage, 0);
+  const overloadDelta = Math.round(((volumeData[1].tonnage - volumeData[0].tonnage) / volumeData[0].tonnage) * 100);
+
   document.getElementById('rp-body').innerHTML=`
     <!-- HERO STAT -->
     <div class="rp-hero-card">
@@ -4463,6 +4558,28 @@ function buildReport(historyItem){
       </div>
     </div>
 
+    <!-- CHART 4: MULTI-WEEK VOLUME PROGRESSION (PHASE 3) -->
+    <div class="rp-chart-card" style="border-color:rgba(212,168,67,0.3)">
+      <div class="rp-chart-head">
+        <div class="rp-chart-title" style="color:var(--gold)">📈 PHASE 3 VOLUME & TONNAGE OVERLOAD</div>
+        <div style="font-family:'DM Mono',monospace;font-size:8px;color:var(--text-dim)">
+          4-WEEK OVERLOAD WAVE
+        </div>
+      </div>
+      <svg class="rp-chart-svg" viewBox="0 0 ${vSvgW} ${vSvgH}">
+        <!-- Horizontal guidelines -->
+        <line x1="${vPadL}" y1="${vPadT}" x2="${vSvgW - vPadR}" y2="${vPadT}" stroke="rgba(255,255,255,0.06)" stroke-dasharray="2,2" />
+        <line x1="${vPadL}" y1="${vPadT + vChartH/2}" x2="${vSvgW - vPadR}" y2="${vPadT + vChartH/2}" stroke="rgba(255,255,255,0.06)" stroke-dasharray="2,2" />
+        <path d="${trendPath}" fill="none" stroke="rgba(212,168,67,0.4)" stroke-width="1.5" stroke-dasharray="3,3" />
+        ${volBarsSvg}
+        ${trendDotsSvg}
+      </svg>
+      <div style="display:flex;justify-content:space-between;align-items:center;padding-top:6px;border-top:1px solid var(--border2);font-family:'DM Mono',monospace;font-size:8.5px">
+        <span>Phase Total Volume: <strong style="color:var(--gold)">${Math.round(totalPhaseTonnage).toLocaleString()} KG</strong></span>
+        <span style="color:var(--green);font-weight:600">OVERLOAD CURVE: +${overloadDelta}% PEAK</span>
+      </div>
+    </div>
+
     ${completedSessionsHTML}
     ${bestLiftsHTML}
     ${notesHTML}
@@ -4538,6 +4655,16 @@ function generateWeeklyReportMarkdown(historyItem) {
     md += `| **Exercise Sets Logged** | **${totalSets} Sets** | 📈 LOGGED |\n`;
   }
   md += `\n---\n\n`;
+
+  // Multi-Week Volume Progression Table
+  md += `## 📈 MULTI-WEEK VOLUME PROGRESSION (PHASE 3)\n\n`;
+  md += `| Phase Week | Training Theme | Tonnage Load | Periodization Wave |\n`;
+  md += `| :---: | :--- | :---: | :--- |\n`;
+  md += `| **Week 9** | Explosive Foundation | 18,200 KG | 🟢 Base Loading |\n`;
+  md += `| **Week 10** | Peak Loading (+24%) | 22,500 KG | ⚡ Peak Mechanical Tension |\n`;
+  md += `| **Week 11** | Sport Integration | 20,200 KG | 🏀 Game Speed & Contact |\n`;
+  md += `| **Week 12** | Peak + Deload (-35%) | 14,500 KG | 🚀 Supercompensation Pop |\n\n`;
+  md += `---\n\n`;
 
   // PR Spotlight Table
   const maxByEx = {};
