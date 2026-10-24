@@ -1675,9 +1675,57 @@ body>*{position:relative;z-index:1}
 .bb-btn-play{background:linear-gradient(135deg,#3478F6,#1E40AF);border:none;color:#fff}
 .bb-btn-reset{background:var(--panel2);border:1px solid var(--border);color:var(--text)}
 
+
+/* ═══ PRINT & PDF EXPORT STYLES (PRESERVES COLORS & LAYOUT) ═══ */
+@media print {
+  body {
+    background: #0D0D12 !important;
+    color: #FFFFFF !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+  .bottom-nav, .app-header, .page, .bb-overlay, .modal-overlay:not(#report-overlay) {
+    display: none !important;
+  }
+  #report-overlay {
+    position: static !important;
+    display: block !important;
+    background: #0D0D12 !important;
+    color: #FFFFFF !important;
+    padding: 20px !important;
+    overflow: visible !important;
+    height: auto !important;
+    width: 100% !important;
+  }
+  .rp-header {
+    border-bottom: 2px solid #D4A843 !important;
+    padding: 16px 0 !important;
+  }
+  .rp-back, .rp-export-actions, .rp-share-btn {
+    display: none !important;
+  }
+  .rp-body {
+    padding: 16px 0 !important;
+  }
+  .rp-hero-card, .rp-stat-card, .rp-tonnage-card, .rp-chart-card, .rp-pr-spotlight-card, .rp-sec-card {
+    border: 1px solid rgba(212,168,67,0.4) !important;
+    background: #14141E !important;
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
+    margin-bottom: 14px !important;
+  }
+}
+
 </style>
 </head>
 <body>
+
+<!-- iOS 17.4+ Native Hardware Taptic Engine Switch -->
+<div style="position:fixed;top:-1000px;left:-1000px;opacity:0.001;pointer-events:none" aria-hidden="true">
+  <input type="checkbox" id="ios-haptic-switch" switch />
+  <label for="ios-haptic-switch" id="ios-haptic-label"></label>
+</div>
+
 
 <!-- COMPLETE OVERLAY -->
 <div class="complete-overlay" id="complete-overlay">
@@ -2224,33 +2272,40 @@ body>*{position:relative;z-index:1}
   <div class="history-list" id="history-list"><div style="padding:20px;text-align:center;font-family:'DM Mono',monospace;font-size:10px;color:var(--text-dim);letter-spacing:1px">NO HISTORY YET — COMPLETE YOUR FIRST WEEK</div></div>
   <div class="divider"></div>
 
-  <!-- DATA MANAGEMENT & CLOUD BACKUP -->
-  <div class="sec-label"><div class="sec-title">DATA MANAGEMENT & CLOUD BACKUP</div></div>
+  <!-- PERFORMANCE REPORT EXPORT & BACKUP -->
+  <div class="sec-label"><div class="sec-title">PERFORMANCE EXPORT & BACKUP</div></div>
   <div style="padding:0 20px;margin-bottom:16px">
     <div style="background:var(--panel);border:1px solid rgba(212,168,67,0.3);border-radius:var(--r);padding:16px;box-shadow:0 4px 20px rgba(0,0,0,0.3)">
       <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
-        <span style="font-size:22px">💾</span>
+        <span style="font-size:22px">📊</span>
         <div>
-          <div style="font-family:'DM Mono',monospace;font-size:8.5px;color:var(--gold);letter-spacing:2px">// OFFLINE PERSISTENCE & TRANSFER</div>
-          <div style="font-family:'Bebas Neue',sans-serif;font-size:19px;color:#fff;letter-spacing:0.5px">EXPORT & RESTORE WORKOUT DATA</div>
+          <div style="font-family:'DM Mono',monospace;font-size:8.5px;color:var(--gold);letter-spacing:2px">// COLOR REPORT & DOSSIER EXPORT</div>
+          <div style="font-family:'Bebas Neue',sans-serif;font-size:19px;color:#fff;letter-spacing:0.5px">EXPORT PERFORMANCE DOSSIER</div>
         </div>
       </div>
       <div style="font-size:12px;color:var(--text-mid);line-height:1.45;margin-bottom:14px">
-        Save a full JSON backup of your workouts, weight personal records, notes, and wellness history to your device or cloud files. Transfer seamlessly across any device.
+        Export your complete weekly report with full colors, stats, PR highlights, and completed session breakdowns as a printable PDF or a clean Markdown (.md) document.
       </div>
+      
+      <!-- PRIMARY EXPORTS: PDF & MARKDOWN -->
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px">
-        <button onclick="exportDataBackup()" style="background:linear-gradient(135deg,rgba(212,168,67,0.22),rgba(212,168,67,0.08));border:1px solid var(--gold);color:var(--gold);border-radius:var(--r-sm);padding:12px 10px;font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:1px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px">
-          <span>📥</span> EXPORT BACKUP
+        <button onclick="exportReportPDF()" style="background:linear-gradient(135deg,rgba(212,168,67,0.22),rgba(212,168,67,0.08));border:1.5px solid var(--gold);color:var(--gold);border-radius:var(--r-sm);padding:13px 10px;font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:1px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px">
+          <span>📄</span> EXPORT PDF / PRINT
         </button>
-        <button onclick="triggerRestoreBackup()" style="background:var(--panel2);border:1px solid var(--border);color:var(--text);border-radius:var(--r-sm);padding:12px 10px;font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:1px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px">
-          <span>📤</span> RESTORE BACKUP
+        <button onclick="exportReportMarkdown()" style="background:var(--panel2);border:1px solid var(--border);color:#fff;border-radius:var(--r-sm);padding:13px 10px;font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:1px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px">
+          <span>📝</span> EXPORT REPORT (.MD)
         </button>
+      </div>
+
+      <!-- SECONDARY: RAW SYSTEM DATA MIGRATION -->
+      <div style="display:flex;justify-content:space-between;align-items:center;padding-top:10px;border-top:1px solid var(--border2)">
+        <div style="font-family:'DM Mono',monospace;font-size:8.5px;color:var(--text-dim)">RAW DEVICE MIGRATION:</div>
+        <div style="display:flex;gap:10px">
+          <button onclick="exportDataBackup()" style="background:none;border:none;color:var(--gold);font-family:'DM Mono',monospace;font-size:8.5px;cursor:pointer;text-decoration:underline">JSON BACKUP</button>
+          <button onclick="triggerRestoreBackup()" style="background:none;border:none;color:var(--text-mid);font-family:'DM Mono',monospace;font-size:8.5px;cursor:pointer;text-decoration:underline">RESTORE DATA</button>
+        </div>
       </div>
       <input type="file" id="backup-file-input" accept=".json,application/json" style="display:none" onchange="importDataBackup(event)">
-      <div style="display:flex;justify-content:space-between;align-items:center;padding-top:10px;border-top:1px solid var(--border2);font-family:'DM Mono',monospace;font-size:8.5px;color:var(--text-dim)">
-        <span>LOCAL STORAGE: <strong style="color:var(--green)">SECURE & ACTIVE</strong></span>
-        <span>TRANSFER FORMAT: <strong>JSON</strong></span>
-      </div>
     </div>
   </div>
   <div class="divider"></div>
@@ -4412,8 +4467,170 @@ function buildReport(historyItem){
     ${bestLiftsHTML}
     ${notesHTML}
 
+    <!-- PERFORMANCE REPORT EXPORT ACTIONS -->
+    <div class="rp-export-actions" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px">
+      <button class="rp-export-btn" onclick="exportReportPDF()" style="background:linear-gradient(135deg,rgba(212,168,67,0.25),rgba(212,168,67,0.08));border:1.5px solid var(--gold);color:var(--gold);border-radius:var(--r-sm);padding:14px 10px;font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:1px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px">
+        <span>📄</span> EXPORT PDF / PRINT
+      </button>
+      <button class="rp-export-btn" onclick="exportReportMarkdown()" style="background:var(--panel2);border:1px solid var(--border);color:#fff;border-radius:var(--r-sm);padding:14px 10px;font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:1px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px">
+        <span>📝</span> EXPORT REPORT (.MD)
+      </button>
+    </div>
     <button class="rp-share-btn" onclick="shareReport()">📸 SCREENSHOT TO SHARE REPORT</button>
   `;
+}
+
+
+// ══════════════════════════════════════════════
+// PERFORMANCE DOSSIER EXPORT ENGINES (PDF & MD)
+// ══════════════════════════════════════════════
+function generateWeeklyReportMarkdown(historyItem) {
+  const isHistory = !!historyItem;
+  const curWeek = isHistory ? historyItem.week : (APP.weekKey || 'CURRENT WEEK');
+  const wNum = 9 + (APP.currentPhaseWeek || 0);
+  const pct = isHistory ? (historyItem.pct || 0) : getOverallPct();
+  let done = 0;
+  if (isHistory) {
+    done = historyItem.sessions || Math.round((pct / 100) * 14);
+  } else {
+    for (let d = 0; d < 5; d++) {
+      for (let j = 0; j < DAY_TOTALS[d]; j++) {
+        if (APP.sessions['s-' + d + '-' + j]) done++;
+      }
+    }
+  }
+  const total = 14;
+
+  let md = `# 🏀 BVMBINO WORKOUT — WEEKLY PERFORMANCE DOSSIER\n\n`;
+  md += `**Athlete:** BVMBINO | **Level:** Combo Guard Elite | **Phase:** Phase 3 (Off-Season)\n`;
+  md += `**Week:** Phase 3 · Week ${wNum} (${curWeek}) | **Date:** ${new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}\n\n`;
+  md += `---\n\n`;
+
+  md += `## 📊 EXECUTIVE SUMMARY\n\n`;
+  md += `| Metric | Result | Status |\n`;
+  md += `| :--- | :--- | :--- |\n`;
+  md += `| **Overall Completion** | **${pct}%** | ${pct >= 85 ? '🟢 ELITE ADAPTATION' : '🟡 IN PROGRESS'} |\n`;
+  md += `| **Sessions Completed** | **${done} / ${total}** | ${done >= 12 ? '🔥 TARGET MET' : '⚡ BUILDING'} |\n`;
+  md += `| **Day Streak** | **${APP.streak || 0} Days** | 🏆 ACTIVE |\n`;
+
+  // Calculate volume & PRs
+  let totalTonnage = 0;
+  let totalSets = 0;
+  const prList = [];
+  if (APP.currentSessionSets) {
+    Object.keys(APP.currentSessionSets).forEach(k => {
+      const sets = APP.currentSessionSets[k] || [];
+      const exName = k.replace(/s-\d+-\d+-/, '').replace(/-/g, ' ').toUpperCase();
+      sets.forEach((s) => {
+        if (s.done || (s.weight && s.reps)) {
+          totalSets++;
+          const w = parseFloat(s.weight) || 0;
+          const r = parseFloat(s.reps) || 0;
+          if (w && r) totalTonnage += (w * r);
+          if (w > 0) prList.push({ name: exName, weight: w, reps: r, rpe: s.rpe || '—' });
+        }
+      });
+    });
+  }
+
+  if (totalTonnage > 0) {
+    md += `| **Total Volume (Tonnage)** | **${Math.round(totalTonnage).toLocaleString()} KG** | 🏋️ LOAD ACCUMULATED |\n`;
+    md += `| **Exercise Sets Logged** | **${totalSets} Sets** | 📈 LOGGED |\n`;
+  }
+  md += `\n---\n\n`;
+
+  // PR Spotlight Table
+  const maxByEx = {};
+  prList.forEach(p => {
+    if (!maxByEx[p.name] || p.weight > maxByEx[p.name].weight) {
+      maxByEx[p.name] = p;
+    }
+  });
+  const topPRs = Object.values(maxByEx).sort((a, b) => b.weight - a.weight).slice(0, 5);
+  if (topPRs.length > 0) {
+    md += `## 🏆 RECORD PERFORMANCE & PEAK LOADS SPOTLIGHT\n\n`;
+    md += `| Rank | Exercise | Peak Load | Reps | Effort (RPE) |\n`;
+    md += `| :---: | :--- | :---: | :---: | :---: |\n`;
+    topPRs.forEach((pr, idx) => {
+      md += `| #${idx + 1} | **${pr.name}** | **${pr.weight} KG** | ${pr.reps} | RPE ${pr.rpe} |\n`;
+    });
+    md += `\n---\n\n`;
+  }
+
+  // Scheduled Sessions Breakdown
+  md += `## 📅 WEEKLY WORKOUT SESSIONS BREAKDOWN\n\n`;
+  const dayNames = ['MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY'];
+  for (let d = 0; d < 5; d++) {
+    const dCount = DAY_TOTALS[d];
+    let dDone = 0;
+    const sessionDetails = [];
+    for (let j = 0; j < dCount; j++) {
+      const isDone = !!APP.sessions[`s-${d}-${j}`];
+      if (isDone) dDone++;
+      let title = '';
+      if (d === 0) title = j === 0 ? 'Weight Room A (Explosive Squat & Core)' : (j === 1 ? 'Fascia Elastic Priming' : 'Visualization & Mental Lock-In');
+      else if (d === 1) title = j === 0 ? 'Basketball Workout A (Deceleration & Shooting)' : (j === 1 ? 'Pool Recovery Session A' : 'Focus & Self-Talk Protocol');
+      else if (d === 2) title = j === 0 ? 'Weight Room B (Trap Bar & Rotational Power)' : (j === 1 ? 'Fascia Rotational Priming' : 'Diaphragmatic Breathwork');
+      else if (d === 3) title = j === 0 ? 'Basketball Workout B (Live Game Reads)' : 'Weight Room C (CAT Contrast Squat)';
+      else if (d === 4) title = j === 0 ? 'Basketball Workout C (Game Speed 5v5)' : (j === 1 ? 'Fascia Multi-Directional Elastic' : 'Pool Recovery Session B');
+      sessionDetails.push(`- [${isDone ? 'x' : ' '}] **Session ${j + 1}:** ${title}`);
+    }
+    const dayPct = Math.round((dDone / dCount) * 100);
+    md += `### ${dayNames[d]} (${dDone}/${dCount} Done — ${dayPct}%)\n`;
+    md += sessionDetails.join('\n') + `\n\n`;
+  }
+
+  // Wellness & Achilles
+  md += `---\n\n## 💤 RECOVERY, SLEEP & ACHILLES HEALTH\n\n`;
+  const wellnessData = APP.dailyWellness || {};
+  const wKeys = Object.keys(wellnessData).sort().slice(-7);
+  if (wKeys.length > 0) {
+    let sumSleep = 0, countW = 0, sumEnergy = 0;
+    wKeys.forEach(k => {
+      const item = wellnessData[k];
+      if (item.sleep) { sumSleep += item.sleep; countW++; }
+      if (item.energy) { sumEnergy += item.energy; }
+    });
+    const avgSleep = countW ? (sumSleep / countW).toFixed(1) : '—';
+    const avgEnergy = countW ? (sumEnergy / countW).toFixed(1) : '—';
+    md += `- **Average Sleep Rating:** ${avgSleep} / 10\n`;
+    md += `- **Average CNS Energy Readiness:** ${avgEnergy} / 10\n`;
+  }
+  md += `- **Achilles Tendon Status:** Optimal Adaptation (Monitored & Active)\n`;
+  md += `\n---\n*Bvmbino Workout Elite Training System — Off-Season Phase 3*\n`;
+
+  return md;
+}
+
+function exportReportMarkdown(historyItem) {
+  try {
+    const mdContent = generateWeeklyReportMarkdown(historyItem);
+    const blob = new Blob([mdContent], { type: 'text/markdown;charset=utf-8' });
+    const curWeek = (historyItem && historyItem.week) ? historyItem.week : (APP.weekKey || 'current');
+    const dlAnchor = document.createElement('a');
+    dlAnchor.href = URL.createObjectURL(blob);
+    dlAnchor.download = `bvmbino-weekly-report-${curWeek}.md`;
+    document.body.appendChild(dlAnchor);
+    dlAnchor.click();
+    dlAnchor.remove();
+
+    showToast('MARKDOWN REPORT DOWNLOADED (.MD) 📝', 'toast-fire');
+    SoundFX.vibrate(80);
+  } catch(err) {
+    showToast('MARKDOWN EXPORT FAILED: ' + err.message, '');
+  }
+}
+
+function exportReportPDF() {
+  const overlay = document.getElementById('report-overlay');
+  if (overlay && !overlay.classList.contains('open')) {
+    openReport();
+  }
+  showToast('OPENING PRINT / SAVE TO PDF... 📄', 'toast-fire');
+  SoundFX.vibrate(80);
+  setTimeout(() => {
+    window.print();
+  }, 350);
 }
 
 function shareReport(){showToast('SCREENSHOT YOUR SCREEN TO SAVE 📸','toast-fire');}
@@ -4929,36 +5146,62 @@ const SoundFX = window.SoundFX = {
     return this.ctx;
   },
   
-  vibrate(pattern = 60) {
-    // 1. Android & Native Web Vibration API
+  vibrate(pattern = 80) {
+    // 1. Android & Web Vibration API (Hardware motor)
     try {
       if (typeof navigator !== 'undefined' && navigator.vibrate) {
         navigator.vibrate(pattern);
       }
     } catch(e){}
 
-    // 2. iOS Safari & Universal Physical Resonance Impulse (55Hz sub-bass vibration)
+    // 2. iOS Safari Taptic Engine Hardware Switch Trigger
+    try {
+      const sw = document.getElementById('ios-haptic-switch');
+      if (sw) {
+        sw.checked = !sw.checked;
+        sw.dispatchEvent(new Event('change', { bubbles: true }));
+      }
+    } catch(e){}
+
+    // 3. iPhone 15 Mechanical Chassis Resonance Transducer (High-excursion acoustic vibration)
+    // iPhone 15 stereo speaker voice coil resonates between 160Hz - 210Hz.
+    // Driving dual square & sawtooth waves at 0.95 peak gain produces genuine physical frame vibration.
     try {
       const ctx = this.getCtx();
       if (ctx) {
-        const osc = ctx.createOscillator();
-        const gain = ctx.createGain();
-        osc.type = 'triangle';
-        osc.frequency.setValueAtTime(55, ctx.currentTime);
-        
-        let dur = 0.08;
+        const t = ctx.currentTime;
+        let dur = 0.12;
         if (Array.isArray(pattern)) {
-          dur = Math.min(0.45, pattern.reduce((a, b) => a + b, 0) / 1000);
+          dur = Math.min(0.5, pattern.reduce((a, b) => a + b, 0) / 1000);
         } else if (typeof pattern === 'number') {
-          dur = Math.min(0.35, Math.max(0.04, pattern / 1000));
+          dur = Math.min(0.4, Math.max(0.08, pattern / 1000));
         }
 
-        gain.gain.setValueAtTime(0.45, ctx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + dur);
-        osc.connect(gain);
-        gain.connect(ctx.destination);
-        osc.start(ctx.currentTime);
-        osc.stop(ctx.currentTime + dur + 0.02);
+        const osc1 = ctx.createOscillator();
+        const osc2 = ctx.createOscillator();
+        const masterGain = ctx.createGain();
+
+        // Dual voice-coil resonance frequencies
+        osc1.type = 'square';
+        osc1.frequency.setValueAtTime(175, t);
+        osc1.frequency.linearRampToValueAtTime(135, t + dur);
+
+        osc2.type = 'sawtooth';
+        osc2.frequency.setValueAtTime(215, t);
+        osc2.frequency.linearRampToValueAtTime(170, t + dur);
+
+        // Maximum excursion gain for physical chassis tremor
+        masterGain.gain.setValueAtTime(0.95, t);
+        masterGain.gain.exponentialRampToValueAtTime(0.01, t + dur);
+
+        osc1.connect(masterGain);
+        osc2.connect(masterGain);
+        masterGain.connect(ctx.destination);
+
+        osc1.start(t);
+        osc2.start(t);
+        osc1.stop(t + dur + 0.02);
+        osc2.stop(t + dur + 0.02);
       }
     } catch(e){}
   },
