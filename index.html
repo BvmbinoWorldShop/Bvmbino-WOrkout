@@ -2284,7 +2284,7 @@ body>*{position:relative;z-index:1}
       <div class="rest-timer-box" id="modal-rest-timer">
         <div class="rt-top-row">
           <div class="rt-label">
-            <span>⏱ REST TIMER</span>
+            <span>⏱ REST TIMER · 📳 VIBRATION & 🔊 CHIMES</span>
           </div>
           <div class="rt-time-display" id="rt-time">01:30</div>
         </div>
@@ -2407,7 +2407,10 @@ body>*{position:relative;z-index:1}
         <button class="bb-cycle-preset" data-cycles="6" onclick="setBoxBreathingCycles(6)">6 CYCLES</button>
         <button class="bb-cycle-preset" data-cycles="8" onclick="setBoxBreathingCycles(8)">8 CYCLES</button>
       </div>
-      <button id="bb-audio-toggle" onclick="toggleBoxBreathingAudio()" class="bb-audio-btn">🔊 AUDIO ON</button>
+      <div style="display:flex;gap:6px">
+        <button id="bb-vibe-toggle" onclick="toggleBoxBreathingVibe()" class="bb-audio-btn">📳 VIBE ON</button>
+        <button id="bb-audio-toggle" onclick="toggleBoxBreathingAudio()" class="bb-audio-btn">🔊 AUDIO</button>
+      </div>
     </div>
 
     <!-- Central Breathing Animation Circle -->
@@ -4926,9 +4929,37 @@ const SoundFX = window.SoundFX = {
     return this.ctx;
   },
   
-  vibrate(pattern) {
+  vibrate(pattern = 60) {
+    // 1. Android & Native Web Vibration API
     try {
-      if (navigator.vibrate) navigator.vibrate(pattern);
+      if (typeof navigator !== 'undefined' && navigator.vibrate) {
+        navigator.vibrate(pattern);
+      }
+    } catch(e){}
+
+    // 2. iOS Safari & Universal Physical Resonance Impulse (55Hz sub-bass vibration)
+    try {
+      const ctx = this.getCtx();
+      if (ctx) {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(55, ctx.currentTime);
+        
+        let dur = 0.08;
+        if (Array.isArray(pattern)) {
+          dur = Math.min(0.45, pattern.reduce((a, b) => a + b, 0) / 1000);
+        } else if (typeof pattern === 'number') {
+          dur = Math.min(0.35, Math.max(0.04, pattern / 1000));
+        }
+
+        gain.gain.setValueAtTime(0.45, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + dur);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(ctx.currentTime);
+        osc.stop(ctx.currentTime + dur + 0.02);
+      }
     } catch(e){}
   },
 
@@ -5074,7 +5105,7 @@ const SoundFX = window.SoundFX = {
 };
 
 // ══════════════════════════════════════════════
-// GUIDED BOX BREATHING ENGINE
+// GUIDED BOX BREATHING ENGINE (AUDIO & HAPTICS)
 // ══════════════════════════════════════════════
 let boxBreathingRunning = false;
 let boxBreathingTimer = null;
@@ -5083,12 +5114,45 @@ let boxBreathingSecondsLeft = 4;
 let boxBreathingCycle = 1;
 let boxBreathingTotalCycles = 4;
 let boxBreathingAudioEnabled = true;
+let boxBreathingVibeEnabled = true;
 
-const BREATH_PHASES = [
-  { name: 'INHALE', detail: 'Inhale through nose — expand belly and diaphragm', color: '#3478F6', action: () => SoundFX.playInhaleChime() },
-  { name: 'HOLD FULL', detail: 'Hold breath at top — calm stillness, no strain', color: '#D4A843', action: () => SoundFX.playHoldChime() },
-  { name: 'EXHALE', detail: 'Exhale smoothly through mouth — empty completely', color: '#30D158', action: () => SoundFX.playExhaleChime() },
-  { name: 'HOLD EMPTY', detail: 'Hold empty — reset nervous system, quiet focus', color: '#9B51E0', action: () => SoundFX.playHoldEmptyChime() }
+const BREATH_PHASES = window.BREATH_PHASES = [
+  {
+    name: 'INHALE',
+    detail: 'Inhale through nose — expand belly and diaphragm',
+    color: '#3478F6',
+    action: () => {
+      if (boxBreathingVibeEnabled) SoundFX.vibrate(100);
+      if (boxBreathingAudioEnabled) SoundFX.playInhaleChime();
+    }
+  },
+  {
+    name: 'HOLD FULL',
+    detail: 'Hold breath at top — calm stillness, no strain',
+    color: '#D4A843',
+    action: () => {
+      if (boxBreathingVibeEnabled) SoundFX.vibrate([70, 50, 70]);
+      if (boxBreathingAudioEnabled) SoundFX.playHoldChime();
+    }
+  },
+  {
+    name: 'EXHALE',
+    detail: 'Exhale smoothly through mouth — empty completely',
+    color: '#30D158',
+    action: () => {
+      if (boxBreathingVibeEnabled) SoundFX.vibrate(120);
+      if (boxBreathingAudioEnabled) SoundFX.playExhaleChime();
+    }
+  },
+  {
+    name: 'HOLD EMPTY',
+    detail: 'Hold empty — reset nervous system, quiet focus',
+    color: '#9B51E0',
+    action: () => {
+      if (boxBreathingVibeEnabled) SoundFX.vibrate([70, 50, 70]);
+      if (boxBreathingAudioEnabled) SoundFX.playHoldEmptyChime();
+    }
+  }
 ];
 
 function openBoxBreathingModal() {
@@ -5096,6 +5160,7 @@ function openBoxBreathingModal() {
   if (!overlay) return;
   overlay.classList.add('open');
   document.body.style.overflow = 'hidden';
+  SoundFX.vibrate(70);
   resetBoxBreathing();
   startBoxBreathing();
 }
@@ -5110,12 +5175,22 @@ function closeBoxBreathingModal() {
 function toggleBoxBreathingAudio() {
   boxBreathingAudioEnabled = !boxBreathingAudioEnabled;
   const btn = document.getElementById('bb-audio-toggle');
-  if (btn) btn.textContent = boxBreathingAudioEnabled ? '🔊 AUDIO ON' : '🔇 MUTED';
+  if (btn) btn.textContent = boxBreathingAudioEnabled ? '🔊 AUDIO' : '🔇 MUTED';
+  SoundFX.vibrate(40);
   showToast(boxBreathingAudioEnabled ? 'AUDIO CHIMES ON 🔊' : 'AUDIO MUTED 🔇', '');
+}
+
+function toggleBoxBreathingVibe() {
+  boxBreathingVibeEnabled = !boxBreathingVibeEnabled;
+  const btn = document.getElementById('bb-vibe-toggle');
+  if (btn) btn.textContent = boxBreathingVibeEnabled ? '📳 VIBE ON' : '📳 OFF';
+  if (boxBreathingVibeEnabled) SoundFX.vibrate([60, 40, 60]);
+  showToast(boxBreathingVibeEnabled ? 'HAPTIC VIBRATION ON 📳' : 'VIBRATION MUTED', '');
 }
 
 function setBoxBreathingCycles(n) {
   boxBreathingTotalCycles = n;
+  SoundFX.vibrate(50);
   document.querySelectorAll('.bb-cycle-preset').forEach(btn => {
     btn.classList.toggle('active', parseInt(btn.dataset.cycles) === n);
   });
@@ -5127,9 +5202,8 @@ function startBoxBreathing() {
   boxBreathingRunning = true;
   updateBoxBreathingUI();
   
-  if (boxBreathingAudioEnabled) {
-    BREATH_PHASES[boxBreathingPhase].action();
-  }
+  // Trigger initial phase chime and vibration
+  BREATH_PHASES[boxBreathingPhase].action();
 
   boxBreathingTimer = setInterval(() => {
     boxBreathingSecondsLeft--;
@@ -5145,8 +5219,12 @@ function startBoxBreathing() {
         }
       }
 
-      if (boxBreathingAudioEnabled) {
-        BREATH_PHASES[boxBreathingPhase].action();
+      // Phase transition chime & vibration
+      BREATH_PHASES[boxBreathingPhase].action();
+    } else {
+      // Tactile metronome pulse on each countdown second
+      if (boxBreathingVibeEnabled) {
+        SoundFX.vibrate(30);
       }
     }
     updateBoxBreathingUI();
@@ -5156,16 +5234,19 @@ function startBoxBreathing() {
 function pauseBoxBreathing() {
   boxBreathingRunning = false;
   if (boxBreathingTimer) clearInterval(boxBreathingTimer);
+  SoundFX.vibrate(50);
   updateBoxBreathingUI();
 }
 
 function toggleBoxBreathingPlay() {
+  SoundFX.vibrate(60);
   if (boxBreathingRunning) pauseBoxBreathing();
   else startBoxBreathing();
 }
 
 function resetBoxBreathing() {
   pauseBoxBreathing();
+  SoundFX.vibrate(50);
   boxBreathingPhase = 0;
   boxBreathingSecondsLeft = 4;
   boxBreathingCycle = 1;
@@ -5174,6 +5255,9 @@ function resetBoxBreathing() {
 
 function finishBoxBreathingSession() {
   pauseBoxBreathing();
+  if (boxBreathingVibeEnabled) {
+    SoundFX.vibrate([200, 100, 200, 100, 450, 100, 600]);
+  }
   if (boxBreathingAudioEnabled) {
     SoundFX.playBreathingComplete();
   }
@@ -5312,8 +5396,8 @@ function startRestTimer(duration){
   restTimerRunning=true;
   updateRestTimerUI();
 
-  // Instant feedback on start
-  SoundFX.vibrate(40);
+  // Instant tangible vibration on timer start
+  SoundFX.vibrate(80);
   SoundFX.playTone(660, 0.12, 'sine', 0.2);
 
   restTimerInterval=setInterval(()=>{
@@ -5321,15 +5405,24 @@ function startRestTimer(duration){
       restTimerRemaining--;
       updateRestTimerUI();
 
-      // Audio countdown & vibration chimes for 3, 2, 1 seconds
-      if(restTimerRemaining <= 3 && restTimerRemaining >= 1){
-        SoundFX.playTick(restTimerRemaining === 1);
+      // Tactile countdown beeps & intensifying vibration for 3, 2, 1 seconds
+      if(restTimerRemaining === 3){
+        SoundFX.vibrate(80);
+        SoundFX.playTick(false);
+      } else if(restTimerRemaining === 2){
+        SoundFX.vibrate(100);
+        SoundFX.playTick(false);
+      } else if(restTimerRemaining === 1){
+        SoundFX.vibrate(150);
+        SoundFX.playTick(true);
       }
     }else{
       restTimerRemaining=0;
       restTimerRunning=false;
       clearInterval(restTimerInterval);
       updateRestTimerUI();
+      // Powerful multi-pulse buzzer vibration pattern on finish
+      SoundFX.vibrate([350, 120, 350, 120, 500, 120, 600]);
       SoundFX.playTimerComplete();
       showToast('REST OVER — NEXT SET! ⚡','toast-fire');
     }
@@ -5337,12 +5430,14 @@ function startRestTimer(duration){
 }
 
 function pauseRestTimer(){
+  SoundFX.vibrate(60);
   restTimerRunning=false;
   if(restTimerInterval)clearInterval(restTimerInterval);
   updateRestTimerUI();
 }
 
 function resetRestTimer(){
+  SoundFX.vibrate(60);
   restTimerRunning=false;
   if(restTimerInterval)clearInterval(restTimerInterval);
   restTimerRemaining=restTimerTotal;
@@ -5350,6 +5445,7 @@ function resetRestTimer(){
 }
 
 function setRestPreset(sec){
+  SoundFX.vibrate(50);
   restTimerTotal=sec;
   restTimerRemaining=sec;
   restTimerRunning=false;
@@ -5358,6 +5454,7 @@ function setRestPreset(sec){
 }
 
 function adjustRestTimer(delta){
+  SoundFX.vibrate(40);
   restTimerRemaining=Math.max(0,restTimerRemaining+delta);
   if(restTimerRemaining>restTimerTotal)restTimerTotal=restTimerRemaining;
   updateRestTimerUI();
