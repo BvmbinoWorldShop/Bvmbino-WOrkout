@@ -1595,6 +1595,86 @@ body>*{position:relative;z-index:1}
   border-top: 1px solid rgba(255, 159, 10, 0.2);
   line-height: 1.4;
 }
+
+/* ═══ GUIDED BOX BREATHING OVERLAY STYLES ═══ */
+.bb-overlay{
+  position:fixed;top:0;left:0;right:0;bottom:0;
+  background:rgba(6,6,8,0.92);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  z-index:9000;display:none;align-items:center;justify-content:center;padding:20px;
+}
+.bb-overlay.open{display:flex}
+.bb-modal{
+  background:var(--panel);border:1px solid rgba(52,120,246,0.3);border-radius:var(--r);
+  width:100%;max-width:420px;padding:24px 20px;box-shadow:0 12px 40px rgba(0,0,0,0.85);text-align:center;
+}
+.bb-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px;text-align:left}
+.bb-close-btn{background:none;border:none;color:var(--text-dim);font-size:22px;cursor:pointer;padding:4px 8px;line-height:1}
+.bb-cycle-preset{
+  background:var(--panel2);border:1px solid var(--border);border-radius:var(--r-sm);
+  color:var(--text-dim);font-family:'DM Mono',monospace;font-size:9px;padding:5px 9px;cursor:pointer;
+}
+.bb-cycle-preset.active{background:rgba(52,120,246,0.2);border-color:#3478F6;color:#5B9AFF}
+.bb-audio-btn{
+  background:var(--panel2);border:1px solid var(--border);border-radius:var(--r-sm);
+  color:var(--gold);font-family:'DM Mono',monospace;font-size:9px;padding:5px 9px;cursor:pointer;
+}
+.bb-visualizer-wrap{
+  position:relative;width:210px;height:210px;margin:16px auto;display:flex;align-items:center;justify-content:center;
+}
+.bb-glow-ring{
+  position:absolute;width:210px;height:210px;border-radius:50%;
+  border:2px dashed rgba(255,255,255,0.08);animation:bbSpin 30s linear infinite;
+}
+@keyframes bbSpin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+.bb-circle{
+  width:140px;height:140px;border-radius:50%;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  transition:all 1s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow:0 0 35px rgba(52,120,246,0.3);
+}
+.bb-circle.bb-phase-0{ /* Inhale */
+  transform:scale(1.28);
+  background:radial-gradient(circle,rgba(52,120,246,0.35) 0%,rgba(52,120,246,0.1) 70%);
+  border:2.5px solid #3478F6;
+  box-shadow:0 0 45px rgba(52,120,246,0.55);
+}
+.bb-circle.bb-phase-1{ /* Hold Full */
+  transform:scale(1.28);
+  background:radial-gradient(circle,rgba(212,168,67,0.35) 0%,rgba(212,168,67,0.1) 70%);
+  border:2.5px solid #D4A843;
+  box-shadow:0 0 50px rgba(212,168,67,0.6);
+}
+.bb-circle.bb-phase-2{ /* Exhale */
+  transform:scale(0.86);
+  background:radial-gradient(circle,rgba(48,209,88,0.3) 0%,rgba(48,209,88,0.1) 70%);
+  border:2.5px solid #30D158;
+  box-shadow:0 0 30px rgba(48,209,88,0.45);
+}
+.bb-circle.bb-phase-3{ /* Hold Empty */
+  transform:scale(0.86);
+  background:radial-gradient(circle,rgba(155,81,224,0.3) 0%,rgba(155,81,224,0.1) 70%);
+  border:2.5px solid #9B51E0;
+  box-shadow:0 0 30px rgba(155,81,224,0.45);
+}
+.bb-circle.completed{
+  transform:scale(1.15);
+  background:radial-gradient(circle,rgba(212,168,67,0.4) 0%,rgba(212,168,67,0.1) 70%);
+  border:3px solid var(--gold);
+  box-shadow:0 0 60px rgba(212,168,67,0.7);
+}
+.bb-countdown{font-family:'Bebas Neue',sans-serif;font-size:52px;color:#fff;line-height:1}
+.bb-sec-label{font-family:'DM Mono',monospace;font-size:8px;color:rgba(255,255,255,0.7);letter-spacing:1px}
+.bb-status-box{margin-bottom:18px}
+.bb-phase-title{font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:1.5px;color:#3478F6}
+.bb-phase-desc{font-size:12px;color:var(--text-mid);line-height:1.4;margin:4px 0 8px;min-height:34px}
+.bb-cycle-display{font-family:'DM Mono',monospace;font-size:10px;color:var(--gold);letter-spacing:1.5px}
+.bb-controls{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.bb-ctrl-btn{
+  border-radius:var(--r-sm);padding:12px;font-family:'Bebas Neue',sans-serif;font-size:17px;letter-spacing:1px;cursor:pointer;
+}
+.bb-btn-play{background:linear-gradient(135deg,#3478F6,#1E40AF);border:none;color:#fff}
+.bb-btn-reset{background:var(--panel2);border:1px solid var(--border);color:var(--text)}
+
 </style>
 </head>
 <body>
@@ -1881,6 +1961,11 @@ body>*{position:relative;z-index:1}
         </div>
       </div>
       <div class="day-card"><div class="mental-top" style="background:linear-gradient(135deg,rgba(52,120,246,0.12),var(--panel2))"><span class="mental-emoji">🧠</span><div class="mental-title">BOX BREATHING</div><div class="mental-timing">PRE-SESSION · PRE-GAME · 5 MIN</div></div>
+        <div style="padding:10px 14px 4px">
+          <button onclick="openBoxBreathingModal()" style="width:100%;background:linear-gradient(135deg,#3478F6,#1E40AF);border:none;border-radius:var(--r-sm);color:#fff;font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:1px;padding:10px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 4px 15px rgba(52,120,246,0.3)">
+            <span>▶</span> START 4-4-4-4 GUIDED BREATHING SESSION
+          </button>
+        </div>
         <div class="mental-steps">
           <div class="mental-step" id="ms-1-0" onclick="toggleMental(this,'ms-1-0')"><div class="ms-check"><span class="ms-chk">✓</span></div><div class="ms-text">Seated — spine tall, shoulders down and back.</div></div>
           <div class="mental-step" id="ms-1-1" onclick="toggleMental(this,'ms-1-1')"><div class="ms-check"><span class="ms-chk">✓</span></div><div class="ms-text">INHALE through nose — 4 full counts. Belly fills first.</div></div>
@@ -2138,6 +2223,37 @@ body>*{position:relative;z-index:1}
   <div class="sec-label"><div class="sec-title">WEEK HISTORY</div></div>
   <div class="history-list" id="history-list"><div style="padding:20px;text-align:center;font-family:'DM Mono',monospace;font-size:10px;color:var(--text-dim);letter-spacing:1px">NO HISTORY YET — COMPLETE YOUR FIRST WEEK</div></div>
   <div class="divider"></div>
+
+  <!-- DATA MANAGEMENT & CLOUD BACKUP -->
+  <div class="sec-label"><div class="sec-title">DATA MANAGEMENT & CLOUD BACKUP</div></div>
+  <div style="padding:0 20px;margin-bottom:16px">
+    <div style="background:var(--panel);border:1px solid rgba(212,168,67,0.3);border-radius:var(--r);padding:16px;box-shadow:0 4px 20px rgba(0,0,0,0.3)">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+        <span style="font-size:22px">💾</span>
+        <div>
+          <div style="font-family:'DM Mono',monospace;font-size:8.5px;color:var(--gold);letter-spacing:2px">// OFFLINE PERSISTENCE & TRANSFER</div>
+          <div style="font-family:'Bebas Neue',sans-serif;font-size:19px;color:#fff;letter-spacing:0.5px">EXPORT & RESTORE WORKOUT DATA</div>
+        </div>
+      </div>
+      <div style="font-size:12px;color:var(--text-mid);line-height:1.45;margin-bottom:14px">
+        Save a full JSON backup of your workouts, weight personal records, notes, and wellness history to your device or cloud files. Transfer seamlessly across any device.
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px">
+        <button onclick="exportDataBackup()" style="background:linear-gradient(135deg,rgba(212,168,67,0.22),rgba(212,168,67,0.08));border:1px solid var(--gold);color:var(--gold);border-radius:var(--r-sm);padding:12px 10px;font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:1px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px">
+          <span>📥</span> EXPORT BACKUP
+        </button>
+        <button onclick="triggerRestoreBackup()" style="background:var(--panel2);border:1px solid var(--border);color:var(--text);border-radius:var(--r-sm);padding:12px 10px;font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:1px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px">
+          <span>📤</span> RESTORE BACKUP
+        </button>
+      </div>
+      <input type="file" id="backup-file-input" accept=".json,application/json" style="display:none" onchange="importDataBackup(event)">
+      <div style="display:flex;justify-content:space-between;align-items:center;padding-top:10px;border-top:1px solid var(--border2);font-family:'DM Mono',monospace;font-size:8.5px;color:var(--text-dim)">
+        <span>LOCAL STORAGE: <strong style="color:var(--green)">SECURE & ACTIVE</strong></span>
+        <span>TRANSFER FORMAT: <strong>JSON</strong></span>
+      </div>
+    </div>
+  </div>
+  <div class="divider"></div>
   <div style="padding:0 20px">
     <div style="background:rgba(212,168,67,0.05);border:1px solid rgba(212,168,67,0.15);border-radius:var(--r);padding:16px;margin-bottom:12px">
       <div style="font-family:'DM Mono',monospace;font-size:9px;color:var(--gold);letter-spacing:2px;margin-bottom:10px">// INJURY STATUS</div>
@@ -2272,6 +2388,52 @@ body>*{position:relative;z-index:1}
 </div>
 
 <!-- ═══ WEEKLY REPORT OVERLAY ═══ -->
+
+<!-- ═══ GUIDED BOX BREATHING OVERLAY ═══ -->
+<div class="bb-overlay" id="box-breathing-overlay" onclick="if(event.target===this)closeBoxBreathingModal()">
+  <div class="bb-modal">
+    <div class="bb-header">
+      <div>
+        <div style="font-family:'DM Mono',monospace;font-size:9px;color:var(--gold);letter-spacing:2px">// 4-4-4-4 PROTOCOL</div>
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:24px;color:#fff;letter-spacing:0.5px">GUIDED BOX BREATHING</div>
+      </div>
+      <button class="bb-close-btn" onclick="closeBoxBreathingModal()">✕</button>
+    </div>
+
+    <!-- Cycle Selector & Audio Toggle -->
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+      <div style="display:flex;gap:6px">
+        <button class="bb-cycle-preset active" data-cycles="4" onclick="setBoxBreathingCycles(4)">4 CYCLES</button>
+        <button class="bb-cycle-preset" data-cycles="6" onclick="setBoxBreathingCycles(6)">6 CYCLES</button>
+        <button class="bb-cycle-preset" data-cycles="8" onclick="setBoxBreathingCycles(8)">8 CYCLES</button>
+      </div>
+      <button id="bb-audio-toggle" onclick="toggleBoxBreathingAudio()" class="bb-audio-btn">🔊 AUDIO ON</button>
+    </div>
+
+    <!-- Central Breathing Animation Circle -->
+    <div class="bb-visualizer-wrap">
+      <div class="bb-glow-ring"></div>
+      <div class="bb-circle bb-phase-0" id="bb-circle">
+        <div class="bb-countdown" id="bb-countdown">4</div>
+        <div class="bb-sec-label">SECONDS</div>
+      </div>
+    </div>
+
+    <!-- Status & Guidance -->
+    <div class="bb-status-box">
+      <div class="bb-phase-title" id="bb-phase-title">INHALE</div>
+      <div class="bb-phase-desc" id="bb-phase-desc">Inhale through nose — expand belly and diaphragm</div>
+      <div class="bb-cycle-display" id="bb-cycle-display">CYCLE 1 / 4</div>
+    </div>
+
+    <!-- Controls -->
+    <div class="bb-controls">
+      <button class="bb-ctrl-btn bb-btn-play" id="bb-play-btn" onclick="toggleBoxBreathingPlay()">⏸ PAUSE</button>
+      <button class="bb-ctrl-btn bb-btn-reset" onclick="resetBoxBreathing()">↺ RESTART</button>
+    </div>
+  </div>
+</div>
+
 <div class="report-overlay" id="report-overlay">
   <div class="rp-header">
     <div class="rp-back" onclick="closeReport()">← BACK</div>
@@ -3877,6 +4039,7 @@ function buildReport(historyItem){
   let totalSetsLogged=0;
   let totalTonnage=0;
   const topLifts=[];
+  const prList=[];
 
   if(APP.currentSessionSets){
     Object.keys(APP.currentSessionSets).forEach(k=>{
@@ -4073,12 +4236,94 @@ function buildReport(historyItem){
     `;
   }
 
+  // Build Weekly PR & Peak Loads Spotlight
+  let prSpotlightHTML = '';
+  if (APP.currentSessionSets) {
+    Object.keys(APP.currentSessionSets).forEach(k => {
+      const sets = APP.currentSessionSets[k] || [];
+      const exName = k.replace(/s-\d+-\d+-/, '').replace(/-/g, ' ').toUpperCase();
+      sets.forEach((s, sIdx) => {
+        if (s.weight && parseFloat(s.weight) > 0) {
+          prList.push({
+            name: exName,
+            weight: parseFloat(s.weight),
+            reps: parseFloat(s.reps) || 1,
+            rpe: s.rpe || '—',
+            setNum: sIdx + 1
+          });
+        }
+      });
+    });
+  }
+
+  if (APP.exerciseLogs) {
+    Object.keys(APP.exerciseLogs).forEach(exName => {
+      const logs = APP.exerciseLogs[exName] || [];
+      logs.forEach(l => {
+        if (l.sets) {
+          l.sets.forEach((s, sIdx) => {
+            if (s.weight && parseFloat(s.weight) > 0) {
+              prList.push({
+                name: exName.toUpperCase(),
+                weight: parseFloat(s.weight),
+                reps: parseFloat(s.reps) || 1,
+                rpe: s.rpe || '—',
+                setNum: sIdx + 1
+              });
+            }
+          });
+        }
+      });
+    });
+  }
+
+  const maxByEx = {};
+  prList.forEach(item => {
+    if (!maxByEx[item.name] || item.weight > maxByEx[item.name].weight) {
+      maxByEx[item.name] = item;
+    }
+  });
+
+  const sortedPRs = Object.values(maxByEx).sort((a, b) => b.weight - a.weight).slice(0, 3);
+  if (sortedPRs.length > 0) {
+    prSpotlightHTML = `
+      <div class="rp-pr-spotlight-card" style="background:linear-gradient(135deg,rgba(212,168,67,0.18),rgba(14,14,20,0.95));border:1.5px solid var(--gold);border-radius:var(--r);padding:14px 16px;margin-bottom:14px;box-shadow:0 6px 20px rgba(212,168,67,0.12)">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+          <div style="display:flex;align-items:center;gap:8px">
+            <span style="font-size:20px">🏆</span>
+            <div>
+              <div style="font-family:'DM Mono',monospace;font-size:8px;color:var(--gold);letter-spacing:2px">// RECORD PERFORMANCE</div>
+              <div style="font-family:'Bebas Neue',sans-serif;font-size:18px;color:#fff;letter-spacing:0.5px">WEEKLY PR & PEAK LOADS SPOTLIGHT</div>
+            </div>
+          </div>
+          <div style="font-family:'DM Mono',monospace;font-size:8px;color:#000;background:var(--gold);padding:3px 7px;border-radius:4px;font-weight:700;letter-spacing:1px">ALL-TIME PEAK</div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          ${sortedPRs.map((pr, idx) => `
+            <div style="display:flex;justify-content:space-between;align-items:center;background:rgba(255,255,255,0.04);border:1px solid rgba(212,168,67,0.25);border-radius:var(--r-sm);padding:8px 12px">
+              <div>
+                <div style="font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:600;color:#fff">${pr.name}</div>
+                <div style="font-family:'DM Mono',monospace;font-size:8.5px;color:var(--text-dim)">${pr.reps} REPS · RPE ${pr.rpe}</div>
+              </div>
+              <div style="text-align:right">
+                <div style="font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--gold);line-height:1">${pr.weight} <span style="font-size:13px">KG</span></div>
+                <div style="font-family:'DM Mono',monospace;font-size:7.5px;color:var(--green);letter-spacing:0.5px">RANK #${idx + 1} PEAK</div>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    `;
+  }
+
   document.getElementById('rp-body').innerHTML=`
     <!-- HERO STAT -->
     <div class="rp-hero-card">
       <div class="rp-big-num">${pct}%</div>
       <div class="rp-big-label">OVERALL WEEKLY COMPLETION</div>
     </div>
+
+    ${prSpotlightHTML}
 
     <!-- STAT GRID -->
     <div class="rp-grid">
@@ -4664,6 +4909,399 @@ function toggleRestTimer(){
   else startRestTimer();
 }
 
+
+// ══════════════════════════════════════════════
+// WEB AUDIO & HAPTIC FEEDBACK SYNTHESIZER
+// ══════════════════════════════════════════════
+const SoundFX = window.SoundFX = {
+  ctx: null,
+  getCtx() {
+    if (!this.ctx) {
+      const AudioCtx = window.AudioContext || window.webkitAudioContext;
+      if (AudioCtx) this.ctx = new AudioCtx();
+    }
+    if (this.ctx && this.ctx.state === 'suspended') {
+      this.ctx.resume();
+    }
+    return this.ctx;
+  },
+  
+  vibrate(pattern) {
+    try {
+      if (navigator.vibrate) navigator.vibrate(pattern);
+    } catch(e){}
+  },
+
+  playTone(freq, duration = 0.15, type = 'sine', gainVal = 0.25) {
+    try {
+      const ctx = this.getCtx();
+      if (!ctx) return;
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = type;
+      osc.frequency.setValueAtTime(freq, ctx.currentTime);
+      gain.gain.setValueAtTime(gainVal, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + duration);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start(ctx.currentTime);
+      osc.stop(ctx.currentTime + duration + 0.05);
+    } catch(e){}
+  },
+
+  playInhaleChime() {
+    this.vibrate(40);
+    try {
+      const ctx = this.getCtx();
+      if (!ctx) return;
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(432, ctx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(540, ctx.currentTime + 1.2);
+      gain.gain.setValueAtTime(0.2, ctx.currentTime);
+      gain.gain.linearRampToValueAtTime(0.001, ctx.currentTime + 1.8);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start(ctx.currentTime);
+      osc.stop(ctx.currentTime + 1.85);
+    } catch(e){}
+  },
+
+  playHoldChime() {
+    this.vibrate([30, 40, 30]);
+    try {
+      const ctx = this.getCtx();
+      if (!ctx) return;
+      [528, 792].forEach((freq, i) => {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(freq, ctx.currentTime);
+        gain.gain.setValueAtTime(i === 0 ? 0.22 : 0.08, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 1.4);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(ctx.currentTime);
+        osc.stop(ctx.currentTime + 1.45);
+      });
+    } catch(e){}
+  },
+
+  playExhaleChime() {
+    this.vibrate(50);
+    try {
+      const ctx = this.getCtx();
+      if (!ctx) return;
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(396, ctx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(264, ctx.currentTime + 1.4);
+      gain.gain.setValueAtTime(0.2, ctx.currentTime);
+      gain.gain.linearRampToValueAtTime(0.001, ctx.currentTime + 1.8);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start(ctx.currentTime);
+      osc.stop(ctx.currentTime + 1.85);
+    } catch(e){}
+  },
+
+  playHoldEmptyChime() {
+    this.vibrate([30, 40, 30]);
+    try {
+      const ctx = this.getCtx();
+      if (!ctx) return;
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(285, ctx.currentTime);
+      gain.gain.setValueAtTime(0.18, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 1.2);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start(ctx.currentTime);
+      osc.stop(ctx.currentTime + 1.25);
+    } catch(e){}
+  },
+
+  playTick(isFinal = false) {
+    this.vibrate(isFinal ? 60 : 35);
+    this.playTone(isFinal ? 880 : 587.33, 0.08, 'sine', isFinal ? 0.3 : 0.2);
+  },
+
+  playTimerComplete() {
+    this.vibrate([200, 80, 200, 80, 450]);
+    try {
+      const ctx = this.getCtx();
+      if (!ctx) return;
+      const chord = [523.25, 659.25, 783.99, 1046.50];
+      chord.forEach((freq, idx) => {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(freq, ctx.currentTime + idx * 0.1);
+        gain.gain.setValueAtTime(0.25, ctx.currentTime + idx * 0.1);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + idx * 0.1 + 0.45);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(ctx.currentTime + idx * 0.1);
+        osc.stop(ctx.currentTime + idx * 0.1 + 0.5);
+      });
+    } catch(e){}
+  },
+
+  playBreathingComplete() {
+    this.vibrate([150, 80, 250, 80, 500]);
+    try {
+      const ctx = this.getCtx();
+      if (!ctx) return;
+      const tones = [440, 554.37, 659.25, 880];
+      tones.forEach((freq, idx) => {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(freq, ctx.currentTime + idx * 0.12);
+        gain.gain.setValueAtTime(0.22, ctx.currentTime + idx * 0.12);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + idx * 0.12 + 0.6);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(ctx.currentTime + idx * 0.12);
+        osc.stop(ctx.currentTime + idx * 0.12 + 0.65);
+      });
+    } catch(e){}
+  }
+};
+
+// ══════════════════════════════════════════════
+// GUIDED BOX BREATHING ENGINE
+// ══════════════════════════════════════════════
+let boxBreathingRunning = false;
+let boxBreathingTimer = null;
+let boxBreathingPhase = 0;
+let boxBreathingSecondsLeft = 4;
+let boxBreathingCycle = 1;
+let boxBreathingTotalCycles = 4;
+let boxBreathingAudioEnabled = true;
+
+const BREATH_PHASES = [
+  { name: 'INHALE', detail: 'Inhale through nose — expand belly and diaphragm', color: '#3478F6', action: () => SoundFX.playInhaleChime() },
+  { name: 'HOLD FULL', detail: 'Hold breath at top — calm stillness, no strain', color: '#D4A843', action: () => SoundFX.playHoldChime() },
+  { name: 'EXHALE', detail: 'Exhale smoothly through mouth — empty completely', color: '#30D158', action: () => SoundFX.playExhaleChime() },
+  { name: 'HOLD EMPTY', detail: 'Hold empty — reset nervous system, quiet focus', color: '#9B51E0', action: () => SoundFX.playHoldEmptyChime() }
+];
+
+function openBoxBreathingModal() {
+  const overlay = document.getElementById('box-breathing-overlay');
+  if (!overlay) return;
+  overlay.classList.add('open');
+  document.body.style.overflow = 'hidden';
+  resetBoxBreathing();
+  startBoxBreathing();
+}
+
+function closeBoxBreathingModal() {
+  pauseBoxBreathing();
+  const overlay = document.getElementById('box-breathing-overlay');
+  if (overlay) overlay.classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function toggleBoxBreathingAudio() {
+  boxBreathingAudioEnabled = !boxBreathingAudioEnabled;
+  const btn = document.getElementById('bb-audio-toggle');
+  if (btn) btn.textContent = boxBreathingAudioEnabled ? '🔊 AUDIO ON' : '🔇 MUTED';
+  showToast(boxBreathingAudioEnabled ? 'AUDIO CHIMES ON 🔊' : 'AUDIO MUTED 🔇', '');
+}
+
+function setBoxBreathingCycles(n) {
+  boxBreathingTotalCycles = n;
+  document.querySelectorAll('.bb-cycle-preset').forEach(btn => {
+    btn.classList.toggle('active', parseInt(btn.dataset.cycles) === n);
+  });
+  updateBoxBreathingUI();
+}
+
+function startBoxBreathing() {
+  if (boxBreathingRunning) return;
+  boxBreathingRunning = true;
+  updateBoxBreathingUI();
+  
+  if (boxBreathingAudioEnabled) {
+    BREATH_PHASES[boxBreathingPhase].action();
+  }
+
+  boxBreathingTimer = setInterval(() => {
+    boxBreathingSecondsLeft--;
+    if (boxBreathingSecondsLeft <= 0) {
+      boxBreathingPhase = (boxBreathingPhase + 1) % 4;
+      boxBreathingSecondsLeft = 4;
+      
+      if (boxBreathingPhase === 0) {
+        boxBreathingCycle++;
+        if (boxBreathingCycle > boxBreathingTotalCycles) {
+          finishBoxBreathingSession();
+          return;
+        }
+      }
+
+      if (boxBreathingAudioEnabled) {
+        BREATH_PHASES[boxBreathingPhase].action();
+      }
+    }
+    updateBoxBreathingUI();
+  }, 1000);
+}
+
+function pauseBoxBreathing() {
+  boxBreathingRunning = false;
+  if (boxBreathingTimer) clearInterval(boxBreathingTimer);
+  updateBoxBreathingUI();
+}
+
+function toggleBoxBreathingPlay() {
+  if (boxBreathingRunning) pauseBoxBreathing();
+  else startBoxBreathing();
+}
+
+function resetBoxBreathing() {
+  pauseBoxBreathing();
+  boxBreathingPhase = 0;
+  boxBreathingSecondsLeft = 4;
+  boxBreathingCycle = 1;
+  updateBoxBreathingUI();
+}
+
+function finishBoxBreathingSession() {
+  pauseBoxBreathing();
+  if (boxBreathingAudioEnabled) {
+    SoundFX.playBreathingComplete();
+  }
+  
+  for (let i = 0; i < 6; i++) {
+    APP.mentalSteps['ms-1-' + i] = true;
+  }
+  saveData();
+  renderMentalDailySteps();
+  showToast('4-4-4-4 BOX BREATHING COMPLETE! PARASYMPATHETIC ACTIVATED 🧘', 'toast-fire');
+
+  const circle = document.getElementById('bb-circle');
+  if (circle) circle.className = 'bb-circle completed';
+  const label = document.getElementById('bb-phase-title');
+  if (label) label.textContent = 'SESSION COMPLETE';
+  const detail = document.getElementById('bb-phase-desc');
+  if (detail) detail.textContent = `${boxBreathingTotalCycles} Cycles Logged · Focus Locked In`;
+  const cnt = document.getElementById('bb-countdown');
+  if (cnt) cnt.textContent = '✓';
+}
+
+function updateBoxBreathingUI() {
+  const currentPhase = BREATH_PHASES[boxBreathingPhase];
+  const titleEl = document.getElementById('bb-phase-title');
+  const descEl = document.getElementById('bb-phase-desc');
+  const cntEl = document.getElementById('bb-countdown');
+  const cycleEl = document.getElementById('bb-cycle-display');
+  const circleEl = document.getElementById('bb-circle');
+  const playBtn = document.getElementById('bb-play-btn');
+
+  if (titleEl) {
+    titleEl.textContent = currentPhase.name;
+    titleEl.style.color = currentPhase.color;
+  }
+  if (descEl) descEl.textContent = currentPhase.detail;
+  if (cntEl) cntEl.textContent = boxBreathingSecondsLeft;
+  if (cycleEl) cycleEl.textContent = `CYCLE ${boxBreathingCycle} / ${boxBreathingTotalCycles}`;
+  if (playBtn) playBtn.textContent = boxBreathingRunning ? '⏸ PAUSE' : '▶ RESUME';
+
+  if (circleEl) {
+    circleEl.className = `bb-circle bb-phase-${boxBreathingPhase}`;
+  }
+}
+
+// ══════════════════════════════════════════════
+// DATA BACKUP & RESTORE ENGINE
+// ══════════════════════════════════════════════
+function exportDataBackup() {
+  try {
+    const backupObj = {
+      appVersion: '2.0.0',
+      exportedAt: new Date().toISOString(),
+      athlete: 'BVMBINO',
+      appState: APP,
+      rawLocalStorage: {}
+    };
+    for (let i = 0; i < localStorage.length; i++) {
+      const k = localStorage.key(i);
+      if (k) backupObj.rawLocalStorage[k] = localStorage.getItem(k);
+    }
+    const dataStr = 'data:text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(backupObj, null, 2));
+    const nowStr = getTodayDateStr();
+    const dlAnchor = document.createElement('a');
+    dlAnchor.setAttribute('href', dataStr);
+    dlAnchor.setAttribute('download', `bvmbino-workout-backup-${nowStr}.json`);
+    document.body.appendChild(dlAnchor);
+    dlAnchor.click();
+    dlAnchor.remove();
+
+    showToast('BACKUP DOWNLOADED TO FILES 💾', 'toast-fire');
+    SoundFX.vibrate([60, 40, 60]);
+    SoundFX.playTone(784, 0.12, 'sine', 0.2);
+  } catch (err) {
+    showToast('EXPORT FAILED: ' + err.message, '');
+  }
+}
+
+function triggerRestoreBackup() {
+  const fi = document.getElementById('backup-file-input');
+  if (fi) fi.click();
+}
+
+function importDataBackup(event) {
+  const file = event.target.files && event.target.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      const parsed = JSON.parse(e.target.result);
+      if (!parsed || (!parsed.appState && !parsed.rawLocalStorage)) {
+        throw new Error('Invalid backup file format.');
+      }
+
+      if (parsed.rawLocalStorage) {
+        Object.keys(parsed.rawLocalStorage).forEach(k => {
+          localStorage.setItem(k, parsed.rawLocalStorage[k]);
+        });
+      }
+
+      if (parsed.appState) {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(parsed.appState));
+        APP = parsed.appState;
+      } else {
+        APP = loadData();
+      }
+
+      saveData();
+      showToast('BACKUP RESTORED SUCCESSFULLY! 🔥', 'toast-fire');
+      SoundFX.vibrate([100, 50, 100, 50, 200]);
+      SoundFX.playTone(659, 0.15, 'sine', 0.25);
+
+      updateProgress();
+      renderMentalDailySteps();
+      renderRecoveryChecklist();
+      renderWellnessUI();
+      renderProfile();
+      updateHistory();
+      updatePhaseUI();
+      applyCustomWorkouts();
+    } catch (err) {
+      showToast('RESTORE FAILED: ' + err.message, '');
+    }
+    event.target.value = '';
+  };
+  reader.readAsText(file);
+}
+
 function startRestTimer(duration){
   if(duration){
     restTimerTotal=duration;
@@ -4673,16 +5311,26 @@ function startRestTimer(duration){
   if(restTimerInterval)clearInterval(restTimerInterval);
   restTimerRunning=true;
   updateRestTimerUI();
+
+  // Instant feedback on start
+  SoundFX.vibrate(40);
+  SoundFX.playTone(660, 0.12, 'sine', 0.2);
+
   restTimerInterval=setInterval(()=>{
     if(restTimerRemaining>1){
       restTimerRemaining--;
       updateRestTimerUI();
+
+      // Audio countdown & vibration chimes for 3, 2, 1 seconds
+      if(restTimerRemaining <= 3 && restTimerRemaining >= 1){
+        SoundFX.playTick(restTimerRemaining === 1);
+      }
     }else{
       restTimerRemaining=0;
       restTimerRunning=false;
       clearInterval(restTimerInterval);
       updateRestTimerUI();
-      playRestChime();
+      SoundFX.playTimerComplete();
       showToast('REST OVER — NEXT SET! ⚡','toast-fire');
     }
   },1000);
