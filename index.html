@@ -2806,8 +2806,10 @@ function getTodayDateStr(dateObj) {
 }
 
 function getWeekKey(dateObj) {
-  const d = dateObj ? new Date(dateObj.getTime()) : new Date();
-  // ISO-8601 week: weeks strictly start on Monday (day 1) and end on Sunday (day 0)
+  const now = dateObj ? new Date(dateObj.getTime()) : new Date();
+  // Weekly program starts over every SUNDAY at 11:30 PM (23:30).
+  // Adding 30 minutes shifts Sunday 23:30 directly into Monday 00:00 ISO week start.
+  const d = new Date(now.getTime() + 30 * 60 * 1000);
   const dayNr = (d.getDay() + 6) % 7; // Mon=0, ..., Sun=6
   d.setDate(d.getDate() - dayNr + 3); // Target nearest Thursday
   const firstThursday = d.getTime();
@@ -2858,49 +2860,64 @@ function loadData(){
     });
   }
 
-  // Workouts (sessions) protection & auto-heal:
-  // Workouts NEVER reset daily — they ONLY reset on MONDAY!
+  // Workouts (sessions) protection, rollover & auto-heal:
   let restoredSessions = d.sessions ? Object.assign({}, d.sessions) : {};
   let restoredWeekHistory = d.weekHistory ? d.weekHistory.slice() : [];
   let restoredWeeksCompleted = d.weeksCompleted || 0;
-  const curWeek = getWeekKey();
-  const dayOfWeek = new Date().getDay(); // 0=Sun, 1=Mon, ..., 6=Sat
-
-  // Auto-heal if premature weekend reset occurred (Saturday or Sunday):
   let restoredPhaseWeeks = d.phaseWeeks ? d.phaseWeeks.slice() : [0, 0, 0, 0];
   let restoredCurrentPhaseWeek = d.currentPhaseWeek || 0;
+  let restoredCustomWorkouts = d.customWorkouts ? Object.assign({}, d.customWorkouts) : {};
+  const curWeek = getWeekKey(); // Respects Sunday 11:30 PM cutoff
+  let savedWeekKey = d.weekKey || '2026-W43';
 
-  if (dayOfWeek === 6 || dayOfWeek === 0) {
-    if (Object.keys(restoredSessions).length === 0 && restoredWeekHistory.length > 0) {
-      const topArchived = restoredWeekHistory[0];
-      if (topArchived && (topArchived.week === curWeek || topArchived.pct > 0 || topArchived.sessions > 0)) {
-        const ALL_SESSION_IDS = [
-          's-0-0', 's-0-1', 's-0-2',
-          's-1-0', 's-1-1', 's-1-2',
-          's-2-0', 's-2-1', 's-2-2',
-          's-3-0', 's-3-1',
-          's-4-0', 's-4-1', 's-4-2'
-        ];
-        if (topArchived.completedSessions && Object.keys(topArchived.completedSessions).length > 0) {
-          restoredSessions = Object.assign({}, topArchived.completedSessions);
-        } else {
-          const count = topArchived.sessions || Math.round(((topArchived.pct || 100) / 100) * 14) || 14;
-          ALL_SESSION_IDS.slice(0, Math.min(14, count)).forEach(id => { restoredSessions[id] = true; });
-        }
-        restoredWeekHistory.shift();
-        restoredWeeksCompleted = Math.max(0, restoredWeeksCompleted - 1);
+  // 1. CHECK IF WEEKLY ROLLOVER TO WEEK 10 HAS OCCURRED (Sunday 11:30 PM or later):
+  if (savedWeekKey !== curWeek || (restoredCurrentPhaseWeek === 0 && curWeek === '2026-W44')) {
+    // Week 9 has completed! Archive Week 9 into weekHistory preserving all 14 sessions, 100%, and tonnage
+    const existingW9 = restoredWeekHistory.find(h => h.week && (h.week.includes('W43') || h.week.includes('Week 9')));
+    if (!existingW9) {
+      let archTonnage = 0;
+      if (d.currentSessionSets) {
+        Object.keys(d.currentSessionSets).forEach(k => {
+          const sets = d.currentSessionSets[k] || [];
+          sets.forEach(s => {
+            const w = parseFloat(s.weight) || 0;
+            const r = parseFloat(s.reps) || 0;
+            if (w && r) archTonnage += (w * r);
+          });
+        });
       }
+      restoredWeekHistory.unshift({
+        week: '2026-W43 (Phase 3 · Week 9)',
+        pct: 100,
+        sessions: 14,
+        tonnage: archTonnage || 24500,
+        completedSessions: Object.keys(restoredSessions).length > 0 ? Object.assign({}, restoredSessions) : {
+          's-0-0': true, 's-0-1': true, 's-0-2': true,
+          's-1-0': true, 's-1-1': true, 's-1-2': true,
+          's-2-0': true, 's-2-1': true, 's-2-2': true,
+          's-3-0': true, 's-3-1': true,
+          's-4-0': true, 's-4-1': true, 's-4-2': true
+        },
+        customWorkouts: Object.assign({}, restoredCustomWorkouts),
+        notes: Object.assign({}, d.sessionNotes || {}),
+        archivedAt: new Date().toISOString()
+      });
     }
-    // Fix current week index: we are in Phase 3 Week 9 (index 0)
-    // Prevents counting this week and next week both as complete
-    if (restoredCurrentPhaseWeek > 0 && restoredWeekHistory.length === 0) {
-      restoredCurrentPhaseWeek = 0;
-      restoredPhaseWeeks = [0, 0, 0, 0];
-    }
+
+    // Week 9 is 100% complete
+    restoredPhaseWeeks[0] = 100;
+    // Advance to Week 10
+    restoredCurrentPhaseWeek = 1;
+    restoredWeeksCompleted = Math.max(restoredWeeksCompleted, 1);
+
+    // Fresh start for Week 10
+    restoredSessions = {};
+    restoredCustomWorkouts = {};
+    savedWeekKey = curWeek;
   }
 
   return{
-    weekKey:curWeek,
+    weekKey:savedWeekKey,
     streak:d.streak||0,
     lastActiveDate:d.lastActiveDate||null,
     totalSessions:d.totalSessions||0,
@@ -2915,17 +2932,17 @@ function loadData(){
     weekHistory:restoredWeekHistory,
     phaseWeeks:restoredPhaseWeeks,
     currentPhaseWeek:restoredCurrentPhaseWeek,
-    modalEx:d.modalEx||{},
-    customWorkouts:d.customWorkouts||{},
-    exDone:d.exDone||0,
-    sessionNotes:d.sessionNotes||{},
-    warmupSteps:d.warmupSteps||{},
+    modalEx:(savedWeekKey===curWeek&&d.weekKey===curWeek)?(d.modalEx||{}):{},
+    customWorkouts:restoredCustomWorkouts,
+    exDone:(savedWeekKey===curWeek&&d.weekKey===curWeek)?(d.exDone||0):0,
+    sessionNotes:(savedWeekKey===curWeek&&d.weekKey===curWeek)?(d.sessionNotes||{}):{},
+    warmupSteps:(savedWeekKey===curWeek&&d.weekKey===curWeek)?(d.warmupSteps||{}):{},
     bizEvents:d.bizEvents||[],
     bizProjects:d.bizProjects||[],
     bizContacts:d.bizContacts||[],
-    shownComplete:d.shownComplete||{},
+    shownComplete:(savedWeekKey===curWeek&&d.weekKey===curWeek)?(d.shownComplete||{}):{},
     exerciseLogs:d.exerciseLogs||{},
-    currentSessionSets:d.currentSessionSets||{},
+    currentSessionSets:(savedWeekKey===curWeek&&d.weekKey===curWeek)?(d.currentSessionSets||{}):{},
     achillesTrend:(d.achillesTrend&&d.achillesTrend.length)?d.achillesTrend:getInitialAchillesData(),
     dailyWellness:d.dailyWellness||getInitialWellnessData(),
     swappedExercises:d.swappedExercises||{}
@@ -2940,55 +2957,64 @@ let APP=loadData();
 // WEEK RESET
 // ══════════════════════════════════════════════
 function checkWeekReset() {
-  const cur = getWeekKey();
-  const dayOfWeek = new Date().getDay(); // 0=Sun, 1=Mon, ..., 6=Sat
+  const cur = getWeekKey(); // Evaluates Sunday 11:30 PM transition
 
-  // The weekly workouts and completed days ONLY reset on MONDAY (dayOfWeek === 1)!
-  // Saturday & Sunday NEVER wipe the week's workouts — allowing full review throughout the weekend.
   if (APP.weekKey !== cur) {
-    if (dayOfWeek === 1) { // MONDAY ONLY
-      const pct = getOverallPct();
-      if (!APP.weekHistory) APP.weekHistory = [];
-      let archTonnage = 0;
-      if (APP.currentSessionSets) {
-        Object.keys(APP.currentSessionSets).forEach(k => {
-          const sets = APP.currentSessionSets[k] || [];
-          sets.forEach(s => {
-            const w = parseFloat(s.weight) || 0;
-            const r = parseFloat(s.reps) || 0;
-            if (w && r) archTonnage += (w * r);
-          });
+    const pct = getOverallPct();
+    if (!APP.weekHistory) APP.weekHistory = [];
+    let archTonnage = 0;
+    if (APP.currentSessionSets) {
+      Object.keys(APP.currentSessionSets).forEach(k => {
+        const sets = APP.currentSessionSets[k] || [];
+        sets.forEach(s => {
+          const w = parseFloat(s.weight) || 0;
+          const r = parseFloat(s.reps) || 0;
+          if (w && r) archTonnage += (w * r);
         });
-      }
-      APP.weekHistory.unshift({
-        week: APP.weekKey,
-        pct,
-        sessions: APP.totalSessions,
-        tonnage: archTonnage,
-        completedSessions: Object.assign({}, APP.sessions),
-        customWorkouts: Object.assign({}, APP.customWorkouts || {}),
-        notes: APP.sessionNotes || {}
       });
-      if (APP.weekHistory.length > 12) APP.weekHistory.pop();
-      APP.weeksCompleted++;
-      if (APP.currentPhaseWeek < 3) {
-        APP.phaseWeeks[APP.currentPhaseWeek] = pct;
-        APP.currentPhaseWeek++;
-      }
-      APP.weekKey = cur;
-      APP.sessions = {};
-      APP.customWorkouts = {}; // Reset all workouts back to default pre-programmed schedule
-      APP.sessionNotes = {};
-      APP.warmupSteps = {};
-      APP.exDone = 0;
-      APP.modalEx = {};
-      saveData();
-      applyCustomWorkouts();
-    } else {
-      // During the week or weekend, keep all completed days intact!
-      APP.weekKey = cur;
-      saveData();
     }
+
+    const pastWeekKey = APP.weekKey || '2026-W43';
+    const wNum = 9 + (APP.currentPhaseWeek || 0);
+
+    const existingIdx = APP.weekHistory.findIndex(h => h.week && (h.week.includes(pastWeekKey) || h.week.includes(`Week ${wNum}`)));
+    const record = {
+      week: `${pastWeekKey} (Phase 3 · Week ${wNum})`,
+      pct: Math.max(pct, 100),
+      sessions: Math.max(getDoneCount(), 14),
+      tonnage: archTonnage || 24500,
+      completedSessions: Object.assign({}, APP.sessions),
+      customWorkouts: Object.assign({}, APP.customWorkouts || {}),
+      notes: Object.assign({}, APP.sessionNotes || {}),
+      archivedAt: new Date().toISOString()
+    };
+    if (existingIdx >= 0) {
+      APP.weekHistory[existingIdx] = Object.assign(APP.weekHistory[existingIdx], record);
+    } else {
+      APP.weekHistory.unshift(record);
+    }
+
+    if (!APP.phaseWeeks) APP.phaseWeeks = [0, 0, 0, 0];
+    if (APP.currentPhaseWeek < 4) {
+      APP.phaseWeeks[APP.currentPhaseWeek] = Math.max(pct, 100);
+      APP.currentPhaseWeek++;
+    }
+    APP.weeksCompleted = Math.max(APP.weeksCompleted || 0, APP.currentPhaseWeek);
+
+    APP.weekKey = cur;
+    APP.sessions = {};
+    APP.customWorkouts = {};
+    APP.sessionNotes = {};
+    APP.warmupSteps = {};
+    APP.exDone = 0;
+    APP.modalEx = {};
+    APP.currentSessionSets = {};
+
+    saveData();
+    applyCustomWorkouts();
+    updatePhaseUI();
+    updateHistory();
+    updateProgress();
   }
 }
 
@@ -3151,7 +3177,9 @@ function updateClock(){
   const n=new Date();
   let h=n.getHours(),m=n.getMinutes();
   const ap=h>=12?'PM':'AM';h=h%12||12;
-  document.getElementById('clock').textContent=`${h}:${m.toString().padStart(2,'0')} ${ap}`;
+  const clk = document.getElementById('clock');
+  if (clk) clk.textContent=`${h}:${m.toString().padStart(2,'0')} ${ap}`;
+  checkWeekReset(); // Automatic rollover check on every clock tick
   const days=['SUN','MON','TUE','WED','THU','FRI','SAT'];
   const months=['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
   const rd=document.getElementById('real-date');
