@@ -1683,43 +1683,72 @@ body>*{position:relative;z-index:1}
 
 /* ═══ PRINT & PDF EXPORT: EXACT 2-PAGE ELITE ATHLETIC DOSSIER ═══ */
 @page {
-  size: A4 portrait;
-  margin: 6mm 8mm;
+  size: 210mm 297mm;
+  margin: 0;
+}
+
+body.is-printing-pdf {
+  width: 210mm !important;
+  max-width: 210mm !important;
+  min-width: 210mm !important;
+  margin: 0 auto !important;
+  padding: 0 !important;
 }
 
 @media print {
+  @page {
+    size: 210mm 297mm;
+    margin: 0;
+  }
+
+  *, *::before, *::after {
+    box-sizing: border-box !important;
+  }
+
   html, body {
-    background: #0D0D12 !important;
-    color: #FFFFFF !important;
-    margin: 0 !important;
+    width: 210mm !important;
+    max-width: 210mm !important;
+    min-width: 210mm !important;
+    height: 100% !important;
+    margin: 0 auto !important;
     padding: 0 !important;
-    width: 100% !important;
+    background: #060608 !important;
+    color: #FFFFFF !important;
+    overflow: visible !important;
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
   }
   
   /* Hide all app chrome, screens, modals, bottom nav, and standard mobile report overlay */
-  .bottom-nav, .app-header, .page, .bb-overlay, .modal-overlay, #report-overlay, .rp-header, .rp-body, .rp-export-actions, .rp-share-btn, .complete-overlay, .toast {
+  .bottom-nav, .app-header, .page, .bb-overlay, .modal-overlay, #report-overlay, .rp-header, .rp-body, .rp-export-actions, .rp-share-btn, .complete-overlay, .toast, .install-banner {
     display: none !important;
   }
   
   #pdf-dossier {
     display: block !important;
-    width: 100% !important;
-    background: #0D0D12 !important;
+    width: 210mm !important;
+    max-width: 210mm !important;
+    min-width: 210mm !important;
+    margin: 0 auto !important;
+    padding: 0 !important;
+    background: #060608 !important;
     color: #FFFFFF !important;
   }
 
   .pdf-page {
-    height: 280mm !important;
-    max-height: 280mm !important;
+    width: 210mm !important;
+    max-width: 210mm !important;
+    min-width: 210mm !important;
+    height: 297mm !important;
+    max-height: 297mm !important;
+    min-height: 297mm !important;
     box-sizing: border-box !important;
     overflow: hidden !important;
     display: flex !important;
     flex-direction: column !important;
     justify-content: space-between !important;
-    padding: 4mm 6mm !important;
-    background: #0D0D12 !important;
+    padding: 10mm 12mm !important;
+    background: #060608 !important;
     page-break-inside: avoid !important;
     break-inside: avoid !important;
   }
@@ -1736,8 +1765,8 @@ body>*{position:relative;z-index:1}
 
   .pdf-header {
     border-bottom: 2px solid #D4A843 !important;
-    padding-bottom: 5px !important;
-    margin-bottom: 8px !important;
+    padding-bottom: 6px !important;
+    margin-bottom: 10px !important;
     display: flex !important;
     justify-content: space-between !important;
     align-items: flex-end !important;
@@ -1745,15 +1774,15 @@ body>*{position:relative;z-index:1}
 
   .pdf-title {
     font-family: 'Bebas Neue', sans-serif !important;
-    font-size: 24px !important;
+    font-size: 28px !important;
     color: #FFF !important;
-    letter-spacing: 1px !important;
+    letter-spacing: 1.2px !important;
     line-height: 1 !important;
   }
 
   .pdf-tag {
     font-family: 'DM Mono', monospace !important;
-    font-size: 8px !important;
+    font-size: 9px !important;
     color: #D4A843 !important;
     letter-spacing: 1.5px !important;
   }
@@ -1761,52 +1790,55 @@ body>*{position:relative;z-index:1}
   .pdf-kpi-grid {
     display: grid !important;
     grid-template-columns: repeat(6, 1fr) !important;
-    gap: 6px !important;
-    margin-bottom: 8px !important;
+    gap: 8px !important;
+    margin-bottom: 10px !important;
   }
 
   .pdf-kpi-val {
     font-family: 'Bebas Neue', sans-serif !important;
-    font-size: 20px !important;
+    font-size: 24px !important;
     color: #D4A843 !important;
     line-height: 1 !important;
   }
 
   .pdf-kpi-lbl {
     font-family: 'DM Mono', monospace !important;
-    font-size: 7px !important;
-    color: #888899 !important;
+    font-size: 8px !important;
+    color: #999AB0 !important;
     letter-spacing: 0.5px !important;
     margin-top: 2px !important;
   }
 
   .pdf-card {
-    background: #14141E !important;
-    border: 1px solid rgba(212,168,67,0.3) !important;
-    border-radius: 6px !important;
-    padding: 6px 8px !important;
+    background: #111116 !important;
+    border: 1px solid rgba(212,168,67,0.35) !important;
+    border-radius: 8px !important;
+    padding: 8px 10px !important;
     box-sizing: border-box !important;
   }
 
   .pdf-table {
     width: 100% !important;
     border-collapse: collapse !important;
-    font-size: 8px !important;
+    font-size: 9px !important;
+    table-layout: fixed !important;
   }
 
   .pdf-table th {
     font-family: 'DM Mono', monospace !important;
-    font-size: 7px !important;
+    font-size: 8px !important;
     color: #D4A843 !important;
     text-align: left !important;
-    padding: 2.5px 4px !important;
+    padding: 3.5px 5px !important;
     border-bottom: 1px solid rgba(212,168,67,0.3) !important;
+    white-space: nowrap !important;
   }
 
   .pdf-table td {
-    padding: 2.5px 4px !important;
-    border-bottom: 1px solid rgba(255,255,255,0.05) !important;
-    color: #DDD !important;
+    padding: 3.5px 5px !important;
+    border-bottom: 1px solid rgba(255,255,255,0.06) !important;
+    color: #E8E8F0 !important;
+    word-break: break-word !important;
   }
 }
 </style>
@@ -3547,59 +3579,126 @@ function initBizDelegation(){
 // QUOTES & MANTRAS DATA
 // ══════════════════════════════════════════════
 const DAILY_QUOTES = [
-  // Week 9 — Foundation (days 1-7)
-  {q:"The body achieves what the mind believes.", a:"Kobe Bryant"},
-  {q:"Pain is temporary. Glory is forever.", a:"Bvmbino"},
-  {q:"Every rep, every sprint — this is the version they haven't seen yet.", a:"Phase 3"},
-  {q:"Champions are built in the off-season.", a:"Elite Mindset"},
-  {q:"Your comeback is always stronger than your setback.", a:"Anonymous"},
-  {q:"Discipline is doing it when you don't feel like it.", a:"Jocko Willink"},
-  {q:"The Achilles healed. The hunger never left.", a:"Bvmbino"},
-  // Week 10 — Peak Loading (days 8-14)
-  {q:"Explosiveness is a skill. Train it like one.", a:"Phase 3"},
-  {q:"Trust the process even when you can't see the progress.", a:"Anonymous"},
-  {q:"Be so good they can't ignore you.", a:"Steve Martin"},
-  {q:"Push the limit. Then push past it.", a:"Bvmbino"},
-  {q:"The best players train hardest when no one is watching.", a:"Elite Mindset"},
-  {q:"Your potential is infinite. Your effort defines it.", a:"Phase 3"},
-  {q:"I don't count my sit-ups. I only start counting when it hurts.", a:"Muhammad Ali"},
-  // Week 11 — Sport Integration (days 15-21)
-  {q:"Positionless. Relentless. Bvmbino.", a:"Identity"},
-  {q:"Your legs feed the wolf — or starve it.", a:"Vince Lombardi"},
-  {q:"The court remembers what the gym built.", a:"Phase 3"},
-  {q:"Hard work beats talent when talent doesn't work hard.", a:"Tim Notke"},
-  {q:"Every great player was once a player who refused to quit.", a:"Anonymous"},
-  {q:"Win the morning. Win the day.", a:"Tim Ferriss"},
-  {q:"The separation is in the preparation.", a:"Russell Wilson"},
-  // Week 12 — Explosive Peak (days 22-28)
-  {q:"You didn't come this far to only come this far.", a:"Anonymous"},
-  {q:"One more rep. One more inch. One more game.", a:"Bvmbino"},
-  {q:"Pre-season is coming. You are ready.", a:"Phase 3"},
-  {q:"Greatness is not a destination — it's a standard.", a:"Elite Mindset"},
-  {q:"Your body is your weapon. Keep it sharp.", a:"Phase 3"},
-  {q:"Earned. Not given.", a:"Bvmbino"},
-  {q:"The work is done. Now go show them.", a:"Phase 3"},
+  // Kobe Bryant & Mamba Mentality
+  { q: "The body achieves what the mind believes.", a: "Kobe Bryant" },
+  { q: "Rest at the end, not in the middle.", a: "Kobe Bryant" },
+  { q: "Great things come from hard work and perseverance. No excuses.", a: "Kobe Bryant" },
+  { q: "I have self-doubt. I have insecurity. I have fear of failure. But I don't quit.", a: "Kobe Bryant" },
+  { q: "Those times when you get up early and you work hard; those times when you stay up late and you work hard; that's the dream.", a: "Kobe Bryant" },
+  { q: "I'm reflective only in the sense that I learn to move forward. I reflect with a purpose.", a: "Kobe Bryant" },
+  { q: "Dedication makes dreams come true. Focus on the detail.", a: "Kobe Bryant" },
+  { q: "Once you know what failure feels like, determination chases success.", a: "Kobe Bryant" },
+
+  // Michael Jordan & Legendary Drive
+  { q: "I've missed more than 9,000 shots. I've lost almost 300 games. That is why I succeed.", a: "Michael Jordan" },
+  { q: "Limits, like fears, are often just an illusion.", a: "Michael Jordan" },
+  { q: "I play to win, whether during practice or a real game.", a: "Michael Jordan" },
+  { q: "Some people want it to happen, some wish it would happen, others make it happen.", a: "Michael Jordan" },
+  { q: "If you quit once it becomes a habit. Never quit.", a: "Michael Jordan" },
+  { q: "Obstacles don't have to stop you. If you run into a wall, figure out how to climb it.", a: "Michael Jordan" },
+
+  // Bvmbino Athlete Identity & Comeback
+  { q: "Pain is temporary. Glory is forever.", a: "Bvmbino" },
+  { q: "The Achilles healed. The hunger never left.", a: "Bvmbino" },
+  { q: "Positionless. Relentless. Bvmbino.", a: "Bvmbino" },
+  { q: "Every rep, every sprint — this is the version they haven't seen yet.", a: "Bvmbino" },
+  { q: "Push the limit. Then push past it.", a: "Bvmbino" },
+  { q: "Earned in the dark. Displayed in the light.", a: "Bvmbino" },
+  { q: "One more rep. One more inch. One more game.", a: "Bvmbino" },
+  { q: "Tired is only a feeling. Elevate above it.", a: "Bvmbino" },
+
+  // Tim Grover & Cleaners Standard
+  { q: "Don't think. You already know what to do. Go do it.", a: "Tim Grover (Relentless)" },
+  { q: "Being the best means engineering your own pressure.", a: "Tim Grover" },
+  { q: "When you're a Cleaner, you don't compete with anyone else. They compete with you.", a: "Tim Grover" },
+  { q: "Craving the result without the grind is a delusion.", a: "Tim Grover" },
+  { q: "Control your mind. Own your instincts.", a: "Tim Grover" },
+
+  // David Goggins & Mental Fortitude
+  { q: "When your mind says you're done, you're really only 40% into your actual capacity.", a: "David Goggins" },
+  { q: "You are in danger of living a life so comfortable that you will die without realizing your potential.", a: "David Goggins" },
+  { q: "Don't stop when you're tired. Stop when you're done.", a: "David Goggins" },
+  { q: "The ticket to victory is callousing your mind daily.", a: "David Goggins" },
+  { q: "Motivation is crap. It comes and goes. When you're driven, whatever is in front of you will get destroyed.", a: "David Goggins" },
+
+  // Muhammad Ali & Ring Dominance
+  { q: "I don't count my sit-ups. I only start counting when it hurts.", a: "Muhammad Ali" },
+  { q: "Suffer now and live the rest of your life as a champion.", a: "Muhammad Ali" },
+  { q: "Champions aren't made in gyms. They are made from a desire, a dream, a vision.", a: "Muhammad Ali" },
+  { q: "He who is not courageous enough to take risks will accomplish nothing in life.", a: "Muhammad Ali" },
+  { q: "Inside the ring or out, ain't nothing wrong with going down. It's staying down that's wrong.", a: "Muhammad Ali" },
+
+  // LeBron James & Modern Dominance
+  { q: "Nothing is given. Everything is earned.", a: "LeBron James" },
+  { q: "I like criticism. It makes you strong.", a: "LeBron James" },
+  { q: "You can't be afraid to fail. It's the only way you succeed.", a: "LeBron James" },
+  { q: "Commitment to your body 365 days a year is the prerequisite for greatness.", a: "LeBron James" },
+
+  // Elite Mentality & Stoic Execution
+  { q: "The impediment to action advances action. What stands in the way becomes the way.", a: "Marcus Aurelius" },
+  { q: "You have power over your mind — not outside events. Realize this, and you will find great strength.", a: "Marcus Aurelius" },
+  { q: "No man is free who is not master of himself.", a: "Epictetus" },
+  { q: "We suffer more often in imagination than in reality.", a: "Seneca" },
+  { q: "Discipline equals freedom.", a: "Jocko Willink" },
+  { q: "The separation is in the preparation.", a: "Russell Wilson" },
+  { q: "Champions are built in the off-season.", a: "Elite Mindset" },
+  { q: "Your comeback is always stronger than your setback.", a: "Elite Mindset" },
+  { q: "Be so good they can't ignore you.", a: "Steve Martin" },
+  { q: "The court remembers what the gym built.", a: "Elite Mindset" },
+  { q: "Hard work beats talent when talent fails to work hard.", a: "Tim Notke" },
+  { q: "Win the morning. Win the day.", a: "Tim Ferriss" },
+  { q: "Greatness is not a destination — it's a daily standard.", a: "Phil Jackson" },
+  { q: "You didn't come this far just to come this far.", a: "Inky Johnson" },
+  { q: "Pressure is a privilege. It only visits those who've earned it.", a: "Billie Jean King" },
+  { q: "Fall in love with the quiet, unglamorous execution of habits.", a: "James Clear" },
+  { q: "The wolf on the hill is never as hungry as the wolf climbing the hill.", a: "Arnold Schwarzenegger" },
+  { q: "True competitor mentality: I want your best, so when I win, there are no debates.", a: "Damian Lillard" },
+  { q: "I've never been afraid of big moments. I get butterflies, but I lock into the work.", a: "Stephen Curry" },
+  { q: "Why not me? Why not now? Every day is game day.", a: "Russell Westbrook" },
+  { q: "If you don't believe in yourself, why should anyone else?", a: "Tom Brady" }
 ];
 
 const WEEKLY_MANTRAS = [
-  {week:9, mantra:"I TRUST MY BODY.\nI BUILD THE FOUNDATION.", theme:"EXPLOSIVE FOUNDATION"},
-  {week:10, mantra:"I PUSH PAST\nEVERY LIMIT.", theme:"PEAK LOADING"},
-  {week:11, mantra:"POSITIONLESS.\nRELENTLESS.", theme:"SPORT INTEGRATION"},
-  {week:12, mantra:"EARNED.\nNOT GIVEN.", theme:"EXPLOSIVE PEAK"},
+  { week: 1, mantra: "I TRUST MY BODY.\nI BUILD THE FOUNDATION.", theme: "EXPLOSIVE FOUNDATION" },
+  { week: 2, mantra: "I PUSH PAST\nEVERY SINGLE LIMIT.", theme: "PEAK OVERLOAD" },
+  { week: 3, mantra: "POSITIONLESS.\nRELENTLESS ON BOTH ENDS.", theme: "SPORT INTEGRATION" },
+  { week: 4, mantra: "EARNED IN THE DARK.\nNEVER GIVEN.", theme: "EXPLOSIVE PEAK" },
+  { week: 5, mantra: "FAST FEET. COLD MIND.\nZERO HESITATION.", theme: "DECELERATION & POP" },
+  { week: 6, mantra: "WHAT HURTS TODAY\nFEEDS THE WOLF TOMORROW.", theme: "TENDON RESILIENCE" },
+  { week: 7, mantra: "THE COURT REMEMBERS\nWHAT THE GYM FORGED.", theme: "GAME SPEED TRANSFER" },
+  { week: 8, mantra: "TIRED IS ONLY A FEELING.\nFINISH THE DRILL.", theme: "FATIGUE IMMUNITY" },
+  { week: 9, mantra: "CALM IN TRANSITION.\nDEADLY AT THE RIM.", theme: "ATTACKING FORCE" },
+  { week: 10, mantra: "ELEVATION OVER ISOLATION.\nWE RISE TOGETHER.", theme: "LEADERSHIP & DOMINANCE" },
+  { week: 11, mantra: "REBOUND. PUSH PACE.\nCONTROL THE TEMPO.", theme: "PACE & SWITCH DEFENSE" },
+  { week: 12, mantra: "SUPERCOMPENSATION.\nUNLEASH THE POP.", theme: "BALLISTIC UNCOIL" },
+  { week: 13, mantra: "THE MAMBA STANDARD:\nNO SHORTCUTS.", theme: "OBSESSIVE WORK ETHIC" },
+  { week: 14, mantra: "IRON WILL.\nUNBREAKABLE CONFIDENCE.", theme: "NEURAL DRIVE" },
+  { week: 15, mantra: "CHAMPION HABITS\nCOMPOUND IN SILENCE.", theme: "SYSTEM EXECUTION" },
+  { week: 16, mantra: "PRE-SEASON IS HERE.\nI AM BUILT FOR THIS.", theme: "READY FOR COMBAT" }
 ];
 
 function getDailyQuote() {
-  // Use day of year (0-364) mod 28 to pick a quote — changes every day
   const now = new Date();
   const start = new Date(now.getFullYear(), 0, 0);
   const diff = now - start;
   const dayOfYear = Math.floor(diff / 86400000);
-  return DAILY_QUOTES[dayOfYear % DAILY_QUOTES.length];
+  // Rapid mathematical rotation so consecutive days never see similar themes
+  const qIdx = (dayOfYear * 7 + (now.getFullYear() % 10)) % DAILY_QUOTES.length;
+  return DAILY_QUOTES[qIdx];
 }
 
 function getWeeklyMantra() {
-  const weekNum = 9 + (APP.currentPhaseWeek || 0);
-  return WEEKLY_MANTRAS.find(m => m.week === weekNum) || WEEKLY_MANTRAS[0];
+  const now = new Date();
+  const start = new Date(now.getFullYear(), 0, 1);
+  const weekNumOfYear = Math.ceil((((now - start) / 86400000) + start.getDay() + 1) / 7);
+  const offset = APP.currentPhaseWeek || 0;
+  const mIdx = (weekNumOfYear + offset) % WEEKLY_MANTRAS.length;
+  const m = WEEKLY_MANTRAS[mIdx];
+  return {
+    week: 9 + offset,
+    mantra: m.mantra,
+    theme: m.theme
+  };
 }
 
 function renderQuotes() {
@@ -5701,37 +5800,37 @@ function renderPDFDossier(historyItem) {
   });
   const topPRs = Object.values(maxByEx).sort((a, b) => b.weight - a.weight).slice(0, 4);
 
-  // Volume Progression SVG
+  // High-Resolution Full A4 Volume Progression SVG
   const phaseTargets = [18200, 22500, 20200, 14500];
   const phaseLabels = ['W9 (BASE)', 'W10 (PEAK)', 'W11 (GAME)', 'W12 (POP)'];
   const vMax = 25000;
-  const vSvgW = 310, vSvgH = 68;
-  const vBarW = 28, vGap = (vSvgW - 40 - (4 * vBarW)) / 3;
-  let volSvg = `<svg width="100%" height="68" viewBox="0 0 ${vSvgW} ${vSvgH}">`;
+  const vSvgW = 380, vSvgH = 75;
+  const vBarW = 34, vGap = (vSvgW - 50 - (4 * vBarW)) / 3;
+  let volSvg = `<svg width="100%" height="75" viewBox="0 0 ${vSvgW} ${vSvgH}">`;
   phaseLabels.forEach((lbl, idx) => {
-    const x = 20 + idx * (vBarW + vGap);
+    const x = 25 + idx * (vBarW + vGap);
     const ton = (idx === targetWeekIdx && totalTonnage > 0) ? totalTonnage : phaseTargets[idx];
-    const bH = Math.max(6, (ton / vMax) * 40);
-    const y = 48 - bH;
+    const bH = Math.max(8, (ton / vMax) * 46);
+    const y = 52 - bH;
     const isCur = idx === targetWeekIdx;
-    const color = isCur ? '#D4A843' : (idx < targetWeekIdx ? '#30D158' : 'rgba(212,168,67,0.3)');
+    const color = isCur ? '#D4A843' : (idx < targetWeekIdx ? '#30D158' : 'rgba(212,168,67,0.35)');
     const tonFmt = (ton >= 1000) ? (ton / 1000).toFixed(1) + 'k' : ton;
     volSvg += `
-      <rect x="${x}" y="${y}" width="${vBarW}" height="${bH}" rx="3" fill="${color}" opacity="${isCur ? 1 : 0.7}" />
-      <text x="${x + vBarW / 2}" y="${Math.max(8, y - 2)}" font-family="'DM Mono', monospace" font-size="7" font-weight="700" fill="${isCur ? '#D4A843' : '#FFF'}" text-anchor="middle">${tonFmt}</text>
-      <text x="${x + vBarW / 2}" y="60" font-family="'DM Mono', monospace" font-size="7" fill="${isCur ? '#D4A843' : '#888'}" text-anchor="middle">${lbl}</text>
+      <rect x="${x}" y="${y}" width="${vBarW}" height="${bH}" rx="4" fill="${color}" opacity="${isCur ? 1 : 0.75}" />
+      <text x="${x + vBarW / 2}" y="${Math.max(9, y - 3)}" font-family="'DM Mono', monospace" font-size="8.5" font-weight="700" fill="${isCur ? '#D4A843' : '#FFF'}" text-anchor="middle">${tonFmt}</text>
+      <text x="${x + vBarW / 2}" y="67" font-family="'DM Mono', monospace" font-size="8" fill="${isCur ? '#D4A843' : '#888'}" text-anchor="middle">${lbl}</text>
     `;
   });
   volSvg += `</svg>`;
 
-  // Completion by Day SVG
+  // High-Resolution Full A4 Completion by Day SVG
   const dayNames = ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'];
   const dayTotals = [3, 3, 3, 2, 3, 0, 0];
-  const cSvgW = 310, cSvgH = 68;
-  const cBarW = 20, cGap = (cSvgW - 24 - (7 * cBarW)) / 6;
-  let compSvg = `<svg width="100%" height="68" viewBox="0 0 ${cSvgW} ${cSvgH}">`;
+  const cSvgW = 380, cSvgH = 75;
+  const cBarW = 26, cGap = (cSvgW - 32 - (7 * cBarW)) / 6;
+  let compSvg = `<svg width="100%" height="75" viewBox="0 0 ${cSvgW} ${cSvgH}">`;
   dayNames.forEach((dName, d) => {
-    const x = 12 + d * (cBarW + cGap);
+    const x = 16 + d * (cBarW + cGap);
     const dTot = dayTotals[d];
     let dDone = 0;
     if (dTot > 0) {
@@ -5740,13 +5839,13 @@ function renderPDFDossier(historyItem) {
       }
     }
     const dPct = dTot > 0 ? Math.round((dDone / dTot) * 100) : (d === 5 ? 100 : 0);
-    const bH = Math.max(4, (dPct / 100) * 40);
-    const y = 48 - bH;
+    const bH = Math.max(6, (dPct / 100) * 46);
+    const y = 52 - bH;
     const color = dPct === 100 ? '#30D158' : (dPct > 0 ? '#D4A843' : 'rgba(255,255,255,0.08)');
     compSvg += `
-      <rect x="${x}" y="${y}" width="${cBarW}" height="${bH}" rx="3" fill="${color}" />
-      <text x="${x + cBarW / 2}" y="${Math.max(8, y - 2)}" font-family="'DM Mono', monospace" font-size="6.5" fill="${dPct > 0 ? '#D4A843' : '#666'}" text-anchor="middle">${dPct}%</text>
-      <text x="${x + cBarW / 2}" y="60" font-family="'DM Mono', monospace" font-size="7" fill="#888" text-anchor="middle">${dName}</text>
+      <rect x="${x}" y="${y}" width="${cBarW}" height="${bH}" rx="4" fill="${color}" />
+      <text x="${x + cBarW / 2}" y="${Math.max(9, y - 3)}" font-family="'DM Mono', monospace" font-size="8" font-weight="700" fill="${dPct > 0 ? '#D4A843' : '#666'}" text-anchor="middle">${dPct}%</text>
+      <text x="${x + cBarW / 2}" y="67" font-family="'DM Mono', monospace" font-size="8" fill="#888" text-anchor="middle">${dName}</text>
     `;
   });
   compSvg += `</svg>`;
@@ -5804,14 +5903,14 @@ function renderPDFDossier(historyItem) {
 
           rows += `
             <tr>
-              <td style="font-weight:600;color:#FFF">
-                <span style="font-family:'DM Mono',monospace;font-size:7px;color:#D4A843;margin-right:4px">${dayShort}</span>
-                ${ex.name}${ex.achilles ? ' <span style="color:#FF6B6B;font-size:6.5px">⚡</span>' : ''}
+              <td style="font-weight:600;color:#FFF;font-size:8.5px">
+                <span style="font-family:'DM Mono',monospace;font-size:7.5px;color:#D4A843;margin-right:4px">${dayShort}</span>
+                ${ex.name}${ex.achilles ? ' <span style="color:#FF6B6B;font-size:7.5px">⚡</span>' : ''}
               </td>
-              <td><span style="font-family:'DM Mono',monospace;font-size:6.5px;color:#D4A843;background:rgba(212,168,67,0.1);padding:1px 3px;border-radius:2px">${ex.quality || 'DRILL'}</span></td>
-              <td style="font-family:'DM Mono',monospace;color:#DDD">${prescribed}</td>
-              <td style="font-family:'DM Mono',monospace;color:#30D158">${loggedText}</td>
-              <td style="text-align:center">${isDone ? '<span style="color:#30D158;font-weight:bold">✓</span>' : '<span style="color:#555">○</span>'}</td>
+              <td><span style="font-family:'DM Mono',monospace;font-size:7.5px;color:#D4A843;background:rgba(212,168,67,0.12);padding:2px 4px;border-radius:3px">${ex.quality || 'DRILL'}</span></td>
+              <td style="font-family:'DM Mono',monospace;color:#DDD;font-size:8px">${prescribed}</td>
+              <td style="font-family:'DM Mono',monospace;color:#30D158;font-size:8px">${loggedText}</td>
+              <td style="text-align:center">${isDone ? '<span style="color:#30D158;font-weight:bold;font-size:9.5px">✓</span>' : '<span style="color:#555">○</span>'}</td>
             </tr>
           `;
         });
@@ -5824,276 +5923,300 @@ function renderPDFDossier(historyItem) {
   if (!container) return;
 
   container.innerHTML = `
-    <!-- ════════════ PAGE 1: EXECUTIVE & PHYSIOLOGICAL HEALTH (1 PAGE MAX) ════════════ -->
+    <!-- ════════════ PAGE 1: EXECUTIVE & PHYSIOLOGICAL HEALTH (1 PAGE FULL A4) ════════════ -->
     <div class="pdf-page pdf-page-1">
-      <div>
+      <div style="display:flex;flex-direction:column;justify-content:space-between;height:100%;gap:10px">
         <!-- Header -->
         <div class="pdf-header">
           <div>
             <div class="pdf-tag">// BVMBINO BASKETBALL · EXECUTIVE ATHLETIC DOSSIER</div>
             <div class="pdf-title">WEEKLY ATHLETIC PERFORMANCE DOSSIER</div>
-            <div style="font-size:9.5px;color:#BBB;margin-top:2px">
+            <div style="font-size:11px;color:#BBB;margin-top:4px">
               Athlete: <strong style="color:#FFF">BVMBINO</strong> · Level: <strong>Combo Guard Elite</strong> · Periodization: <strong>Phase 3 (Off-Season)</strong> · Week: <strong>Week ${wNum} (${curWeek})</strong>
             </div>
           </div>
           <div style="text-align:right">
-            <div style="font-family:'DM Mono',monospace;font-size:8px;color:#000;background:#D4A843;font-weight:700;padding:2px 7px;border-radius:3px;display:inline-block">85–90% HIGH INTENSITY</div>
-            <div style="font-family:'DM Mono',monospace;font-size:8px;color:#888;margin-top:3px">${new Date().toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' })}</div>
+            <div style="font-family:'DM Mono',monospace;font-size:9px;color:#000;background:#D4A843;font-weight:700;padding:3px 9px;border-radius:3px;display:inline-block">85–90% HIGH INTENSITY</div>
+            <div style="font-family:'DM Mono',monospace;font-size:9px;color:#888;margin-top:4px">${new Date().toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' })}</div>
           </div>
         </div>
 
         <!-- KPI Stat Ribbon -->
         <div class="pdf-kpi-grid">
-          <div class="pdf-card" style="text-align:center;padding:6px">
+          <div class="pdf-card" style="text-align:center;padding:8px">
             <div class="pdf-kpi-val">${pct}%</div>
             <div class="pdf-kpi-lbl">COMPLETION</div>
           </div>
-          <div class="pdf-card" style="text-align:center;padding:6px">
+          <div class="pdf-card" style="text-align:center;padding:8px">
             <div class="pdf-kpi-val" style="color:#30D158">${doneCount} / 14</div>
             <div class="pdf-kpi-lbl">SESSIONS DONE</div>
           </div>
-          <div class="pdf-card" style="text-align:center;padding:6px">
+          <div class="pdf-card" style="text-align:center;padding:8px">
             <div class="pdf-kpi-val" style="color:#FF9F0A">${APP.streak || 7} DAYS</div>
             <div class="pdf-kpi-lbl">DAY STREAK</div>
           </div>
-          <div class="pdf-card" style="text-align:center;padding:6px">
+          <div class="pdf-card" style="text-align:center;padding:8px">
             <div class="pdf-kpi-val">${Math.round(totalTonnage).toLocaleString()} KG</div>
             <div class="pdf-kpi-lbl">TONNAGE LIFTED</div>
           </div>
-          <div class="pdf-card" style="text-align:center;padding:6px">
+          <div class="pdf-card" style="text-align:center;padding:8px">
             <div class="pdf-kpi-val" style="color:#FFF">${totalSets} SETS</div>
             <div class="pdf-kpi-lbl">SETS LOGGED</div>
           </div>
-          <div class="pdf-card" style="text-align:center;padding:6px">
+          <div class="pdf-card" style="text-align:center;padding:8px">
             <div class="pdf-kpi-val" style="color:#BF5AF2">${cnsPct}%</div>
             <div class="pdf-kpi-lbl">CNS READINESS</div>
           </div>
         </div>
 
         <!-- 2-Column Middle Analytics (Charts & PR Table) -->
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;align-items:stretch">
           <!-- Left: Charts -->
-          <div style="display:flex;flex-direction:column;gap:8px">
-            <div class="pdf-card">
-              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
-                <span style="font-family:'Bebas Neue',sans-serif;font-size:12px;color:#D4A843;letter-spacing:0.5px">📈 MULTI-WEEK VOLUME OVERLOAD WAVE (PHASE 3)</span>
-                <span style="font-family:'DM Mono',monospace;font-size:7px;color:#30D158">+24% PEAK LOAD</span>
+          <div style="display:flex;flex-direction:column;gap:10px;justify-content:space-between">
+            <div class="pdf-card" style="padding:10px 12px">
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+                <span style="font-family:'Bebas Neue',sans-serif;font-size:14px;color:#D4A843;letter-spacing:0.5px">📈 MULTI-WEEK VOLUME OVERLOAD WAVE (PHASE 3)</span>
+                <span style="font-family:'DM Mono',monospace;font-size:8px;color:#30D158">+24% PEAK LOAD</span>
               </div>
               ${volSvg}
             </div>
-            <div class="pdf-card">
-              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
-                <span style="font-family:'Bebas Neue',sans-serif;font-size:12px;color:#FFF;letter-spacing:0.5px">📊 COMPLETION BY DAY (MON — SUN)</span>
-                <span style="font-family:'DM Mono',monospace;font-size:7px;color:#D4A843">SCHEDULED VS DONE</span>
+            <div class="pdf-card" style="padding:10px 12px">
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+                <span style="font-family:'Bebas Neue',sans-serif;font-size:14px;color:#FFF;letter-spacing:0.5px">📊 COMPLETION BY DAY (MON — SUN)</span>
+                <span style="font-family:'DM Mono',monospace;font-size:8px;color:#D4A843">SCHEDULED VS DONE</span>
               </div>
               ${compSvg}
             </div>
           </div>
 
           <!-- Right: Peak PR Spotlight Table -->
-          <div class="pdf-card" style="display:flex;flex-direction:column;justify-content:space-between">
+          <div class="pdf-card" style="display:flex;flex-direction:column;justify-content:space-between;padding:10px 12px">
             <div>
-              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
-                <span style="font-family:'Bebas Neue',sans-serif;font-size:12px;color:#FFF;letter-spacing:0.5px">🏆 RECORD PERFORMANCE &amp; PEAK LOADS SPOTLIGHT</span>
-                <span style="font-family:'DM Mono',monospace;font-size:7px;color:#000;background:#D4A843;padding:1px 4px;border-radius:2px;font-weight:700">PEAK VERIFIED</span>
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+                <span style="font-family:'Bebas Neue',sans-serif;font-size:14px;color:#FFF;letter-spacing:0.5px">🏆 RECORD PERFORMANCE &amp; PEAK LOADS SPOTLIGHT</span>
+                <span style="font-family:'DM Mono',monospace;font-size:8px;color:#000;background:#D4A843;padding:2px 6px;border-radius:2px;font-weight:700">PEAK VERIFIED</span>
               </div>
               <table class="pdf-table">
                 <thead>
                   <tr>
                     <th style="width:10%">RANK</th>
-                    <th style="width:46%">EXERCISE</th>
-                    <th style="width:18%">PEAK LOAD</th>
-                    <th style="width:14%">REPS</th>
+                    <th style="width:44%">EXERCISE</th>
+                    <th style="width:22%">PEAK LOAD</th>
+                    <th style="width:12%">REPS</th>
                     <th style="width:12%">RPE</th>
                   </tr>
                 </thead>
                 <tbody>
                   ${topPRs.map((pr, idx) => `
                     <tr>
-                      <td style="font-family:'DM Mono',monospace;color:#D4A843;font-weight:bold">#${idx + 1}</td>
-                      <td style="font-weight:600;color:#FFF">
+                      <td style="font-family:'DM Mono',monospace;color:#D4A843;font-weight:bold;font-size:10px">#${idx + 1}</td>
+                      <td style="font-weight:600;color:#FFF;font-size:10px">
                         ${pr.name}
-                        <div style="font-family:'DM Mono',monospace;font-size:6.5px;color:#888;font-weight:normal">VBT: ~${calc1RMAndVBT(pr.weight, pr.reps).vel} m/s · ${calc1RMAndVBT(pr.weight, pr.reps).zone}</div>
+                        <div style="font-family:'DM Mono',monospace;font-size:7.5px;color:#888;font-weight:normal;margin-top:1px">VBT: ~${calc1RMAndVBT(pr.weight, pr.reps).vel} m/s · ${calc1RMAndVBT(pr.weight, pr.reps).zone}</div>
                       </td>
-                      <td style="font-family:'DM Mono',monospace;color:#D4A843;font-weight:bold">
+                      <td style="font-family:'DM Mono',monospace;color:#D4A843;font-weight:bold;font-size:11px">
                         ${pr.weight} KG
-                        <div style="font-size:6.5px;color:#30D158;font-weight:normal">1RM: ${calc1RMAndVBT(pr.weight, pr.reps).e1rm}k</div>
+                        <div style="font-size:7.5px;color:#30D158;font-weight:normal">1RM: ${calc1RMAndVBT(pr.weight, pr.reps).e1rm}k</div>
                       </td>
-                      <td style="font-family:'DM Mono',monospace">${pr.reps}</td>
-                      <td style="font-family:'DM Mono',monospace;color:#30D158">${pr.rpe}</td>
+                      <td style="font-family:'DM Mono',monospace;font-size:10px">${pr.reps}</td>
+                      <td style="font-family:'DM Mono',monospace;color:#30D158;font-size:10px">${pr.rpe}</td>
                     </tr>
                   `).join('')}
                 </tbody>
               </table>
             </div>
-            <div style="background:rgba(212,168,67,0.06);border:1px dashed rgba(212,168,67,0.25);border-radius:4px;padding:5px 8px;margin-top:6px;font-size:8px;color:#BBB">
-              ⚡ <strong>CAT Neuromuscular Recruits:</strong> Peak rate of force development (RFD) transfer to on-court reactive elevation.
+            <div style="background:rgba(212,168,67,0.06);border:1px dashed rgba(212,168,67,0.25);border-radius:4px;padding:6px 10px;margin-top:8px;font-size:9px;color:#BBB">
+              ⚡ <strong>CAT Neuromuscular &amp; VBT Telemetry:</strong> Concentric velocity outputs correlate with rate of force development (RFD) transfer to on-court reactive elevation.
             </div>
           </div>
         </div>
 
         <!-- Recovery, Sleep, Weight & Achilles Health (4 Cards Grid) -->
-        <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:6px;margin-bottom:8px">
-          <div class="pdf-card">
-            <div style="font-family:'DM Mono',monospace;font-size:7px;color:#3478F6">● SLEEP SCORE</div>
-            <div style="font-family:'Bebas Neue',sans-serif;font-size:20px;color:#FFF;line-height:1.1">${avgSleep} <span style="font-size:11px;color:#888">/ 10</span></div>
-            <div style="font-size:7px;color:#30D158;font-weight:600">8.5h Deep Sleep Window</div>
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px">
+          <div class="pdf-card" style="padding:10px">
+            <div style="font-family:'DM Mono',monospace;font-size:8px;color:#3478F6">● SLEEP SCORE</div>
+            <div style="font-family:'Bebas Neue',sans-serif;font-size:24px;color:#FFF;line-height:1.1">${avgSleep} <span style="font-size:13px;color:#888">/ 10</span></div>
+            <div style="font-size:8px;color:#30D158;font-weight:600">8.5h Deep Sleep Remodeling</div>
           </div>
-          <div class="pdf-card">
-            <div style="font-family:'DM Mono',monospace;font-size:7px;color:#FF9F0A">● CNS ENERGY</div>
-            <div style="font-family:'Bebas Neue',sans-serif;font-size:20px;color:#FF9F0A;line-height:1.1">${avgEnergy} <span style="font-size:11px;color:#888">/ 10</span></div>
-            <div style="font-size:7px;color:#D4A843;font-weight:600">Optimal ANS Tone</div>
+          <div class="pdf-card" style="padding:10px">
+            <div style="font-family:'DM Mono',monospace;font-size:8px;color:#FF9F0A">● CNS READINESS</div>
+            <div style="font-family:'Bebas Neue',sans-serif;font-size:24px;color:#FFF;line-height:1.1">${avgEnergy} <span style="font-size:13px;color:#888">/ 10</span></div>
+            <div style="font-size:8px;color:#D4A843;font-weight:600">Optimal ANS Sympathetic Tone</div>
           </div>
-          <div class="pdf-card">
-            <div style="font-family:'DM Mono',monospace;font-size:7px;color:#D4A843">● BODY WEIGHT</div>
-            <div style="font-family:'Bebas Neue',sans-serif;font-size:20px;color:#FFF;line-height:1.1">${curWeight} <span style="font-size:11px;color:#888">KG</span></div>
-            <div style="font-size:7px;color:#30D158;font-weight:600">Avg: ${avgWeight} kg · Target 94-95</div>
+          <div class="pdf-card" style="padding:10px">
+            <div style="font-family:'DM Mono',monospace;font-size:8px;color:#D4A843">● BODY WEIGHT</div>
+            <div style="font-family:'Bebas Neue',sans-serif;font-size:24px;color:#FFF;line-height:1.1">${curWeight} <span style="font-size:13px;color:#888">KG</span></div>
+            <div style="font-size:8px;color:#30D158;font-weight:600">Avg: ${avgWeight} kg · Target 94–95</div>
           </div>
-          <div class="pdf-card">
-            <div style="font-family:'DM Mono',monospace;font-size:7px;color:#FF6B6B">● ACHILLES RESILIENCE</div>
-            <div style="font-family:'Bebas Neue',sans-serif;font-size:18px;color:#30D158;line-height:1.2">OPTIMAL LOAD</div>
-            <div style="font-size:7px;color:#AAA">Pain: <strong>${avgADuring}</strong>/<strong>${avgAAfter}</strong> (Clear)</div>
+          <div class="pdf-card" style="padding:10px">
+            <div style="font-family:'DM Mono',monospace;font-size:8px;color:#E03434">● ACHILLES RESILIENCE</div>
+            <div style="font-family:'Bebas Neue',sans-serif;font-size:22px;color:#30D158;line-height:1.1">OPTIMAL LOAD</div>
+            <div style="font-size:8px;color:#AAA">Pain: <strong>${avgADuring}</strong>/<strong>${avgAAfter}</strong> (Clear)</div>
           </div>
         </div>
 
         <!-- Mindset & Mental Readiness Ribbon -->
-        <div class="pdf-card" style="display:flex;justify-content:space-between;align-items:center;padding:6px 10px">
-          <div style="display:flex;align-items:center;gap:6px">
-            <span style="font-size:12px">🧠</span>
-            <span style="font-family:'Bebas Neue',sans-serif;font-size:13px;color:#FFF;letter-spacing:0.5px">MINDSET PROTOCOLS:</span>
-            <span style="font-size:8px;color:#BBB">Visualization (Lock-In ✓) · Box Breathing (4-4-4-4 CNS Reset ✓) · Identity Reset ("I TRUST MY BODY FULLY" ✓)</span>
+        <div class="pdf-card" style="display:flex;justify-content:space-between;align-items:center;padding:10px 14px">
+          <div style="display:flex;align-items:center;gap:10px">
+            <span style="font-size:16px">🧠</span>
+            <div>
+              <div style="font-family:'DM Mono',monospace;font-size:8.5px;color:#BF5AF2;letter-spacing:1px">// MENTALITY &amp; READINESS PROTOCOLS</div>
+              <div style="font-size:10.5px;color:#DDD;margin-top:2px">
+                Visualization (Lock-In ✓) · Box Breathing (4-4-4-4 CNS Reset ✓) · Identity Reset ("I TRUST MY BODY FULLY" ✓)
+              </div>
+            </div>
           </div>
-          <div style="font-family:'DM Mono',monospace;font-size:7.5px;color:#30D158;font-weight:700">100% EXECUTED</div>
+          <div style="font-family:'DM Mono',monospace;font-size:9px;color:#30D158;background:rgba(48,209,88,0.15);padding:3px 8px;border-radius:3px;font-weight:bold">
+            100% EXECUTED
+          </div>
         </div>
-      </div>
 
-      <!-- Page 1 Footer -->
-      <div style="border-top:1px solid rgba(255,255,255,0.1);padding-top:4px;display:flex;justify-content:space-between;align-items:center;font-family:'DM Mono',monospace;font-size:7px;color:#666">
-        <span>BVMBINO WORKOUT PERFORMANCE DOSSIER · OFF-SEASON PHASE 3</span>
-        <span style="color:#D4A843">PAGE 1 OF 2 — EXECUTIVE OVERVIEW</span>
+        <!-- Footer -->
+        <div style="display:flex;justify-content:space-between;align-items:center;border-top:1px solid rgba(255,255,255,0.1);padding-top:6px;font-family:'DM Mono',monospace;font-size:9px;color:#777">
+          <span>BVMBINO WORKOUT PERFORMANCE DOSSIER · OFF-SEASON PHASE 3</span>
+          <span style="color:#D4A843">PAGE 1 OF 2 — EXECUTIVE OVERVIEW</span>
+        </div>
       </div>
     </div>
 
-
-    <!-- ════════════ PAGE 2: WORKOUTS & DETAILED EXERCISE BREAKDOWN (1 PAGE MAX) ════════════ -->
+    <!-- ════════════ PAGE 2: WORKOUTS & DETAILED EXERCISE BREAKDOWN (1 PAGE FULL A4) ════════════ -->
     <div class="pdf-page pdf-page-2">
-      <div>
+      <div style="display:flex;flex-direction:column;justify-content:space-between;height:100%;gap:10px">
         <!-- Header -->
-        <div class="pdf-header" style="margin-bottom:6px">
+        <div class="pdf-header" style="margin-bottom:8px">
           <div>
             <div class="pdf-tag">// BVMBINO BASKETBALL · TRAINING SESSIONS &amp; EXERCISES</div>
             <div class="pdf-title">CATEGORIZED WORKOUT LOG &amp; EXERCISE TARGETS</div>
-            <div style="font-size:9.5px;color:#BBB;margin-top:2px">
+            <div style="font-size:11px;color:#BBB;margin-top:4px">
               Comprehensive breakdown of executed strength lifts, fascia spring drills, on-court actions, and hydro recovery.
             </div>
           </div>
           <div style="text-align:right">
-            <div style="font-family:'DM Mono',monospace;font-size:8px;color:#30D158;background:rgba(48,209,88,0.15);padding:2px 7px;border-radius:3px;display:inline-block">
+            <div style="font-family:'DM Mono',monospace;font-size:9px;color:#30D158;background:rgba(48,209,88,0.15);padding:3px 9px;border-radius:3px;display:inline-block">
               ${doneCount} / 14 SESSIONS COMPLETED (${pct}%)
             </div>
-            <div style="font-family:'DM Mono',monospace;font-size:8px;color:#888;margin-top:3px">PHASE 3 · WEEK ${wNum}</div>
+            <div style="font-family:'DM Mono',monospace;font-size:9px;color:#888;margin-top:4px">PHASE 3 · WEEK ${wNum}</div>
           </div>
         </div>
 
-        <!-- 4 Category Quadrants (2x2 Grid) -->
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+        <!-- 4 Category Quadrants (2 Columns Layout filling A4 height) -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;flex:1;align-items:stretch">
           
-          <!-- Category 1: Weight Room & Strength -->
-          <div class="pdf-card" style="padding:6px 8px">
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;border-bottom:1px solid rgba(231,76,60,0.3);padding-bottom:3px">
-              <span style="font-family:'Bebas Neue',sans-serif;font-size:12px;color:#FF6B6B;letter-spacing:0.5px">🏋️ WEIGHT ROOM / MAX POWER &amp; CAT METHOD</span>
-              <span style="font-family:'DM Mono',monospace;font-size:6.5px;color:#888">MON · WED · THU</span>
+          <!-- Column 1: Weight Room & Basketball -->
+          <div style="display:flex;flex-direction:column;gap:10px;justify-content:space-between">
+            <!-- Category 1: Weight Room & Strength -->
+            <div class="pdf-card" style="padding:10px 12px;flex:1.4;display:flex;flex-direction:column;justify-content:space-between">
+              <div>
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;border-bottom:1px solid rgba(231,76,60,0.3);padding-bottom:4px">
+                  <span style="font-family:'Bebas Neue',sans-serif;font-size:14px;color:#FF6B6B;letter-spacing:0.5px">🏋️ WEIGHT ROOM / MAX POWER &amp; CAT METHOD</span>
+                  <span style="font-family:'DM Mono',monospace;font-size:8px;color:#888">MON · WED · THU</span>
+                </div>
+                <table class="pdf-table">
+                  <thead>
+                    <tr>
+                      <th style="width:38%">EXERCISE</th>
+                      <th style="width:14%">QUALITY</th>
+                      <th style="width:20%">TARGET</th>
+                      <th style="width:20%">LOAD (KG)</th>
+                      <th style="width:8%;text-align:center">✓</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    ${renderCategoryRows(['s-0-0', 's-2-0', 's-3-1'])}
+                  </tbody>
+                </table>
+              </div>
             </div>
-            <table class="pdf-table">
-              <thead>
-                <tr>
-                  <th style="width:38%">EXERCISE</th>
-                  <th style="width:16%">QUALITY</th>
-                  <th style="width:22%">TARGET</th>
-                  <th style="width:18%">LOAD (KG)</th>
-                  <th style="width:6%;text-align:center">✓</th>
-                </tr>
-              </thead>
-              <tbody>
-                ${renderCategoryRows(['s-0-0', 's-2-0', 's-3-1'])}
-              </tbody>
-            </table>
+
+            <!-- Category 3: Basketball & Court Skills -->
+            <div class="pdf-card" style="padding:10px 12px;flex:1;display:flex;flex-direction:column;justify-content:space-between">
+              <div>
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;border-bottom:1px solid rgba(212,168,67,0.3);padding-bottom:4px">
+                  <span style="font-family:'Bebas Neue',sans-serif;font-size:14px;color:#D4A843;letter-spacing:0.5px">🏀 BASKETBALL &amp; GAME-SPEED SKILL INTEGRATION</span>
+                  <span style="font-family:'DM Mono',monospace;font-size:8px;color:#888">TUE · THU · FRI</span>
+                </div>
+                <table class="pdf-table">
+                  <thead>
+                    <tr>
+                      <th style="width:38%">DRILL / FOCUS</th>
+                      <th style="width:14%">QUALITY</th>
+                      <th style="width:20%">TARGET</th>
+                      <th style="width:20%">VOLUME</th>
+                      <th style="width:8%;text-align:center">✓</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    ${renderCategoryRows(['s-1-0', 's-3-0', 's-4-0'])}
+                  </tbody>
+                </table>
+              </div>
+              <div style="background:rgba(212,168,67,0.06);border:1px dashed rgba(212,168,67,0.25);border-radius:4px;padding:6px 10px;margin-top:6px;font-size:8.5px;color:#DDD;line-height:1.4">
+                ⚡ <strong>On-Court Focus:</strong> Uncontested deceleration, change of pace, low-turnover decision making at game intensity.
+              </div>
+            </div>
           </div>
 
-          <!-- Category 2: Fascia & Tendon Elasticity -->
-          <div class="pdf-card" style="padding:6px 8px">
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;border-bottom:1px solid rgba(155,89,182,0.3);padding-bottom:3px">
-              <span style="font-family:'Bebas Neue',sans-serif;font-size:12px;color:#BF5AF2;letter-spacing:0.5px">⚡ FASCIA ELASTIC RECOIL &amp; TENDON STIFFNESS</span>
-              <span style="font-family:'DM Mono',monospace;font-size:6.5px;color:#888">MON · WED · FRI</span>
+          <!-- Column 2: Fascia & Pool Recovery -->
+          <div style="display:flex;flex-direction:column;gap:10px;justify-content:space-between">
+            <!-- Category 2: Fascia & Tendon Elasticity -->
+            <div class="pdf-card" style="padding:10px 12px;flex:1.4;display:flex;flex-direction:column;justify-content:space-between">
+              <div>
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;border-bottom:1px solid rgba(155,89,182,0.3);padding-bottom:4px">
+                  <span style="font-family:'Bebas Neue',sans-serif;font-size:14px;color:#BF5AF2;letter-spacing:0.5px">⚡ FASCIA ELASTIC RECOIL &amp; TENDON STIFFNESS</span>
+                  <span style="font-family:'DM Mono',monospace;font-size:8px;color:#888">MON · WED · FRI</span>
+                </div>
+                <table class="pdf-table">
+                  <thead>
+                    <tr>
+                      <th style="width:38%">DRILL</th>
+                      <th style="width:14%">QUALITY</th>
+                      <th style="width:20%">TARGET</th>
+                      <th style="width:20%">LOAD / VOL</th>
+                      <th style="width:8%;text-align:center">✓</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    ${renderCategoryRows(['s-0-1', 's-2-1', 's-4-1'])}
+                  </tbody>
+                </table>
+              </div>
             </div>
-            <table class="pdf-table">
-              <thead>
-                <tr>
-                  <th style="width:38%">DRILL</th>
-                  <th style="width:16%">QUALITY</th>
-                  <th style="width:22%">TARGET</th>
-                  <th style="width:18%">LOAD / REPS</th>
-                  <th style="width:6%;text-align:center">✓</th>
-                </tr>
-              </thead>
-              <tbody>
-                ${renderCategoryRows(['s-0-1', 's-2-1', 's-4-1'])}
-              </tbody>
-            </table>
-          </div>
 
-          <!-- Category 3: Basketball & Court Skills -->
-          <div class="pdf-card" style="padding:6px 8px">
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;border-bottom:1px solid rgba(212,168,67,0.3);padding-bottom:3px">
-              <span style="font-family:'Bebas Neue',sans-serif;font-size:12px;color:#D4A843;letter-spacing:0.5px">🏀 BASKETBALL &amp; GAME-SPEED SKILL INTEGRATION</span>
-              <span style="font-family:'DM Mono',monospace;font-size:6.5px;color:#888">TUE · THU · FRI</span>
+            <!-- Category 4: Hydro, Pool Flush & Mobility -->
+            <div class="pdf-card" style="padding:10px 12px;flex:1;display:flex;flex-direction:column;justify-content:space-between">
+              <div>
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;border-bottom:1px solid rgba(52,120,246,0.3);padding-bottom:4px">
+                  <span style="font-family:'Bebas Neue',sans-serif;font-size:14px;color:#3478F6;letter-spacing:0.5px">💧 POOL RECOVERY, HYDRO FLUSH &amp; MENTAL RESET</span>
+                  <span style="font-family:'DM Mono',monospace;font-size:8px;color:#888">TUE · FRI</span>
+                </div>
+                <table class="pdf-table">
+                  <thead>
+                    <tr>
+                      <th style="width:38%">PROTOCOL</th>
+                      <th style="width:14%">QUALITY</th>
+                      <th style="width:20%">TARGET</th>
+                      <th style="width:20%">VOLUME</th>
+                      <th style="width:8%;text-align:center">✓</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    ${renderCategoryRows(['s-1-1', 's-1-2', 's-4-2'])}
+                  </tbody>
+                </table>
+              </div>
+              <div style="background:rgba(52,120,246,0.06);border:1px dashed rgba(52,120,246,0.25);border-radius:4px;padding:6px 10px;margin-top:6px;font-size:8.5px;color:#DDD;line-height:1.4">
+                💧 <strong>Hydro Recovery Protocol:</strong> Hydrostatic pressure gradient flushes muscular byproduct; contrast reboots autonomic tone within 24h.
+              </div>
             </div>
-            <table class="pdf-table">
-              <thead>
-                <tr>
-                  <th style="width:38%">DRILL / FOCUS</th>
-                  <th style="width:16%">QUALITY</th>
-                  <th style="width:22%">TARGET</th>
-                  <th style="width:18%">VOLUME</th>
-                  <th style="width:6%;text-align:center">✓</th>
-                </tr>
-              </thead>
-              <tbody>
-                ${renderCategoryRows(['s-1-0', 's-3-0', 's-4-0'])}
-              </tbody>
-            </table>
-          </div>
-
-          <!-- Category 4: Pool Recovery & Joint Decompression -->
-          <div class="pdf-card" style="padding:6px 8px">
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;border-bottom:1px solid rgba(52,152,219,0.3);padding-bottom:3px">
-              <span style="font-family:'Bebas Neue',sans-serif;font-size:12px;color:#5B9AFF;letter-spacing:0.5px">💧 POOL RECOVERY, HYDRO FLUSH &amp; MENTAL</span>
-              <span style="font-family:'DM Mono',monospace;font-size:6.5px;color:#888">TUE · FRI · DAILY</span>
-            </div>
-            <table class="pdf-table">
-              <thead>
-                <tr>
-                  <th style="width:38%">PROTOCOL</th>
-                  <th style="width:16%">QUALITY</th>
-                  <th style="width:22%">TARGET</th>
-                  <th style="width:18%">EFFECT</th>
-                  <th style="width:6%;text-align:center">✓</th>
-                </tr>
-              </thead>
-              <tbody>
-                ${renderCategoryRows(['s-1-1', 's-4-2', 's-0-2', 's-1-2', 's-2-2'])}
-              </tbody>
-            </table>
           </div>
 
         </div>
-      </div>
 
-      <!-- Page 2 Footer with Athlete Sign-off -->
-      <div style="border-top:1px solid rgba(255,255,255,0.1);padding-top:4px;display:flex;justify-content:space-between;align-items:center;font-family:'DM Mono',monospace;font-size:7px;color:#666">
-        <span>Athlete: <strong style="color:#FFF">BVMBINO</strong> · Verified Elite Off-Season Performance Engine</span>
-        <span>Achilles Status: <strong style="color:#30D158">OPTIMAL ADAPTATION</strong></span>
-        <span style="color:#D4A843">PAGE 2 OF 2 — END OF DOSSIER</span>
+        <!-- Footer -->
+        <div style="display:flex;justify-content:space-between;align-items:center;border-top:1px solid rgba(255,255,255,0.1);padding-top:6px;font-family:'DM Mono',monospace;font-size:9px;color:#777">
+          <span>BVMBINO WORKOUT PERFORMANCE DOSSIER · OFF-SEASON PHASE 3 · Status: <strong style="color:#30D158">OPTIMAL ADAPTATION</strong></span>
+          <span style="color:#D4A843">PAGE 2 OF 2 — END OF DOSSIER</span>
+        </div>
       </div>
     </div>
   `;
@@ -6102,10 +6225,14 @@ function renderPDFDossier(historyItem) {
 function exportReportPDF(historyItem) {
   const item = historyItem || window.CURRENT_REPORT_ITEM;
   renderPDFDossier(item);
+  document.body.classList.add('is-printing-pdf');
   showToast('OPENING 2-PAGE ATHLETIC DOSSIER... 📄', 'toast-fire');
   SoundFX.vibrate(80);
   setTimeout(() => {
     window.print();
+    setTimeout(() => {
+      document.body.classList.remove('is-printing-pdf');
+    }, 1500);
   }, 250);
 }
 
@@ -7689,44 +7816,253 @@ function renderWellnessUI() {
 // COLOR-CODED MENTAL PERFORMANCE QUOTES ENGINE
 // ══════════════════════════════════════════════
 const DAILY_MENTAL_QUOTES = {
-  1: { // MON
-    dayQuote: { text: '"You don\'t have to be great to start, but you have to start to be great."', author: '— LES BROWN' },
-    islamQuote: { arabic: 'الْمُؤْمِنُ الْقَوِيُّ خَيْرٌ وَأَحَبُّ إِلَى اللَّهِ مِنَ الْمُؤْمِنِ الضَّعِيفِ', text: '"The strong believer is better and more beloved to Allah than the weak believer."', author: '— PROPHET MUHAMMAD ﷺ (SAHIH MUSLIM)', takeaway: 'Physical power, conditioning, and discipline are acts of devotion. Train to be formidable.' },
-    bookQuote: { text: '"Rest at the end, not in the middle."', author: '— KOBE BRYANT (THE MAMBA MENTALITY)', takeaway: 'Never bargain with your training while fatigued. Complete every rep with intent.' }
-  },
-  2: { // TUE
-    dayQuote: { text: '"The separation is in the preparation. Every rep in the dark echoes under the lights."', author: '— RUSSELL WILSON' },
-    islamQuote: { arabic: 'لَا يُكَلِّفُ اللَّهُ نَفْسًا إِلَّا وُسْعَهَا', text: '"Allah does not burden a soul beyond that it can bear."', author: '— SURAH AL-BAQARAH (2:286)', takeaway: 'You were engineered to endure this load. Do not ask for an easier path; develop broader shoulders.' },
-    bookQuote: { text: '"You fall to the level of your systems. Fall in love with the daily process."', author: '— JAMES CLEAR (ATOMIC HABITS)', takeaway: 'Championships are not won under arena lights; they are forged in the quiet execution of habits.' }
-  },
-  3: { // WED
-    dayQuote: { text: '"Pain is temporary. Quitting lasts forever."', author: '— LANCE ARMSTRONG' },
-    islamQuote: { arabic: 'وَأَن لَّيْسَ لِلْإِنسَانِ إِلَّا مَا سَعَىٰ', text: '"And that there is not for man except that for which he strives."', author: '— SURAH AN-NAJM (53:39)', takeaway: 'Outcomes are written; effort is your only testament. Sweat is the currency of growth.' },
-    bookQuote: { text: '"When your mind says you are done, you are only at 40% of your actual capacity."', author: '— DAVID GOGGINS (CAN\'T HURT ME)', takeaway: 'Callous your mind against the inner governor of fatigue. Push past the initial alarm.' }
-  },
-  4: { // THU
-    dayQuote: { text: '"Pressure is a privilege. It only comes to those who earn it."', author: '— BILLIE JEAN KING' },
-    islamQuote: { arabic: 'وَأَعِدُّوا لَهُم مَّا اسْتَطَعْتُم مِّن قُوَّةٍ', text: '"And prepare against them whatever you are able of power."', author: '— SURAH AL-ANFAL (8:60)', takeaway: 'Cultivating explosive speed and tendon resilience is an explicit mandate. Honor your preparation.' },
-    bookQuote: { text: '"The impediment to action advances action. What stands in the way becomes the way."', author: '— MARCUS AURELIUS (MEDITATIONS)', takeaway: 'Obstacles and heavy defenders are not interruptions; they are the exact arena to prove your craft.' }
-  },
-  5: { // FRI
-    dayQuote: { text: '"Hard work beats talent when talent doesn\'t work hard."', author: '— TIM NOTKE' },
-    islamQuote: { arabic: 'إِنَّ مَعَ الْعُسْرِ يُسْرًا', text: '"Indeed, with hardship comes ease."', author: '— SURAH ASH-SHARH (94:6)', takeaway: 'Tendon remodeling and mental callous only happen inside the strain. The breakthrough is in the difficulty.' },
-    bookQuote: { text: '"When emotions take over, intelligence departs. Keep your cool in the storm."', author: '— ROBERT GREENE (33 STRATEGIES OF WAR)', takeaway: 'Subordinate anger to cold tactical strategy. A calm point guard controls the tempo of the game.' }
-  },
-  6: { // SAT
-    dayQuote: { text: '"Greatness is not a destiny; it is a daily compound interest of standards."', author: '— NICK SABAN' },
-    islamQuote: { arabic: 'فَلَا نَامَتْ أَعْيُنُ الْجُبَنَاءِ', text: '"May the eyes of cowards never sleep."', author: '— KHALID IBN AL-WALID (SAYF ALLAH)', takeaway: 'Breaking nine swords in close combat against 10-to-1 odds. Relentless grit over external numbers.' },
-    bookQuote: { text: '"Crave the result so intensely that the grueling work is completely irrelevant."', author: '— TIM GROVER (RELENTLESS & WINNING)', takeaway: 'A Cleaner doesn\'t ask for pats on the back. Step onto the court and handle business.' }
-  },
-  0: { // SUN
-    dayQuote: { text: '"Don\'t count the days; make the days count."', author: '— MUHAMMAD ALI' },
-    islamQuote: { arabic: 'اعْقِلْهَا وَتَوَكَّلْ', text: '"Tie your camel, then place your trust in Allah."', author: '— PROPHET MUHAMMAD ﷺ (AT-TIRMIDHI)', takeaway: 'Execute 100% of your nutrition, sleep, and recovery habits first — then step on the floor with peace.' },
-    bookQuote: { text: '"The highest-IQ communicators speak last, listen first, and lead with poise."', author: '— DALE CARNEGIE (HOW TO WIN FRIENDS)', takeaway: 'Locker room leaders elevate teammates. High trust on the court yields championship execution.' }
-  }
+  1: [ // MON ROTATING PACKS
+    {
+      dayQuote: { text: '"You don\'t have to be great to start, but you have to start to be great."', author: '— LES BROWN' },
+      islamQuote: { arabic: 'الْمُؤْمِنُ الْقَوِيُّ خَيْرٌ وَأَحَبُّ إِلَى اللَّهِ مِنَ الْمُؤْمِنِ الضَّعِيفِ', text: '"The strong believer is better and more beloved to Allah than the weak believer."', author: '— PROPHET MUHAMMAD ﷺ (SAHIH MUSLIM)', takeaway: 'Physical power, conditioning, and discipline are acts of devotion. Train to be formidable.' },
+      bookQuote: { text: '"Rest at the end, not in the middle."', author: '— KOBE BRYANT (THE MAMBA MENTALITY)', takeaway: 'Never bargain with your training while fatigued. Complete every rep with intent.' }
+    },
+    {
+      dayQuote: { text: '"I\'ve failed over and over and over again in my life. And that is why I succeed."', author: '— MICHAEL JORDAN' },
+      islamQuote: { arabic: 'وَتَوَكَّلْ عَلَى الْعَزِيزِ الرَّحِيمِ الَّذِي يَرَاكَ حِينَ تَقُومُ', text: '"And put your trust in the All-Mighty, the Most Merciful, who sees you when you stand."', author: '— SURAH ASH-SHU\'ARA (26:217)', takeaway: 'Your early morning 5:30 AM workouts are witnessed. Trust the spiritual compounding of unseen labor.' },
+      bookQuote: { text: '"A Cleaner does not compete with anyone else; they compete with what they are capable of becoming."', author: '— TIM GROVER (RELENTLESS)', takeaway: 'Stop comparing yourself to average gym peers. Hold yourself to championship execution.' }
+    },
+    {
+      dayQuote: { text: '"The only limit to our realization of tomorrow will be our doubts of today."', author: '— FRANKLIN D. ROOSEVELT' },
+      islamQuote: { arabic: 'فَإِذَا عَزَمْتَ فَتَوَكَّلْ عَلَى اللَّهِ', text: '"And when you have decided, then rely upon Allah."', author: '— SURAH ALI \'IMRAN (3:159)', takeaway: 'Once you step onto the court or barbell platform, kill all hesitation. Execute with total resolve.' },
+      bookQuote: { text: '"You do not rise to the level of your goals. You fall to the level of your systems."', author: '— JAMES CLEAR (ATOMIC HABITS)', takeaway: 'The workout schedule is non-negotiable. Execute the system, results take care of themselves.' }
+    },
+    {
+      dayQuote: { text: '"I hated every minute of training, but I said, don\'t quit. Suffer now and live as a champion."', author: '— MUHAMMAD ALI' },
+      islamQuote: { arabic: 'إِنَّ مَعَ الْعُسْرِ يُسْرًا', text: '"Indeed, with hardship comes ease."', author: '— SURAH AL-INSHIRAH (94:6)', takeaway: 'Hardship does not precede ease; it contains it. The adaptation occurs right inside the fire.' },
+      bookQuote: { text: '"When you think that you are done, you\'re only 40% into what your body\'s capable of doing."', author: '— DAVID GOGGINS (CAN\'T HURT ME)', takeaway: 'Break through the governor in your brain on your final sprint.' }
+    }
+  ],
+
+  2: [ // TUE ROTATING PACKS
+    {
+      dayQuote: { text: '"The separation is in the preparation. Every rep in the dark echoes under the lights."', author: '— RUSSELL WILSON' },
+      islamQuote: { arabic: 'لَا يُكَلِّفُ اللَّهُ نَفْسًا إِلَّا وُسْعَهَا', text: '"Allah does not burden a soul beyond that it can bear."', author: '— SURAH AL-BAQARAH (2:286)', takeaway: 'You were engineered to endure this load. Do not ask for an easier path; develop broader shoulders.' },
+      bookQuote: { text: '"You fall to the level of your systems. Fall in love with the daily process."', author: '— JAMES CLEAR (ATOMIC HABITS)', takeaway: 'Championships are not won under arena lights; they are forged in the quiet execution of habits.' }
+    },
+    {
+      dayQuote: { text: '"Success is no accident. It is hard work, perseverance, learning, studying, and sacrifice."', author: '— PELÉ' },
+      islamQuote: { arabic: 'إِنَّ اللَّهَ يُحِبُّ إِذَا عَمِلَ أَحَدُكُمْ عَمَلًا أَنْ يُتْقِنَهُ', text: '"Allah loves that when one of you does a work, he does it with perfection (Itqan)."', author: '— PROPHET MUHAMMAD ﷺ (BAYHAQI)', takeaway: 'Itqan means precision. Perfect technique in every decelerating drop step and pull-up jumper.' },
+      bookQuote: { text: '"The mind is the athlete; the body is simply the means it uses."', author: '— PHIL JACKSON (ELEVEN RINGS)', takeaway: 'Stay calm under physical pressure. Breathe, read the defense, make the ruthless play.' }
+    },
+    {
+      dayQuote: { text: '"I\'m not going to let anyone work harder than me today."', author: '— DAMIAN LILLARD' },
+      islamQuote: { arabic: 'وَاسْتَعِينُوا بِالصَّبْرِ وَالصَّلَاةِ', text: '"And seek help through patience and prayer."', author: '— SURAH AL-BAQARAH (2:45)', takeaway: 'True patience is active resilience under heavy fire. Steady your heart before each drill.' },
+      bookQuote: { text: '"Discipline equals freedom. The more disciplined your habits, the more agile your game."', author: '— JOCKO WILLINK', takeaway: 'Eat clean, sleep 8.5 hours, hydrate. The discipline unlocks explosive physical freedom.' }
+    },
+    {
+      dayQuote: { text: '"Focus on the step in front of you, not the whole staircase."', author: '— WILL SMITH' },
+      islamQuote: { arabic: 'وَقُل رَّبِّ زِدْنِي عِلْمًا', text: '"And say: My Lord, increase me in knowledge."', author: '— SURAH TA-HA (20:114)', takeaway: 'Be a student of the game. Study your biomechanics, your pick-and-roll reads, and recovery data.' },
+      bookQuote: { text: '"The obstacle in the path becomes the path. Never forget, within every obstacle is an advantage."', author: '— RYAN HOLIDAY', takeaway: 'Ankle stiffness and tendon rehabilitation are your secret weapons for higher explosive pop.' }
+    }
+  ],
+
+  3: [ // WED ROTATING PACKS
+    {
+      dayQuote: { text: '"Pain is temporary. Quitting lasts forever."', author: '— LANCE ARMSTRONG' },
+      islamQuote: { arabic: 'وَأَن لَّيْسَ لِلْإِنسَانِ إِلَّا مَا سَعَىٰ', text: '"And that there is not for man except that for which he strives."', author: '— SURAH AN-NAJM (53:39)', takeaway: 'Outcomes are written; effort is your only testament. Sweat is the currency of growth.' },
+      bookQuote: { text: '"When your mind says you are done, you are only at 40% of your actual capacity."', author: '— DAVID GOGGINS (CAN\'T HURT ME)', takeaway: 'Callous your mind against the inner governor of fatigue. Push past the initial alarm.' }
+    },
+    {
+      dayQuote: { text: '"There are no shortcuts to any place worth going."', author: '— BEVERLY SILLS' },
+      islamQuote: { arabic: 'إِنَّ اللَّهَ مَعَ الصَّابِرِينَ', text: '"Indeed, Allah is with the patient."', author: '— SURAH AL-BAQARAH (2:153)', takeaway: 'Long-term tendon remodeling requires consistent daily tension without skipping sessions.' },
+      bookQuote: { text: '"Don\'t lower your standards to fit in. Raise your standards until everyone else has to catch up."', author: '— TIM GROVER', takeaway: 'Bring high energy into the weight room. Inspire everyone around you through your work rate.' }
+    },
+    {
+      dayQuote: { text: '"Hard work spotlights the character of people."', author: '— JOHN WOODEN' },
+      islamQuote: { arabic: 'مَا أَصَابَكَ مِن حَسَنَةٍ فَمِنَ اللَّهِ', text: '"Whatever good comes to you is from Allah."', author: '— SURAH AN-NISA (4:79)', takeaway: 'Stay humble in your victories, ruthless in your preparation. Gratitude fuels endurance.' },
+      bookQuote: { text: '"He who has a why to live can bear almost any how."', author: '— FRIEDRICH NIETZSCHE', takeaway: 'Your purpose is bigger than momentary burning in your calves and thighs.' }
+    },
+    {
+      dayQuote: { text: '"It is during our darkest moments that we must focus to see the light."', author: '— ARISTOTLE' },
+      islamQuote: { arabic: 'فَصَبْرٌ جَمِيلٌ', text: '"So patience is most fitting."', author: '— SURAH YUSUF (12:18)', takeaway: 'Composure when tired separates franchise athletes from role players.' },
+      bookQuote: { text: '"Winning requires you to be different. You can\'t belong to the crowd and lead the team."', author: '— TIM GROVER', takeaway: 'Embrace the solitude of the off-season. The reward will be witnessed by millions.' }
+    }
+  ],
+
+  4: [ // THU ROTATING PACKS
+    {
+      dayQuote: { text: '"Pressure is a privilege. It only comes to those who earn it."', author: '— BILLIE JEAN KING' },
+      islamQuote: { arabic: 'وَأَعِدُّوا لَهُم مَّا اسْتَطَعْتُم مِّن قُوَّةٍ', text: '"And prepare against them whatever you are able of power."', author: '— SURAH AL-ANFAL (8:60)', takeaway: 'Cultivating explosive speed and tendon resilience is an explicit mandate. Honor your preparation.' },
+      bookQuote: { text: '"The impediment to action advances action. What stands in the way becomes the way."', author: '— MARCUS AURELIUS (MEDITATIONS)', takeaway: 'Obstacles and heavy defenders are not interruptions to your game; they are the material of your greatness.' }
+    },
+    {
+      dayQuote: { text: '"The harder the battle, the sweeter the victory."', author: '— LES BROWN' },
+      islamQuote: { arabic: 'قُلْ لَنْ يُصِيبَنَا إِلَّا مَا كَتَبَ اللَّهُ لَنَا', text: '"Say: Nothing will happen to us except what Allah has decreed for us."', author: '— SURAH AT-TAWBAH (9:51)', takeaway: 'Fear of injury or bad games dissolves when you realize your destiny is secure. Play fearless.' },
+      bookQuote: { text: '"Championship teams require ego surrender and total communication."', author: '— PHIL JACKSON', takeaway: 'Lead your teammates by holding yourself to a zero-mistake communication standard.' }
+    },
+    {
+      dayQuote: { text: '"Do not pray for an easy life, pray for the strength to endure a difficult one."', author: '— BRUCE LEE' },
+      islamQuote: { arabic: 'رَبَّنَا أَفْرِغْ عَلَيْنَا صَبْرًا وَثَبِّتْ أَقْدَامَنَا', text: '"Our Lord, pour upon us patience and plant firmly our feet."', author: '— SURAH AL-BAQARAH (2:250)', takeaway: 'Firm feet on defense and dynamic balance on court come from physical and spiritual grounding.' },
+      bookQuote: { text: '"Small disciplines repeated with consistency every day lead to great achievements."', author: '— JOHN C. MAXWELL', takeaway: 'Achilles isometric holds and deep sleep window compliance: do not skip small tasks.' }
+    },
+    {
+      dayQuote: { text: '"What you do in the dark puts you in the light."', author: '— KOBE BRYANT' },
+      islamQuote: { arabic: 'وَهُوَ مَعَكُمْ أَيْنَ مَا كُنتُمْ', text: '"And He is with you wherever you are."', author: '— SURAH AL-HADID (57:4)', takeaway: 'You are never training alone. Spiritual alignment gives inexhaustible energy.' },
+      bookQuote: { text: '"The ego is the enemy of mastery. Always remain a beginner hungry for coaching."', author: '— RYAN HOLIDAY', takeaway: 'Welcome video breakdowns and load telemetry. Be hyper-coachable.' }
+    }
+  ],
+
+  5: [ // FRI ROTATING PACKS
+    {
+      dayQuote: { text: '"I\'ve failed over and over and over again in my life. And that is why I succeed."', author: '— MICHAEL JORDAN' },
+      islamQuote: { arabic: 'فَإِذَا فَرَغْتَ فَانصَبْ وَإِلَىٰ رَبِّكَ فَارْغَب', text: '"So when you have finished your duties, labor hard (in worship and discipline)."', author: '— SURAH AL-INSHIRAH (94:7-8)', takeaway: 'Endings are merely prompts for the next standard. Complete the workout, then center your spirit.' },
+      bookQuote: { text: '"In the zone, there is no fear, no doubt, no hesitation. There is only execution."', author: '— TIM GROVER (RELENTLESS)', takeaway: 'Quiet the mental noise during your Friday speed and basketball skill work. Trust your nervous system.' }
+    },
+    {
+      dayQuote: { text: '"Today is Friday: finish the week with the exact same fire you started with on Monday."', author: '— BVMBINO' },
+      islamQuote: { arabic: 'خَيْرُ يَوْمٍ طَلَعَتْ عَلَيْهِ الشَّمْسُ يَوْمُ الْجُمُعَةِ', text: '"The best day upon which the sun rises is Friday."', author: '— PROPHET MUHAMMAD ﷺ', takeaway: 'Friday holds divine blessings. Align your hard training with high spiritual gratitude.' },
+      bookQuote: { text: '"Greatness is about holding the standard when everyone else is looking for the weekend."', author: '— KOBE BRYANT', takeaway: 'While others relax on Friday afternoon, complete your hydro flush and eccentric ankle prehab.' }
+    },
+    {
+      dayQuote: { text: '"The price of success is hard work and determination."', author: '— VINCE LOMBARDI' },
+      islamQuote: { arabic: 'إِنَّ اللَّهَ لَا يُضِيعُ أَجْرَ الْمُحْسِنِينَ', text: '"Indeed, Allah does not lose the reward of the doers of good."', author: '— SURAH AT-TAWBAH (9:120)', takeaway: 'Not a single dropped bead of sweat or logged kilogram is lost. Everything builds the foundation.' },
+      bookQuote: { text: '"Be relentless. When you want something, don\'t stop until you get it, and then don\'t stop until you have more."', author: '— TIM GROVER', takeaway: 'Finish your Friday court runs with maximum intent.' }
+    },
+    {
+      dayQuote: { text: '"Confidence comes from hours, days, weeks, and years of constant preparation."', author: '— ROBERT GRIFFIN III' },
+      islamQuote: { arabic: 'وَأَحْسِنُوا إِنَّ اللَّهَ يُحِبُّ الْمُحْسِنِينَ', text: '"And do good; indeed, Allah loves the doers of excellence."', author: '— SURAH AL-BAQARAH (2:195)', takeaway: 'Ihsan is striving for perfection. Make every jumper in the workout look identical.' },
+      bookQuote: { text: '"Mastery is not about perfection. It\'s about a relentless pursuit of the next level."', author: '— GEORGE LEONARD', takeaway: 'End the week proud of your discipline.' }
+    }
+  ],
+
+  6: [ // SAT ROTATING PACKS
+    {
+      dayQuote: { text: '"Winning is not a sometime thing; it\'s an all the time thing."', author: '— VINCE LOMBARDI' },
+      islamQuote: { arabic: 'وَاعْبُدْ رَبَّكَ حَتَّىٰ يَأْتِيَكَ الْيَقِينُ', text: '"And serve your Lord until there comes unto you the certainty."', author: '— SURAH AL-HIJR (15:99)', takeaway: 'Consistency has no off-season. Recovery protocols and active restoration demand the same focus as lifting.' },
+      bookQuote: { text: '"Good teams become great when the members trust each other enough to surrender the \'me\' for the \'we\'."', author: '— PHIL JACKSON (SACRED HOOPS)', takeaway: 'Saturday recovery restores the nervous system so you can lead your unit with poise and clarity.' }
+    },
+    {
+      dayQuote: { text: '"Recovery is not laziness. It is the intelligent rebuilding of your competitive weapon."', author: '— BVMBINO' },
+      islamQuote: { arabic: 'إِنَّ لِبَدَنِكَ عَلَيْكَ حَقًّا', text: '"Indeed, your body has a right over you."', author: '— PROPHET MUHAMMAD ﷺ (SAHIH AL-BUKHARI)', takeaway: 'Hydration, foam rolling, and mobility are obligations to preserve your athletic talent.' },
+      bookQuote: { text: '"Sleep is the single most effective thing we can do to reset our brain and body health each day."', author: '— MATTHEW WALKER (WHY WE SLEEP)', takeaway: 'Protect your Saturday 9-hour sleep window for deep hormonal growth and tendon tissue repair.' }
+    },
+    {
+      dayQuote: { text: '"The warrior who rests wisely fights with double the ferocity on the morrow."', author: '— SUN TZU' },
+      islamQuote: { arabic: 'الَّذِينَ آمَنُوا وَتَطْمَئِنُّ قُلُوبُهُم بِذِكْرِ اللَّهِ', text: '"Those who have believed and whose hearts are assured by the remembrance of Allah."', author: '— SURAH AR-RA\'D (13:28)', takeaway: 'Inner calm eliminates muscular tension and accelerates neuromuscular recovery.' },
+      bookQuote: { text: '"Stillness is where champions find clarity amidst chaos."', author: '— RYAN HOLIDAY (STILLNESS IS THE KEY)', takeaway: 'Take 20 minutes of silent meditation or reflection today.' }
+    },
+    {
+      dayQuote: { text: '"It\'s what you do on Saturday that separates the good from the transcendent."', author: '— ELITE ATHLETE' },
+      islamQuote: { arabic: 'وَتَعَاوَنُوا عَلَى الْبِرِّ وَالتَّقْوَىٰ', text: '"And cooperate in righteousness and piety."', author: '— SURAH AL-MA\'IDAH (5:2)', takeaway: 'Support your family, connect with your circle, and recharge your emotional drive.' },
+      bookQuote: { text: '"Energy management, not time management, is the key to high performance."', author: '— JIM LOEHR (THE POWER OF FULL ENGAGEMENT)', takeaway: 'Oscillate between high intensity in the gym and deep tranquility during weekend restoration.' }
+    }
+  ],
+
+  0: [ // SUN ROTATING PACKS
+    {
+      dayQuote: { text: '"Heroes come and go, but legends are forever."', author: '— KOBE BRYANT' },
+      islamQuote: { arabic: 'كُلُّ نَفْسٍ ذَائِقَةُ الْمَوْتِ ۖ وَإِنَّمَا تُوَفَّوْنَ أُجُورَكُمْ يَوْمَ الْقِيَامَةِ', text: '"Every soul will taste death, and you will only be given your full compensation on the Day of Resurrection."', author: '— SURAH ALI \'IMRAN (3:185)', takeaway: 'Time is finite. The career of an elite athlete is fleeting. Treat every week as a sacred campaign.' },
+      bookQuote: { text: '"Don\'t count on motivation. Count on discipline. Be the person who shows up regardless."', author: '— JOCKO WILLINK (DISCIPLINE EQUALS FREEDOM)', takeaway: 'Sunday night is preparation time. Review your weekly report, set your Monday intention, and sleep ready.' }
+    },
+    {
+      dayQuote: { text: '"Sunday is the bridge between this week\'s lessons and next week\'s dominance."', author: '— BVMBINO' },
+      islamQuote: { arabic: 'حَاسِبُوا أَنْفُسَكُمْ قَبْلَ أَنْ تُحَاسَبُوا', text: '"Take account of yourselves before you are called to account."', author: '— UMAR IBN AL-KHATTAB (RA)', takeaway: 'Perform an honest audit of your week. Did you hit every set? Did you log your body weight? Calibrate for Monday.' },
+      bookQuote: { text: '"The best preparation for tomorrow is doing your best today."', author: '— H. JACKSON BROWN JR.', takeaway: 'Clean your gear, pack your meals, review your Week targets before Sunday 11:30 PM rollover.' }
+    },
+    {
+      dayQuote: { text: '"Champions do in the dark what they are praised for in the light."', author: '— ANONYMOUS' },
+      islamQuote: { arabic: 'فَبِمَا رَحْمَةٍ مِّنَ اللَّهِ لِنتَ لَهُمْ', text: '"So by mercy from Allah, you were lenient with them."', author: '— SURAH ALI \'IMRAN (3:159)', takeaway: 'True athletic leaders elevate teammates with calm, confident composure.' },
+      bookQuote: { text: '"Success is peace of mind, which is a direct result of self-satisfaction in knowing you made the effort to become the best of which you are capable."', author: '— JOHN WOODEN', takeaway: 'Go to sleep Sunday night with zero regrets.' }
+    },
+    {
+      dayQuote: { text: '"Reset the clock. Reset the mind. Tomorrow we hunt again."', author: '— PHASE 3' },
+      islamQuote: { arabic: 'وَأَنَّ سَعْيَهُ سَوْفَ يُرَىٰ', text: '"And that his effort is going to be seen."', author: '— SURAH AN-NAJM (53:40)', takeaway: 'Your physical sacrifices will manifest in explosive on-court performance.' },
+      bookQuote: { text: '"Focus on the process, not the outcome. The score will take care of itself."', author: '— BILL WALSH', takeaway: 'Lock in for Week ' + (10 + (APP.currentPhaseWeek || 0)) + '.' }
+    }
+  ]
 };
 
+// ══════════════════════════════════════════════
+// WEEKLY MASTERCLASSES ROTATION (ISLAM & BOOK)
+// ══════════════════════════════════════════════
+const WEEKLY_ISLAMIC_MASTERCLASSES = [
+  {
+    hero: "KHALID IBN AL-WALID · THE SWORD OF ALLAH (SAIFULLAH)",
+    arabic: "فَلَا نَامَتْ أَعْيُنُ الْجُبَنَاءِ",
+    quote: '"May the eyes of cowards never sleep."',
+    author: "— KHALID IBN AL-WALID (BATTLE OF MU'TAH)",
+    takeaway: "Outnumbered 3,000 to over 100,000, Khalid broke 9 swords in combat, then engineered a calm dawn flank maneuver to extract his army without defeat. True power is cold tactical calm inside overwhelming adversity."
+  },
+  {
+    hero: "TARIQ IBN ZIYAD · BURNING THE SHIPS AT GIBRALTAR",
+    arabic: "أَيُّهَا النَّاسُ، أَيْنَ الْمَفَرُّ؟ الْبَحْرُ مِنْ وَرَائِكُمْ، وَالْعَدُوُّ أَمَامَكُمْ",
+    quote: '"O people! Where will you flee? The sea is behind you, and the enemy is before you."',
+    author: "— TARIQ IBN ZIYAD (CONQUEST OF ANDALUSIA, 711 CE)",
+    takeaway: "Eliminating retreat creates total focus. When you burn the fallback options, your mind unlocks dormant physiological reserves. Commit 100% to your athletic goals."
+  },
+  {
+    hero: "SALAHUDDIN AL-AYYUBI · THE HONOR OF UNBREAKABLE WILL",
+    arabic: "إِنَّ الْمُلُوكَ إِذَا دَخَلُوا قَرْيَةً أَفْسَدُوهَا، وَأَنَا لَا أَنْتَقِمُ لِنَفْسِي",
+    quote: '"I do not fight out of hatred for what is before me, but love for what is behind me."',
+    author: "— SALAHUDDIN AL-AYYUBI (LIBERATION OF JERUSALEM, 1187 CE)",
+    takeaway: "Physical dominance combined with supreme emotional regulation and chivalry. True warriors control their adrenaline and act with calculated nobility."
+  },
+  {
+    hero: "UMAR IBN AL-KHATTAB · THE DISCIPLINE OF IRON",
+    arabic: "تَعَلَّمُوا الرِّمَايَةَ وَالسِّبَاحَةَ وَرُكُوبَ الْخَيْلِ",
+    quote: '"Teach your children archery, swimming, and horsemanship."',
+    author: "— UMAR IBN AL-KHATTAB (SECOND CALIPH)",
+    takeaway: "Explosive movement, marksmanship under fatigue, and athletic conditioning are foundational mandates of faith. Athleticism is your armor."
+  },
+  {
+    hero: "ALI IBN ABI TALIB · THE GATE OF COURAGE & MASTERY",
+    arabic: "لَا تَقْتَحِمُوا فِي أَمْرٍ حَتَّىٰ تَعْلَمُوا وَجْهَهُ، وَلَا تَهَابُوا الصِّعَابَ",
+    quote: '"Courage is the armor of the heart; wisdom is the compass of the strike."',
+    author: "— ALI IBN ABI TALIB (BATTLE OF KHAYBAR)",
+    takeaway: "Ali wielded Dhul-Fiqar with explosive speed and unmatched agility, lifting the fortified gate single-handedly. True strength combines mind, faith, and tendon power."
+  }
+];
 
+const WEEKLY_BOOK_MASTERCLASSES = [
+  {
+    hero: "KOBE BRYANT · THE MAMBA MENTALITY: HOW I PLAY",
+    badge: "MAMBA PRINCIPLE // 4:00 AM WORK ETHIC",
+    quote: '"I wasn\'t going to let anyone work harder than me. If you train twice a day and I train four times a day, there is no way you catch me over 5 years."',
+    author: "— KOBE BRYANT",
+    takeaway: "The Mamba Mentality is about the process, not the destination. It's about loving the tedious, repetitive unglamorous reps that build instinctive basketball mastery."
+  },
+  {
+    hero: "TIM GROVER · RELENTLESS: FROM GOOD TO GREAT TO UNSTOPPABLE",
+    badge: "CLEANER STANDARD // EMOTIONAL CONTROL",
+    quote: '"In the zone, there is no fear, no doubt, no hesitation. There is only execution. You don\'t compete with anyone; you make them compete with you."',
+    author: "— TIM GROVER (TRAINER TO KOBE & JORDAN)",
+    takeaway: "Coolers show up. Closers execute when called upon. Cleaners engineer the outcome regardless of the circumstances. Hold the Cleaner standard in every set."
+  },
+  {
+    hero: "JAMES CLEAR · ATOMIC HABITS: SYSTEM OVER GOALS",
+    badge: "IDENTITY-BASED HABITS // 1% COMPOUNDING",
+    quote: '"Every action you take is a vote for the type of person you wish to become. No single instance will transform your beliefs, but as the votes build up, so does the evidence of your new identity."',
+    author: "— JAMES CLEAR",
+    takeaway: "You don\'t become an elite pro by hoping for it. You become an elite pro by logging your weight, hitting your sleep target, and doing your ankle eccentric stretches daily."
+  },
+  {
+    hero: "DAVID GOGGINS · CAN'T HURT ME: MASTER YOUR MIND",
+    badge: "THE 40% RULE // THE COOKIE JAR",
+    quote: '"When your mind is telling you you\'re done, that you\'re exhausted, that you can\'t take another step, you are only at 40% of what your body is truly capable of."',
+    author: "— DAVID GOGGINS (NAVY SEAL & ULTRA-ATHLETE)",
+    takeaway: "Reach into your Cookie Jar of past triumphs whenever you feel the burn in your 3rd round of CAT back squats. You have survived everything life has thrown at you."
+  },
+  {
+    hero: "MARCUS AURELIUS · MEDITATIONS: THE INNER CITADEL",
+    badge: "STOIC FORTITUDE // THE OBSTACLE IS THE WAY",
+    quote: '"When you wake up in the morning, tell yourself: The people I deal with today will be meddling, ungrateful, arrogant, dishonest, jealous, and surly. But I cannot be injured by any of them."',
+    author: "— MARCUS AURELIUS (ROMAN EMPEROR & PHILOSOPHER)",
+    takeaway: "Protect your inner energy. Don\'t waste emotional power arguing with referees, opposing defenders, or fatigue. Direct 100% of your energy toward dominant execution."
+  }
+];
+
+function getMentalWeekIndex() {
+  const now = new Date();
+  const start = new Date(now.getFullYear(), 0, 1);
+  const weekNumOfYear = Math.ceil((((now - start) / 86400000) + start.getDay() + 1) / 7);
+  return (weekNumOfYear + (APP.currentPhaseWeek || 0));
+}
 function switchMentalTab(cat, tab) {
   if (cat === 'islam') {
     const vDay = document.getElementById('islam-view-day');
