@@ -2362,7 +2362,12 @@ body>*{position:relative;z-index:1}
       </div>
 
       <div class="ex-list" id="m-exercises"></div>
-      <button class="complete-btn" id="modal-complete-btn" onclick="completeSessionFromModal()">MARK SESSION COMPLETE ✓</button>
+      <div style="display:flex;gap:8px;margin-top:10px">
+        <button class="complete-btn" id="modal-complete-btn" onclick="completeSessionFromModal()" style="flex:2">MARK SESSION COMPLETE ✓</button>
+        <button type="button" class="reset-workout-btn" onclick="resetCurrentWorkoutModal()" style="flex:1;background:rgba(255,255,255,0.06);border:1px solid var(--border);border-radius:var(--r-sm);color:var(--text-dim);font-family:'Bebas Neue',sans-serif;font-size:15px;letter-spacing:1px;cursor:pointer;padding:12px 8px;display:flex;align-items:center;justify-content:center;gap:4px">
+          <span>↺</span> RESET FRESH
+        </button>
+      </div>
       <div class="notes-section">
         <div class="notes-label">// SESSION NOTES — HOW DID IT FEEL?</div>
         <textarea class="notes-area" id="session-notes-area" placeholder="Log your effort, energy, any pain, PRs hit, what felt strong or weak..."></textarea>
@@ -2894,8 +2899,13 @@ function loadData(){
   const curWeek = getWeekKey(); // Respects Sunday 11:30 PM cutoff
   let savedWeekKey = d.weekKey || '2026-W43';
 
-  // 1. CHECK IF WEEKLY ROLLOVER TO WEEK 10 HAS OCCURRED (Sunday 11:30 PM or later):
-  if (savedWeekKey !== curWeek || (restoredCurrentPhaseWeek === 0 && curWeek === '2026-W44')) {
+  // 1. CHECK IF WEEKLY ROLLOVER (Sunday 11:30 PM) HAS OCCURRED OR FRESH SANITIZE IS NEEDED:
+  const isRolloverDue = (savedWeekKey !== curWeek) || 
+                        (d.lastResetWeekKey !== curWeek) ||
+                        (curWeek === '2026-W44' && !d.w44FreshResetDone) ||
+                        (restoredCurrentPhaseWeek === 0 && curWeek === '2026-W44');
+
+  if (isRolloverDue) {
     // Week 9 has completed! Archive Week 9 into weekHistory preserving all 14 sessions, 100%, and tonnage
     const existingW9 = restoredWeekHistory.find(h => h.week && (h.week.includes('W43') || h.week.includes('Week 9')));
     if (!existingW9) {
@@ -2941,8 +2951,19 @@ function loadData(){
     savedWeekKey = curWeek;
   }
 
+  // If rollover occurred, or if 0 sessions are currently marked done this week,
+  // ALL exercises and set inputs MUST be 100% fresh, blank, and unchecked!
+  const hasNoSessionsDone = Object.keys(restoredSessions).length === 0;
+  const isFreshWeek = isRolloverDue || hasNoSessionsDone;
+
+  const initialModalEx = isFreshWeek ? {} : (d.modalEx || {});
+  const initialCurrentSessionSets = isFreshWeek ? {} : (d.currentSessionSets || {});
+  const initialExDone = isFreshWeek ? 0 : (d.exDone || 0);
+
   return{
     weekKey:savedWeekKey,
+    lastResetWeekKey:curWeek,
+    w44FreshResetDone:true,
     streak:d.streak||0,
     lastActiveDate:d.lastActiveDate||null,
     totalSessions:d.totalSessions||0,
@@ -2957,17 +2978,17 @@ function loadData(){
     weekHistory:restoredWeekHistory,
     phaseWeeks:restoredPhaseWeeks,
     currentPhaseWeek:restoredCurrentPhaseWeek,
-    modalEx:(savedWeekKey===curWeek&&d.weekKey===curWeek)?(d.modalEx||{}):{},
+    modalEx:initialModalEx,
     customWorkouts:restoredCustomWorkouts,
-    exDone:(savedWeekKey===curWeek&&d.weekKey===curWeek)?(d.exDone||0):0,
-    sessionNotes:(savedWeekKey===curWeek&&d.weekKey===curWeek)?(d.sessionNotes||{}):{},
-    warmupSteps:(savedWeekKey===curWeek&&d.weekKey===curWeek)?(d.warmupSteps||{}):{},
+    exDone:initialExDone,
+    sessionNotes:isFreshWeek?{}:(d.sessionNotes||{}),
+    warmupSteps:isFreshWeek?{}:(d.warmupSteps||{}),
     bizEvents:d.bizEvents||[],
     bizProjects:d.bizProjects||[],
     bizContacts:d.bizContacts||[],
-    shownComplete:(savedWeekKey===curWeek&&d.weekKey===curWeek)?(d.shownComplete||{}):{},
+    shownComplete:isFreshWeek?{}:(d.shownComplete||{}),
     exerciseLogs:d.exerciseLogs||{},
-    currentSessionSets:(savedWeekKey===curWeek&&d.weekKey===curWeek)?(d.currentSessionSets||{}):{},
+    currentSessionSets:initialCurrentSessionSets,
     achillesTrend:(d.achillesTrend&&d.achillesTrend.length)?d.achillesTrend:getInitialAchillesData(),
     dailyWellness:d.dailyWellness||getInitialWellnessData(),
     swappedExercises:d.swappedExercises||{}
@@ -2984,7 +3005,7 @@ let APP=loadData();
 function checkWeekReset() {
   const cur = getWeekKey(); // Evaluates Sunday 11:30 PM transition
 
-  if (APP.weekKey !== cur) {
+  if (APP.weekKey !== cur || APP.lastResetWeekKey !== cur) {
     const pct = getOverallPct();
     if (!APP.weekHistory) APP.weekHistory = [];
     let archTonnage = 0;
@@ -3028,6 +3049,10 @@ function checkWeekReset() {
     APP.weeksCompleted = Math.max(APP.weeksCompleted || 0, APP.currentPhaseWeek);
 
     APP.weekKey = cur;
+    APP.lastResetWeekKey = cur;
+    APP.w44FreshResetDone = true;
+
+    // EVERY SINGLE EXERCISE & SESSION UNCHECKED & RESET ON SUNDAY NIGHT:
     APP.sessions = {};
     APP.customWorkouts = {};
     APP.sessionNotes = {};
@@ -3041,12 +3066,10 @@ function checkWeekReset() {
     updatePhaseUI();
     updateHistory();
     updateProgress();
+    restoreState();
   }
 }
 
-// ══════════════════════════════════════════════
-// STREAK
-// ══════════════════════════════════════════════
 function isTrainingDay(dateStr){
   // Mon=1..Sat=6 are training days; Sun=0 is rest
   const d=new Date(dateStr);return d.getDay()!==0;
@@ -3076,8 +3099,7 @@ function refreshStreakUI(){
 // RESTORE STATE
 // ══════════════════════════════════════════════
 function restoreState(){
-  Object.keys(APP.sessions).forEach(id=>{const el=document.getElementById(id);if(el)el.classList.add('done');});
-  for(let d=0;d<5;d++)recalcDayProgress(d);
+  for(let d=0;d<5;d++){const dTot=DAY_TOTALS[d]||3;for(let j=0;j<dTot;j++){const sId=`s-${d}-${j}`;const el=document.getElementById(sId);if(el){if(APP.sessions[sId])el.classList.add('done');else el.classList.remove('done');}}recalcDayProgress(d);}
   Object.keys(APP.mentalSteps).forEach(id=>{const el=document.getElementById(id);if(el)el.classList.add('done');});
   checkDailyResets();
   Object.keys(APP.warmupSteps||{}).forEach(id=>{const el=document.getElementById(id);if(el)el.classList.add('done');});
@@ -3946,6 +3968,44 @@ function openModal(key,sessionId,dayIdx){
   if(btn){btn.className=isDone?'complete-btn is-done':'complete-btn';btn.textContent=isDone?'✓ SESSION COMPLETED':'MARK SESSION COMPLETE ✓';}
   document.getElementById('modal-overlay').classList.add('open');
   document.body.style.overflow='hidden';
+}
+
+function resetCurrentWorkoutModal(){
+  if(!currentModalKey) return;
+  const key = currentModalKey;
+  const sId = currentModalSession;
+  const dayIdx = currentModalDay;
+
+  // Clear modal exercise checkmarks
+  if(APP.modalEx && APP.modalEx[key]){
+    delete APP.modalEx[key];
+  }
+
+  // Clear currentSessionSets for all exercises in this workout
+  const w = WORKOUTS[key];
+  if(w && w.exercises){
+    w.exercises.forEach((_, i) => {
+      const setKey = `${key}-${i}`;
+      if(APP.currentSessionSets && APP.currentSessionSets[setKey]){
+        delete APP.currentSessionSets[setKey];
+      }
+    });
+  }
+
+  // If session is marked done, uncheck it
+  if(sId && APP.sessions && APP.sessions[sId]){
+    delete APP.sessions[sId];
+    APP.totalSessions = Math.max(0, (APP.totalSessions || 1) - 1);
+    const item = document.getElementById(sId);
+    if(item) item.classList.remove('done');
+    if(dayIdx >= 0) recalcDayProgress(dayIdx);
+    updateAllStats();
+  }
+
+  saveData();
+  SoundFX.vibrate(60);
+  openModal(key, sId, dayIdx);
+  showToast('SESSION & EXERCISES RESET TO FRESH ✓', 'toast-fire');
 }
 
 function completeSessionFromModal(){
@@ -6220,9 +6280,9 @@ function getSessionSets(workoutKey,exIdx,ex,wkSetsStr){
       sets.push({
         setNum:s,
         prev:prevSet?`${prevSet.weight}×${prevSet.reps}`:'',
-        weight:prevSet?prevSet.weight:'',
-        reps:prevSet?prevSet.reps:defaultReps,
-        rpe:prevSet?prevSet.rpe:'8',
+        weight:'',
+        reps:'',
+        rpe:'8',
         done:false
       });
     }
