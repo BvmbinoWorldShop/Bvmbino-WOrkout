@@ -1309,6 +1309,47 @@ body>*{position:relative;z-index:1}
   border-color: rgba(212, 168, 67, 0.35);
 }
 
+/* ── PRESSING STATE FOR LONG-PRESS FEEDBACK ── */
+.session-item.is-pressing {
+  transform: scale(0.97) !important;
+  border-color: var(--gold) !important;
+  box-shadow: 0 0 16px rgba(212, 168, 67, 0.35) !important;
+  transition: transform 0.1s ease, border-color 0.1s ease !important;
+}
+
+/* ── REST SESSION ITEM BLUE ACCENT ── */
+.session-item.is-rest-session {
+  border-left: 3px solid #3478F6 !important;
+  background: rgba(52, 120, 246, 0.12) !important;
+}
+.session-item.is-rest-session .session-name {
+  color: #3478F6 !important;
+}
+
+/* ── SHEET CATALOGUE BUTTON INSIDE WORKOUT MODAL ── */
+.sheet-catalogue-btn {
+  background: rgba(212, 168, 67, 0.12);
+  border: 1px solid rgba(212, 168, 67, 0.35);
+  color: var(--gold);
+  border-radius: 6px;
+  padding: 5px 12px;
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 1px;
+  cursor: pointer;
+  margin-top: 8px;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  transition: all 0.2s ease;
+  font-weight: 500;
+}
+.sheet-catalogue-btn:active {
+  background: var(--gold);
+  color: #000;
+  transform: scale(0.97);
+}
+
 /* ── SWAPPED WORKOUT BADGE ── */
 .swapped-badge {
   font-family: 'DM Mono', monospace;
@@ -2557,6 +2598,9 @@ body.is-printing-pdf {
       <div class="sheet-type" id="m-type"></div>
       <div class="sheet-title" id="m-title"></div>
       <div class="sheet-meta" id="m-meta"></div>
+      <div>
+        <button class="sheet-catalogue-btn" onclick="const s=currentModalSession; closeModal(); openChangeWorkoutModal(s);" title="Choose Workout from Catalogue / Rest Day">⇄ WORKOUT CATALOGUE</button>
+      </div>
     </div>
     <div class="sheet-body">
       
@@ -4158,7 +4202,7 @@ const WORKOUT_TYPE_OPTIONS = [
     { key: 'weight-c', name: 'WEIGHT ROOM C — EXPLOSIVE HYPERTROPHY', meta: 'Push Press, Weighted Chin-Ups, Armor', color: '#E74C3C', time: '60 MIN' }
   ]},
   { group: 'RECOVERY, POOL & OFF DAY', options: [
-    { key: 'rest-day', name: 'FULL REST DAY — OFF & SLEEP', meta: 'Zero CNS Load, Hydration, Breathwork', color: '#2ECC71', time: 'ALL DAY' },
+    { key: 'rest-day', name: 'FULL REST DAY — OFF & SLEEP', meta: 'Zero CNS Load, Hydration, Breathwork · Turns Day Card Blue', color: '#3478F6', time: 'ALL DAY' },
     { key: 'pool-a', name: 'POOL A — CNS FLUSH & HYDRO DRAIN', meta: 'Contrast Water Therapy, Non-Impact Mobility', color: '#3498DB', time: '45 MIN' },
     { key: 'pool-b', name: 'POOL B — WEEK-END RECOVERY FLUSH', meta: 'Spinal Traction, Hydro Aqua Running', color: '#3498DB', time: '45 MIN' },
     { key: 'recovery-mobility', name: 'ACTIVE MOBILITY & ANKLE DECOMP', meta: '90/90 Hips, Banded Ankle Glide, Couch Stretch', color: '#1ABC9C', time: '35 MIN' },
@@ -4171,8 +4215,13 @@ const WORKOUT_TYPE_OPTIONS = [
 ];
 
 let activeChangeSessionId = null;
+let lpTimer = null;
+let lpTarget = null;
+let lpStartX = 0, lpStartY = 0;
+let lpFiredAt = 0;
 
 function openChangeWorkoutModal(sessionId) {
+  if (!sessionId) sessionId = 's-0-0';
   activeChangeSessionId = sessionId;
   const def = DEFAULT_SESSIONS[sessionId];
   const curKey = (APP.customWorkouts && APP.customWorkouts[sessionId]) || (def ? def.key : null);
@@ -4180,31 +4229,38 @@ function openChangeWorkoutModal(sessionId) {
   const dayNames = ['MONDAY','TUESDAY','WEDNESDAY','THURSDAY','FRIDAY'];
   
   const badgeEl = document.getElementById('cws-badge');
-  if (badgeEl) badgeEl.textContent = '// ' + (dayNames[dayIdx] || 'DAY') + ' · SESSION REASSIGNMENT';
+  if (badgeEl) badgeEl.textContent = '// ' + (dayNames[dayIdx] || 'DAY') + ' · WORKOUT CATALOGUE';
   
   const subEl = document.getElementById('cws-sub');
-  if (subEl) subEl.innerHTML = 'Currently: <strong style="color:#fff">' + (def ? def.name : 'SESSION') + '</strong> — select what you actually trained today:';
+  if (subEl) subEl.innerHTML = 'Currently: <strong style="color:#fff">' + (def ? def.name : 'SESSION') + '</strong> — tap to swap or choose <span style="color:#3478F6;font-weight:600">FULL REST DAY (Turns Blue)</span>:';
   
   let html = '';
   WORKOUT_TYPE_OPTIONS.forEach(g => {
     html += '<div class="cws-category-label">// ' + g.group + '</div>';
     g.options.forEach(opt => {
       const isCur = curKey === opt.key;
-      html += '<div class="cws-opt ' + (isCur ? 'is-active' : '') + '" onclick="selectWorkoutType(\'' + sessionId + '\',\'' + opt.key + '\')">' +
-        '<div class="cws-opt-dot" style="background:' + opt.color + '"></div>' +
+      const isRest = opt.key === 'rest-day';
+      const borderStyle = isRest ? 'border-color:rgba(52,120,246,0.55);background:rgba(52,120,246,0.1);' : '';
+      const activeClass = isCur ? (isRest ? 'is-active is-rest-active' : 'is-active') : '';
+      
+      html += '<div class="cws-opt ' + activeClass + '" style="' + borderStyle + '" onclick="if(Date.now() - lpFiredAt > 350) selectWorkoutType(\'' + sessionId + '\',\'' + opt.key + '\')">' +
+        '<div class="cws-opt-dot" style="background:' + opt.color + (isRest ? ';box-shadow:0 0 10px #3478F6' : '') + '"></div>' +
         '<div class="cws-opt-info">' +
-          '<div class="cws-opt-name">' + opt.name + (isCur ? ' ✓' : '') + '</div>' +
+          '<div class="cws-opt-name" style="' + (isRest ? 'color:#3478F6' : '') + '">' +
+            opt.name + (isCur ? ' ✓' : '') +
+            (isRest ? ' <span style="font-size:9px;background:#3478F6;color:#fff;padding:2px 6px;border-radius:3px;margin-left:6px;font-family:\'DM Mono\',monospace;letter-spacing:1px">TURNS BLUE 💤</span>' : '') +
+          '</div>' +
           '<div class="cws-opt-meta">' + opt.meta + '</div>' +
         '</div>' +
-        '<div class="cws-opt-time">' + opt.time + '</div>' +
+        '<div class="cws-opt-time" style="' + (isRest ? 'color:#3478F6;font-weight:700' : '') + '">' + opt.time + '</div>' +
       '</div>';
     });
   });
   
   if (APP.customWorkouts && APP.customWorkouts[sessionId]) {
-    html += '<div style="margin-top:12px;border-top:1px solid var(--border);padding-top:12px">' +
-      '<div class="cws-opt" style="border-color:rgba(231,76,60,0.4);background:rgba(231,76,60,0.08)" onclick="selectWorkoutType(\'' + sessionId + '\',\'RESET\')">' +
-        '<div style="font-size:16px">🔄</div>' +
+    html += '<div style="margin-top:14px;border-top:1px solid var(--border);padding-top:12px">' +
+      '<div class="cws-opt" style="border-color:rgba(231,76,60,0.45);background:rgba(231,76,60,0.1)" onclick="if(Date.now() - lpFiredAt > 350) selectWorkoutType(\'' + sessionId + '\',\'RESET\')">' +
+        '<div style="font-size:18px">🔄</div>' +
         '<div class="cws-opt-info">' +
           '<div class="cws-opt-name" style="color:#E74C3C">RESET TO SCHEDULED PROGRAM</div>' +
           '<div class="cws-opt-meta">Revert back to original ' + (def ? def.name : 'workout') + '</div>' +
@@ -4230,11 +4286,17 @@ function selectWorkoutType(sessionId, newKey) {
   if (!APP.customWorkouts) APP.customWorkouts = {};
   if (newKey === 'RESET') {
     delete APP.customWorkouts[sessionId];
-    showToast('REVERTED TO SCHEDULED PROGRAM', 'toast-success');
+    showToast('REVERTED TO SCHEDULED PROGRAM 🔄', 'toast-success');
+    if (typeof SoundFX !== 'undefined' && SoundFX.vibrate) SoundFX.vibrate(50);
   } else {
     APP.customWorkouts[sessionId] = newKey;
     const w = WORKOUTS[newKey];
-    showToast('LOGGED AS: ' + (WORKOUT_DISPLAY_NAMES[newKey] || (w ? w.title : 'CUSTOM WORKOUT')) + ' ✓', 'toast-success');
+    if (newKey === 'rest-day') {
+      showToast('FULL REST DAY ACTIVATED 💤 DAY CARD TURNED BLUE', 'toast-fire');
+    } else {
+      showToast('LOGGED AS: ' + (WORKOUT_DISPLAY_NAMES[newKey] || (w ? w.title : 'CUSTOM WORKOUT')) + ' ✓', 'toast-success');
+    }
+    if (typeof SoundFX !== 'undefined' && SoundFX.vibrate) SoundFX.vibrate(80);
   }
   saveData();
   applyCustomWorkouts();
@@ -4255,16 +4317,16 @@ const WORKOUT_DISPLAY_NAMES = {
   'pool-b': 'POOL SESSION B',
   'rest-day': 'FULL REST DAY',
   'abs-stretch': 'ABS & STRETCH',
-  'recovery-mobility': 'MOBILITY & FLUSH',
-  'track-speed': 'TRACK & SPEED',
-  'achilles-rehab': 'ACHILLES REHAB'
+  'recovery-mobility': 'MOBILITY & FLOW',
+  'achilles-rehab': 'ACHILLES REHAB',
+  'track-speed': 'TRACK & SPEED'
 };
 
 const DEFAULT_DAY_FOCUS = [
-  'Max Power + Fascia Elastic + Visualization',
-  'Game Speed Skills + CNS Pool Flush + Focus',
-  'Posterior Chain + Rotational Fascia + Breath',
-  'Pick & Roll / Iso + Explosive Lift',
+  'Max Power & CAT Back Squats + Fascia Elastic Recoil',
+  'Game Speed Shooting & Finishing + Pool Hydro Recovery',
+  'Posterior Chain & Deadlifts + Rotational Fascia Force',
+  'Full-Court Live Scrimmage + Explosive Push Press Armor',
   'Full Live Runs + Multi-Dir + Pool Flush'
 ];
 
@@ -4302,24 +4364,37 @@ function applyCustomWorkouts() {
     const cleanTitle = (WORKOUT_DISPLAY_NAMES[key] || (w ? w.title : def.name));
 
     if (customKey && w) {
-      if (dot) dot.style.background = w.color;
+      if (dot) dot.style.background = (key === 'rest-day' ? '#3478F6' : w.color);
       if (name) {
-        name.innerHTML = cleanTitle + ' <span class="swapped-badge">SWAPPED</span>';
+        if (key === 'rest-day') {
+          name.innerHTML = cleanTitle + ' <span class="swapped-badge" style="background:#3478F6;color:#fff;border-color:#3478F6">REST DAY</span>';
+        } else {
+          name.innerHTML = cleanTitle + ' <span class="swapped-badge">SWAPPED</span>';
+        }
       }
       if (meta) {
         let shortMeta = '';
-        if (key === 'rest-day') shortMeta = 'OFF & SLEEP';
+        if (key === 'rest-day') shortMeta = 'OFF & SLEEP · 0 CNS LOAD';
         else if (w.exercises && w.exercises.length) shortMeta = w.exercises.length + ' EXERCISES';
         else if (w.meta && w.meta[1]) shortMeta = w.meta[1];
         else shortMeta = 'CUSTOM';
-        meta.innerHTML = '<span style="color:var(--text-dim)">PREV: ' + def.name + '</span> · <span style="color:var(--gold)">' + shortMeta + '</span>';
+        meta.innerHTML = '<span style="color:var(--text-dim)">PREV: ' + def.name + '</span> · <span style="color:' + (key === 'rest-day' ? '#3478F6' : 'var(--gold)') + '">' + shortMeta + '</span>';
       }
       if (time && w.meta && w.meta[0]) time.textContent = w.meta[0];
+      
       item.onclick = function(e) {
-        if (window.__longPressFired) { window.__longPressFired = false; return; }
+        if (Date.now() - lpFiredAt < 500 || window.__longPressFired) {
+          window.__longPressFired = false;
+          return;
+        }
         openModal(key, sId, def.day);
       };
       item.classList.add('is-customized');
+      if (key === 'rest-day') {
+        item.classList.add('is-rest-session');
+      } else {
+        item.classList.remove('is-rest-session');
+      }
       dayWorkouts[def.day].push(cleanTitle);
     } else {
       if (dot) dot.style.background = def.color;
@@ -4328,11 +4403,15 @@ function applyCustomWorkouts() {
       if (time) time.textContent = def.time;
       if (def.key && WORKOUTS[def.key]) {
         item.onclick = function(e) {
-          if (window.__longPressFired) { window.__longPressFired = false; return; }
+          if (Date.now() - lpFiredAt < 500 || window.__longPressFired) {
+            window.__longPressFired = false;
+            return;
+          }
           openModal(def.key, sId, def.day);
         };
       }
       item.classList.remove('is-customized');
+      item.classList.remove('is-rest-session');
       dayWorkouts[def.day].push(def.name);
     }
   });
@@ -4369,56 +4448,125 @@ function applyCustomWorkouts() {
 }
 
 function attachLongPressHandlers() {
-  let timer = null;
-  let startX = 0, startY = 0;
-  window.__longPressFired = false;
-
   document.querySelectorAll('.session-item').forEach(el => {
-    if (el.dataset.lpBound) return;
-    el.dataset.lpBound = 'true';
+    if (el.dataset.lpBound === 'v3') return;
+    el.dataset.lpBound = 'v3';
 
+    el.style.webkitTouchCallout = 'none';
+    el.style.webkitUserSelect = 'none';
+    el.style.userSelect = 'none';
+
+    el.addEventListener('contextmenu', (e) => {
+      e.preventDefault();
+      return false;
+    });
+
+    // Touch start
     el.addEventListener('touchstart', (e) => {
-      if (e.target.closest('.check-circle') || e.target.closest('.session-swap-btn')) return;
-      window.__longPressFired = false;
-      startX = e.touches[0].clientX;
-      startY = e.touches[0].clientY;
-      timer = setTimeout(() => {
+      if (e.target.closest('.check-circle')) return;
+      if (e.touches.length > 1) {
+        if (lpTimer) { clearTimeout(lpTimer); lpTimer = null; }
+        el.classList.remove('is-pressing');
+        return;
+      }
+
+      const touch = e.touches[0];
+      lpStartX = touch.clientX;
+      lpStartY = touch.clientY;
+      lpTarget = el;
+      el.classList.add('is-pressing');
+
+      if (lpTimer) clearTimeout(lpTimer);
+      lpTimer = setTimeout(() => {
+        el.classList.remove('is-pressing');
+        lpFiredAt = Date.now();
         window.__longPressFired = true;
-        if (navigator.vibrate) navigator.vibrate(60);
+
+        if (typeof SoundFX !== 'undefined' && SoundFX.vibrate) {
+          SoundFX.vibrate(80);
+        } else if (navigator.vibrate) {
+          navigator.vibrate(70);
+        }
+
         openChangeWorkoutModal(el.id);
-      }, 500);
+      }, 420);
     }, { passive: true });
 
+    // Touch move
     el.addEventListener('touchmove', (e) => {
-      const dx = Math.abs(e.touches[0].clientX - startX);
-      const dy = Math.abs(e.touches[0].clientY - startY);
-      if (dx > 8 || dy > 8) clearTimeout(timer);
+      if (!lpTimer) return;
+      const touch = e.touches[0];
+      const dx = Math.abs(touch.clientX - lpStartX);
+      const dy = Math.abs(touch.clientY - lpStartY);
+      if (dx > 16 || dy > 16) {
+        clearTimeout(lpTimer);
+        lpTimer = null;
+        el.classList.remove('is-pressing');
+      }
     }, { passive: true });
 
-    el.addEventListener('touchend', (e) => {
-      clearTimeout(timer);
-      if (window.__longPressFired) {
-        e.preventDefault();
+    // Touch end & cancel
+    const cancelTouch = (e) => {
+      el.classList.remove('is-pressing');
+      if (lpTimer) {
+        clearTimeout(lpTimer);
+        lpTimer = null;
+      }
+      if (Date.now() - lpFiredAt < 500 || window.__longPressFired) {
+        if (e.cancelable) e.preventDefault();
         e.stopPropagation();
+      }
+    };
+    el.addEventListener('touchend', cancelTouch);
+    el.addEventListener('touchcancel', cancelTouch);
+
+    // Desktop Mouse (Click & Hold)
+    el.addEventListener('mousedown', (e) => {
+      if (e.button !== 0) return;
+      if (e.target.closest('.check-circle')) return;
+
+      lpStartX = e.clientX;
+      lpStartY = e.clientY;
+      lpTarget = el;
+      el.classList.add('is-pressing');
+
+      if (lpTimer) clearTimeout(lpTimer);
+      lpTimer = setTimeout(() => {
+        el.classList.remove('is-pressing');
+        lpFiredAt = Date.now();
+        window.__longPressFired = true;
+        openChangeWorkoutModal(el.id);
+      }, 450);
+    });
+
+    el.addEventListener('mousemove', (e) => {
+      if (!lpTimer) return;
+      const dx = Math.abs(e.clientX - lpStartX);
+      const dy = Math.abs(e.clientY - lpStartY);
+      if (dx > 12 || dy > 12) {
+        clearTimeout(lpTimer);
+        lpTimer = null;
+        el.classList.remove('is-pressing');
       }
     });
 
-    el.addEventListener('mousedown', (e) => {
-      if (e.target.closest('.check-circle') || e.target.closest('.session-swap-btn')) return;
-      window.__longPressFired = false;
-      timer = setTimeout(() => {
-        window.__longPressFired = true;
-        openChangeWorkoutModal(el.id);
-      }, 500);
-    });
-
-    el.addEventListener('mouseup', () => clearTimeout(timer));
-    el.addEventListener('mouseleave', () => clearTimeout(timer));
+    const cancelMouse = () => {
+      el.classList.remove('is-pressing');
+      if (lpTimer) {
+        clearTimeout(lpTimer);
+        lpTimer = null;
+      }
+    };
+    el.addEventListener('mouseup', cancelMouse);
+    el.addEventListener('mouseleave', cancelMouse);
   });
 }
 
-
 function openModal(key,sessionId,dayIdx){
+  if (Date.now() - lpFiredAt < 500 || window.__longPressFired) {
+    window.__longPressFired = false;
+    return;
+  }
   const w=WORKOUTS[key];if(!w)return;
   currentModalSession=sessionId;currentModalKey=key;currentModalDay=dayIdx;
   document.getElementById('m-type').textContent=w.type;document.getElementById('m-type').style.color=w.color;
@@ -8159,7 +8307,7 @@ function initMentalQuotes() {
 </script>
 
 <!-- ── CHANGE WORKOUT TYPE SHEET MODAL ── -->
-<div class="change-workout-overlay" id="change-workout-modal" onclick="if(event.target===this)closeChangeWorkoutModal()">
+<div class="change-workout-overlay" id="change-workout-modal" onclick="if(event.target===this && (typeof lpFiredAt==='undefined' || Date.now() - lpFiredAt > 400)) closeChangeWorkoutModal()">
   <div class="change-workout-sheet">
     <div class="cws-header">
       <div class="cws-top-row">
