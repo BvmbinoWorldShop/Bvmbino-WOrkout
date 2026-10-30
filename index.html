@@ -82,7 +82,8 @@ body>*{position:relative;z-index:1}
 .day-prog-fill{height:100%;border-radius:2px;background:var(--gold);transition:width 0.8s ease}
 .day-prog-text{font-family:'DM Mono',monospace;font-size:9px;color:var(--gold);letter-spacing:1px;white-space:nowrap}
 .day-sessions{padding:14px 18px;display:flex;flex-direction:column;gap:8px}
-.session-item{display:flex;align-items:center;gap:10px;padding:9px 12px;background:var(--panel2);border-radius:var(--r-sm);border:1px solid var(--border2);cursor:pointer;transition:all 0.2s ease;user-select:none;min-height:50px;box-sizing:border-box}
+.session-item{display:flex;align-items:center;gap:10px;padding:9px 12px;background:var(--panel2);border-radius:var(--r-sm);border:1px solid var(--border2);cursor:pointer;transition:all 0.2s ease;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;min-height:50px;box-sizing:border-box;touch-action:manipulation}
+.session-item *{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
 .session-item:active{transform:scale(0.98)}
 .session-item.done{border-color:rgba(48,209,88,0.2);background:rgba(48,209,88,0.04)}
 .session-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
@@ -1780,15 +1781,12 @@ body.is-printing-pdf {
     width: 210mm !important;
     max-width: 210mm !important;
     min-width: 210mm !important;
-    height: 297mm !important;
-    max-height: 297mm !important;
-    min-height: 297mm !important;
+    min-height: 290mm !important;
     box-sizing: border-box !important;
-    overflow: hidden !important;
     display: flex !important;
     flex-direction: column !important;
-    justify-content: space-between !important;
-    padding: 10mm 12mm !important;
+    justify-content: flex-start !important;
+    padding: 8mm 10mm !important;
     background: #060608 !important;
     page-break-inside: avoid !important;
     break-inside: avoid !important;
@@ -1806,8 +1804,8 @@ body.is-printing-pdf {
 
   .pdf-header {
     border-bottom: 2px solid #D4A843 !important;
-    padding-bottom: 6px !important;
-    margin-bottom: 10px !important;
+    padding-bottom: 4px !important;
+    margin-bottom: 8px !important;
     display: flex !important;
     justify-content: space-between !important;
     align-items: flex-end !important;
@@ -1823,7 +1821,7 @@ body.is-printing-pdf {
 
   .pdf-tag {
     font-family: 'DM Mono', monospace !important;
-    font-size: 9px !important;
+    font-size: 8.5px !important;
     color: #D4A843 !important;
     letter-spacing: 1.5px !important;
   }
@@ -1831,20 +1829,20 @@ body.is-printing-pdf {
   .pdf-kpi-grid {
     display: grid !important;
     grid-template-columns: repeat(6, 1fr) !important;
-    gap: 8px !important;
-    margin-bottom: 10px !important;
+    gap: 6px !important;
+    margin-bottom: 8px !important;
   }
 
   .pdf-kpi-val {
     font-family: 'Bebas Neue', sans-serif !important;
-    font-size: 24px !important;
+    font-size: 22px !important;
     color: #D4A843 !important;
     line-height: 1 !important;
   }
 
   .pdf-kpi-lbl {
     font-family: 'DM Mono', monospace !important;
-    font-size: 8px !important;
+    font-size: 7.5px !important;
     color: #999AB0 !important;
     letter-spacing: 0.5px !important;
     margin-top: 2px !important;
@@ -1853,33 +1851,35 @@ body.is-printing-pdf {
   .pdf-card {
     background: #111116 !important;
     border: 1px solid rgba(212,168,67,0.35) !important;
-    border-radius: 8px !important;
-    padding: 8px 10px !important;
+    border-radius: 6px !important;
+    padding: 6px 8px !important;
     box-sizing: border-box !important;
   }
 
   .pdf-table {
     width: 100% !important;
     border-collapse: collapse !important;
-    font-size: 9px !important;
+    font-size: 8px !important;
     table-layout: fixed !important;
   }
 
   .pdf-table th {
     font-family: 'DM Mono', monospace !important;
-    font-size: 8px !important;
+    font-size: 7.5px !important;
     color: #D4A843 !important;
     text-align: left !important;
-    padding: 3.5px 5px !important;
+    padding: 2px 4px !important;
     border-bottom: 1px solid rgba(212,168,67,0.3) !important;
     white-space: nowrap !important;
   }
 
   .pdf-table td {
-    padding: 3.5px 5px !important;
+    padding: 2px 4px !important;
     border-bottom: 1px solid rgba(255,255,255,0.06) !important;
     color: #E8E8F0 !important;
     word-break: break-word !important;
+    font-size: 7.5px !important;
+    line-height: 1.15 !important;
   }
 }
 </style>
@@ -3851,8 +3851,16 @@ function toggleSession(e,id,dayIdx){
 }
 
 function recalcDayProgress(dayIdx){
-  let done=0;for(let j=0;j<DAY_TOTALS[dayIdx];j++)if(APP.sessions[`s-${dayIdx}-${j}`])done++;
-  const total=DAY_TOTALS[dayIdx],pct=Math.round(done/total*100);
+  // Check if day is in Rest Day mode
+  const restSessionId = Object.keys(DEFAULT_SESSIONS).find(sId => DEFAULT_SESSIONS[sId].day === dayIdx && APP.customWorkouts && APP.customWorkouts[sId] === 'rest-day');
+  let done=0, total=DAY_TOTALS[dayIdx];
+  if (restSessionId) {
+    total = 1;
+    if (APP.sessions[restSessionId]) done = 1;
+  } else {
+    for(let j=0;j<DAY_TOTALS[dayIdx];j++)if(APP.sessions[`s-${dayIdx}-${j}`])done++;
+  }
+  const pct=Math.round(done/total*100);
   const fill=document.getElementById('prog-'+dayIdx),txt=document.getElementById('prog-txt-'+dayIdx),wd=document.getElementById('wd-'+dayIdx);
   if(fill)fill.style.width=pct+'%';if(txt)txt.textContent=`${done}/${total}`;
   if(wd){wd.textContent=pct+'%';wd.style.color=pct===100?'var(--green)':'var(--text-dim)';}
@@ -3892,9 +3900,15 @@ function closeCompleteOverlay(){
 
 function checkDayComplete(dayIdx){
   if(dayIdx<0)return;
-  let done=0;
-  for(let j=0;j<DAY_TOTALS[dayIdx];j++)if(APP.sessions[`s-${dayIdx}-${j}`])done++;
-  if(done!==DAY_TOTALS[dayIdx])return;
+  const restSessionId = Object.keys(DEFAULT_SESSIONS).find(sId => DEFAULT_SESSIONS[sId].day === dayIdx && APP.customWorkouts && APP.customWorkouts[sId] === 'rest-day');
+  let done=0, required=DAY_TOTALS[dayIdx];
+  if (restSessionId) {
+    required = 1;
+    if (APP.sessions[restSessionId]) done = 1;
+  } else {
+    for(let j=0;j<DAY_TOTALS[dayIdx];j++)if(APP.sessions[`s-${dayIdx}-${j}`])done++;
+  }
+  if(done!==required)return;
   // Already shown this completion today?
   const key=`complete-${dayIdx}-${getWeekKey()}`;
   if(APP.shownComplete&&APP.shownComplete[key])return;
@@ -4202,7 +4216,7 @@ const WORKOUT_TYPE_OPTIONS = [
     { key: 'weight-c', name: 'WEIGHT ROOM C — EXPLOSIVE HYPERTROPHY', meta: 'Push Press, Weighted Chin-Ups, Armor', color: '#E74C3C', time: '60 MIN' }
   ]},
   { group: 'RECOVERY, POOL & OFF DAY', options: [
-    { key: 'rest-day', name: 'FULL REST DAY — OFF & SLEEP', meta: 'Zero CNS Load, Hydration, Breathwork · Turns Day Card Blue', color: '#3478F6', time: 'ALL DAY' },
+    { key: 'rest-day', name: 'FULL REST DAY — OFF & SLEEP', meta: 'Zero CNS Load, Hydration, Breathwork · Turns Day Card Blue & Clears Day', color: '#3478F6', time: 'ALL DAY' },
     { key: 'pool-a', name: 'POOL A — CNS FLUSH & HYDRO DRAIN', meta: 'Contrast Water Therapy, Non-Impact Mobility', color: '#3498DB', time: '45 MIN' },
     { key: 'pool-b', name: 'POOL B — WEEK-END RECOVERY FLUSH', meta: 'Spinal Traction, Hydro Aqua Running', color: '#3498DB', time: '45 MIN' },
     { key: 'recovery-mobility', name: 'ACTIVE MOBILITY & ANKLE DECOMP', meta: '90/90 Hips, Banded Ankle Glide, Couch Stretch', color: '#1ABC9C', time: '35 MIN' },
@@ -4232,7 +4246,7 @@ function openChangeWorkoutModal(sessionId) {
   if (badgeEl) badgeEl.textContent = '// ' + (dayNames[dayIdx] || 'DAY') + ' · WORKOUT CATALOGUE';
   
   const subEl = document.getElementById('cws-sub');
-  if (subEl) subEl.innerHTML = 'Currently: <strong style="color:#fff">' + (def ? def.name : 'SESSION') + '</strong> — tap to swap or choose <span style="color:#3478F6;font-weight:600">FULL REST DAY (Turns Blue)</span>:';
+  if (subEl) subEl.innerHTML = 'Currently: <strong style="color:#fff">' + (def ? def.name : 'SESSION') + '</strong> — tap any option to swap, or select <span style="color:#3478F6;font-weight:700">FULL REST DAY (Turns Blue & Clears Day)</span>:';
   
   let html = '';
   WORKOUT_TYPE_OPTIONS.forEach(g => {
@@ -4240,10 +4254,10 @@ function openChangeWorkoutModal(sessionId) {
     g.options.forEach(opt => {
       const isCur = curKey === opt.key;
       const isRest = opt.key === 'rest-day';
-      const borderStyle = isRest ? 'border-color:rgba(52,120,246,0.55);background:rgba(52,120,246,0.1);' : '';
+      const borderStyle = isRest ? 'border-color:rgba(52,120,246,0.65);background:rgba(52,120,246,0.12);' : '';
       const activeClass = isCur ? (isRest ? 'is-active is-rest-active' : 'is-active') : '';
       
-      html += '<div class="cws-opt ' + activeClass + '" style="' + borderStyle + '" onclick="if(Date.now() - lpFiredAt > 350) selectWorkoutType(\'' + sessionId + '\',\'' + opt.key + '\')">' +
+      html += '<div class="cws-opt ' + activeClass + '" style="' + borderStyle + '" onclick="if(Date.now() - lpFiredAt > 300) selectWorkoutType(\'' + sessionId + '\',\'' + opt.key + '\')">' +
         '<div class="cws-opt-dot" style="background:' + opt.color + (isRest ? ';box-shadow:0 0 10px #3478F6' : '') + '"></div>' +
         '<div class="cws-opt-info">' +
           '<div class="cws-opt-name" style="' + (isRest ? 'color:#3478F6' : '') + '">' +
@@ -4257,13 +4271,15 @@ function openChangeWorkoutModal(sessionId) {
     });
   });
   
-  if (APP.customWorkouts && APP.customWorkouts[sessionId]) {
+  // Reset button if customized OR if day is in Rest Day mode
+  const dayHasCustom = (APP.customWorkouts && APP.customWorkouts[sessionId]) || (def && Object.keys(APP.customWorkouts || {}).some(k => DEFAULT_SESSIONS[k] && DEFAULT_SESSIONS[k].day === def.day));
+  if (dayHasCustom) {
     html += '<div style="margin-top:14px;border-top:1px solid var(--border);padding-top:12px">' +
-      '<div class="cws-opt" style="border-color:rgba(231,76,60,0.45);background:rgba(231,76,60,0.1)" onclick="if(Date.now() - lpFiredAt > 350) selectWorkoutType(\'' + sessionId + '\',\'RESET\')">' +
+      '<div class="cws-opt" style="border-color:rgba(231,76,60,0.45);background:rgba(231,76,60,0.1)" onclick="if(Date.now() - lpFiredAt > 300) selectWorkoutType(\'' + sessionId + '\',\'RESET\')">' +
         '<div style="font-size:18px">🔄</div>' +
         '<div class="cws-opt-info">' +
           '<div class="cws-opt-name" style="color:#E74C3C">RESET TO SCHEDULED PROGRAM</div>' +
-          '<div class="cws-opt-meta">Revert back to original ' + (def ? def.name : 'workout') + '</div>' +
+          '<div class="cws-opt-meta">Revert back to original scheduled workouts for this day</div>' +
         '</div>' +
       '</div>' +
     '</div>';
@@ -4284,22 +4300,46 @@ function closeChangeWorkoutModal() {
 
 function selectWorkoutType(sessionId, newKey) {
   if (!APP.customWorkouts) APP.customWorkouts = {};
+  const def = DEFAULT_SESSIONS[sessionId];
+  const dayIdx = def ? def.day : -1;
+
   if (newKey === 'RESET') {
-    delete APP.customWorkouts[sessionId];
+    // Reset all custom sessions on this day back to scheduled
+    if (dayIdx >= 0) {
+      Object.keys(DEFAULT_SESSIONS).forEach(sId => {
+        if (DEFAULT_SESSIONS[sId].day === dayIdx) {
+          delete APP.customWorkouts[sId];
+        }
+      });
+    } else {
+      delete APP.customWorkouts[sessionId];
+    }
     showToast('REVERTED TO SCHEDULED PROGRAM 🔄', 'toast-success');
     if (typeof SoundFX !== 'undefined' && SoundFX.vibrate) SoundFX.vibrate(50);
+  } else if (newKey === 'rest-day') {
+    // FULL REST DAY: Clears all other workouts on that day to leave only this Rest Day program!
+    if (dayIdx >= 0) {
+      Object.keys(DEFAULT_SESSIONS).forEach(sId => {
+        if (DEFAULT_SESSIONS[sId].day === dayIdx) {
+          delete APP.customWorkouts[sId];
+        }
+      });
+    }
+    APP.customWorkouts[sessionId] = 'rest-day';
+    showToast('FULL REST DAY ACTIVATED 💤 DAY CARD TURNED BLUE', 'toast-fire');
+    if (typeof SoundFX !== 'undefined' && SoundFX.vibrate) SoundFX.vibrate(80);
   } else {
+    // Standard workout swap
     APP.customWorkouts[sessionId] = newKey;
     const w = WORKOUTS[newKey];
-    if (newKey === 'rest-day') {
-      showToast('FULL REST DAY ACTIVATED 💤 DAY CARD TURNED BLUE', 'toast-fire');
-    } else {
-      showToast('LOGGED AS: ' + (WORKOUT_DISPLAY_NAMES[newKey] || (w ? w.title : 'CUSTOM WORKOUT')) + ' ✓', 'toast-success');
-    }
-    if (typeof SoundFX !== 'undefined' && SoundFX.vibrate) SoundFX.vibrate(80);
+    showToast('LOGGED AS: ' + (WORKOUT_DISPLAY_NAMES[newKey] || (w ? w.title : 'CUSTOM WORKOUT')) + ' ✓', 'toast-success');
+    if (typeof SoundFX !== 'undefined' && SoundFX.vibrate) SoundFX.vibrate(70);
   }
+
   saveData();
   applyCustomWorkouts();
+  if (dayIdx >= 0) recalcDayProgress(dayIdx);
+  updateAllStats();
   closeChangeWorkoutModal();
 }
 
@@ -4343,58 +4383,96 @@ function applyCustomWorkouts() {
 
   const dayWorkouts = [[], [], [], [], []];
 
+  // 1. Identify which days have a Rest Day activated
+  const restDayByDay = {};
+  Object.keys(DEFAULT_SESSIONS).forEach(sId => {
+    const def = DEFAULT_SESSIONS[sId];
+    if (def && APP.customWorkouts[sId] === 'rest-day') {
+      restDayByDay[def.day] = sId;
+    }
+  });
+
+  // 2. Iterate each session item and apply custom/default or hide if rest day
   Object.keys(DEFAULT_SESSIONS).forEach(sId => {
     const item = document.getElementById(sId);
     if (!item) return;
 
-    // Remove any leftover swap button to keep identical DOM layout
+    // Remove old inline swap button if present
     const oldBtn = item.querySelector('.session-swap-btn');
-    if (oldBtn && oldBtn.parentNode) oldBtn.parentNode.removeChild(oldBtn); else if (oldBtn && oldBtn.remove) oldBtn.remove();
+    if (oldBtn) oldBtn.remove();
 
     const def = DEFAULT_SESSIONS[sId];
     const customKey = APP.customWorkouts[sId];
     const key = customKey || def.key;
     const w = WORKOUTS[key];
+    const dayHasRest = restDayByDay[def.day];
+
+    // IF THIS DAY IS IN REST DAY MODE:
+    if (dayHasRest) {
+      if (dayHasRest === sId) {
+        // THIS IS THE REST DAY PROGRAM! SHOW IT ALONE WITH BLUE THEME
+        item.style.display = 'flex';
+        item.classList.add('is-customized');
+        item.classList.add('is-rest-session');
+
+        const dot = item.querySelector('.session-dot');
+        const name = item.querySelector('.session-name');
+        const meta = item.querySelector('.session-meta');
+        const time = item.querySelector('.session-time');
+
+        if (dot) dot.style.background = '#3478F6';
+        if (name) name.innerHTML = 'FULL REST DAY — OFF & SLEEP <span class="swapped-badge" style="background:#3478F6;color:#fff;border-color:#3478F6">REST DAY</span>';
+        if (meta) meta.innerHTML = '<span style="color:#9ac2ff">ALL DAY · PASSIVE RECOVERY · 0 CNS LOAD</span>';
+        if (time) time.textContent = 'ALL DAY';
+
+        item.onclick = function(e) {
+          if (Date.now() - lpFiredAt < 400 || window.__longPressFired) {
+            window.__longPressFired = false;
+            return;
+          }
+          openModal('rest-day', sId, def.day);
+        };
+        dayWorkouts[def.day].push('FULL REST DAY');
+      } else {
+        // ALL OTHER WORKOUTS ON THIS DAY DISAPPEAR TO LEAVE ONLY THE REST DAY PROGRAM!
+        item.style.display = 'none';
+        item.classList.remove('is-rest-session');
+      }
+      return;
+    }
+
+    // NORMAL DAY: SHOW WORKOUT NORMALLY
+    item.style.display = 'flex';
+    item.classList.remove('is-rest-session');
 
     const dot = item.querySelector('.session-dot');
     const name = item.querySelector('.session-name');
     const meta = item.querySelector('.session-meta');
     const time = item.querySelector('.session-time');
-
     const cleanTitle = (WORKOUT_DISPLAY_NAMES[key] || (w ? w.title : def.name));
 
     if (customKey && w) {
-      if (dot) dot.style.background = (key === 'rest-day' ? '#3478F6' : w.color);
+      if (dot) dot.style.background = w.color;
       if (name) {
-        if (key === 'rest-day') {
-          name.innerHTML = cleanTitle + ' <span class="swapped-badge" style="background:#3478F6;color:#fff;border-color:#3478F6">REST DAY</span>';
-        } else {
-          name.innerHTML = cleanTitle + ' <span class="swapped-badge">SWAPPED</span>';
-        }
+        name.innerHTML = cleanTitle + ' <span class="swapped-badge">SWAPPED</span>';
       }
       if (meta) {
         let shortMeta = '';
-        if (key === 'rest-day') shortMeta = 'OFF & SLEEP · 0 CNS LOAD';
-        else if (w.exercises && w.exercises.length) shortMeta = w.exercises.length + ' EXERCISES';
+        if (w.exercises && w.exercises.length) shortMeta = w.exercises.length + ' EXERCISES';
         else if (w.meta && w.meta[1]) shortMeta = w.meta[1];
         else shortMeta = 'CUSTOM';
-        meta.innerHTML = '<span style="color:var(--text-dim)">PREV: ' + def.name + '</span> · <span style="color:' + (key === 'rest-day' ? '#3478F6' : 'var(--gold)') + '">' + shortMeta + '</span>';
+        meta.innerHTML = '<span style="color:var(--text-dim)">PREV: ' + def.name + '</span> · <span style="color:var(--gold)">' + shortMeta + '</span>';
       }
       if (time && w.meta && w.meta[0]) time.textContent = w.meta[0];
       
       item.onclick = function(e) {
-        if (Date.now() - lpFiredAt < 500 || window.__longPressFired) {
+        if (Date.now() - lpFiredAt < 400 || window.__longPressFired) {
           window.__longPressFired = false;
           return;
         }
         openModal(key, sId, def.day);
       };
       item.classList.add('is-customized');
-      if (key === 'rest-day') {
-        item.classList.add('is-rest-session');
-      } else {
-        item.classList.remove('is-rest-session');
-      }
       dayWorkouts[def.day].push(cleanTitle);
     } else {
       if (dot) dot.style.background = def.color;
@@ -4403,7 +4481,7 @@ function applyCustomWorkouts() {
       if (time) time.textContent = def.time;
       if (def.key && WORKOUTS[def.key]) {
         item.onclick = function(e) {
-          if (Date.now() - lpFiredAt < 500 || window.__longPressFired) {
+          if (Date.now() - lpFiredAt < 400 || window.__longPressFired) {
             window.__longPressFired = false;
             return;
           }
@@ -4411,7 +4489,6 @@ function applyCustomWorkouts() {
         };
       }
       item.classList.remove('is-customized');
-      item.classList.remove('is-rest-session');
       dayWorkouts[def.day].push(def.name);
     }
   });
@@ -4425,10 +4502,7 @@ function applyCustomWorkouts() {
     const badgeEl = cardEl.querySelector('.day-badge');
     const focusEl = cardEl.querySelector('.day-focus');
 
-    // Check if any session on this day was swapped to full rest
-    const hasRestDay = Object.keys(APP.customWorkouts).some(sId => DEFAULT_SESSIONS[sId] && DEFAULT_SESSIONS[sId].day === d && APP.customWorkouts[sId] === 'rest-day');
-
-    if (hasRestDay) {
+    if (restDayByDay[d]) {
       cardEl.classList.add('is-rest-recovery');
       if (badgeEl) badgeEl.textContent = '// ' + dayNames[d] + ' · RECOVERY & SLEEP PROTOCOL';
       if (focusEl) focusEl.textContent = 'Full Day Rest & Recovery · Sleep Optimization · 0 CNS Load';
@@ -4436,7 +4510,6 @@ function applyCustomWorkouts() {
       cardEl.classList.remove('is-rest-recovery');
       if (badgeEl) badgeEl.textContent = DEFAULT_DAY_BADGES[d] || ('// ' + dayNames[d]);
 
-      // If any other session on this day was swapped, show updated summary
       const hasCustom = Object.keys(APP.customWorkouts).some(sId => DEFAULT_SESSIONS[sId] && DEFAULT_SESSIONS[sId].day === d);
       if (hasCustom && dayWorkouts[d].length > 0) {
         focusEl.textContent = dayWorkouts[d].join(' + ');
@@ -4445,12 +4518,15 @@ function applyCustomWorkouts() {
       }
     }
   }
+
+  // Always re-bind long press handlers to all visible items
+  attachLongPressHandlers();
 }
 
 function attachLongPressHandlers() {
   document.querySelectorAll('.session-item').forEach(el => {
-    if (el.dataset.lpBound === 'v3') return;
-    el.dataset.lpBound = 'v3';
+    if (el.dataset.lpBound === 'v4') return;
+    el.dataset.lpBound = 'v4';
 
     el.style.webkitTouchCallout = 'none';
     el.style.webkitUserSelect = 'none';
@@ -4461,18 +4537,9 @@ function attachLongPressHandlers() {
       return false;
     });
 
-    // Touch start
-    el.addEventListener('touchstart', (e) => {
-      if (e.target.closest('.check-circle')) return;
-      if (e.touches.length > 1) {
-        if (lpTimer) { clearTimeout(lpTimer); lpTimer = null; }
-        el.classList.remove('is-pressing');
-        return;
-      }
-
-      const touch = e.touches[0];
-      lpStartX = touch.clientX;
-      lpStartY = touch.clientY;
+    const startPress = (clientX, clientY) => {
+      lpStartX = clientX;
+      lpStartY = clientY;
       lpTarget = el;
       el.classList.add('is-pressing');
 
@@ -4489,76 +4556,62 @@ function attachLongPressHandlers() {
         }
 
         openChangeWorkoutModal(el.id);
-      }, 420);
-    }, { passive: true });
+      }, 320); // 320ms fast, responsive long-press
+    };
 
-    // Touch move
-    el.addEventListener('touchmove', (e) => {
-      if (!lpTimer) return;
-      const touch = e.touches[0];
-      const dx = Math.abs(touch.clientX - lpStartX);
-      const dy = Math.abs(touch.clientY - lpStartY);
-      if (dx > 16 || dy > 16) {
-        clearTimeout(lpTimer);
-        lpTimer = null;
-        el.classList.remove('is-pressing');
-      }
-    }, { passive: true });
-
-    // Touch end & cancel
-    const cancelTouch = (e) => {
+    const cancelPress = () => {
       el.classList.remove('is-pressing');
       if (lpTimer) {
         clearTimeout(lpTimer);
         lpTimer = null;
       }
-      if (Date.now() - lpFiredAt < 500 || window.__longPressFired) {
+    };
+
+    // Touch events for mobile
+    el.addEventListener('touchstart', (e) => {
+      if (e.target.closest('.check-circle')) return;
+      if (e.touches.length > 1) { cancelPress(); return; }
+      const touch = e.touches[0];
+      startPress(touch.clientX, touch.clientY);
+    }, { passive: true });
+
+    el.addEventListener('touchmove', (e) => {
+      if (!lpTimer) return;
+      const touch = e.touches[0];
+      const dx = Math.abs(touch.clientX - lpStartX);
+      const dy = Math.abs(touch.clientY - lpStartY);
+      if (dx > 20 || dy > 20) cancelPress();
+    }, { passive: true });
+
+    el.addEventListener('touchend', (e) => {
+      cancelPress();
+      if (Date.now() - lpFiredAt < 400 || window.__longPressFired) {
         if (e.cancelable) e.preventDefault();
         e.stopPropagation();
       }
-    };
-    el.addEventListener('touchend', cancelTouch);
-    el.addEventListener('touchcancel', cancelTouch);
+    });
 
-    // Desktop Mouse (Click & Hold)
+    el.addEventListener('touchcancel', () => {
+      // If user stayed still until close to firing, allow it
+      cancelPress();
+    });
+
+    // Mouse events for desktop
     el.addEventListener('mousedown', (e) => {
       if (e.button !== 0) return;
       if (e.target.closest('.check-circle')) return;
-
-      lpStartX = e.clientX;
-      lpStartY = e.clientY;
-      lpTarget = el;
-      el.classList.add('is-pressing');
-
-      if (lpTimer) clearTimeout(lpTimer);
-      lpTimer = setTimeout(() => {
-        el.classList.remove('is-pressing');
-        lpFiredAt = Date.now();
-        window.__longPressFired = true;
-        openChangeWorkoutModal(el.id);
-      }, 450);
+      startPress(e.clientX, e.clientY);
     });
 
     el.addEventListener('mousemove', (e) => {
       if (!lpTimer) return;
       const dx = Math.abs(e.clientX - lpStartX);
       const dy = Math.abs(e.clientY - lpStartY);
-      if (dx > 12 || dy > 12) {
-        clearTimeout(lpTimer);
-        lpTimer = null;
-        el.classList.remove('is-pressing');
-      }
+      if (dx > 16 || dy > 16) cancelPress();
     });
 
-    const cancelMouse = () => {
-      el.classList.remove('is-pressing');
-      if (lpTimer) {
-        clearTimeout(lpTimer);
-        lpTimer = null;
-      }
-    };
-    el.addEventListener('mouseup', cancelMouse);
-    el.addEventListener('mouseleave', cancelMouse);
+    el.addEventListener('mouseup', cancelPress);
+    el.addEventListener('mouseleave', cancelPress);
   });
 }
 
@@ -6051,14 +6104,14 @@ function renderPDFDossier(historyItem) {
 
           rows += `
             <tr>
-              <td style="font-weight:600;color:#FFF;font-size:8.5px">
-                <span style="font-family:'DM Mono',monospace;font-size:7.5px;color:#D4A843;margin-right:4px">${dayShort}</span>
-                ${ex.name}${ex.achilles ? ' <span style="color:#FF6B6B;font-size:7.5px">⚡</span>' : ''}
+              <td style="font-weight:600;color:#FFF;font-size:7.5px;padding:2px 4px;line-height:1.15">
+                <span style="font-family:'DM Mono',monospace;font-size:6.5px;color:#D4A843;margin-right:3px">${dayShort}</span>
+                ${ex.name}${ex.achilles ? ' <span style="color:#FF6B6B;font-size:7px">⚡</span>' : ''}
               </td>
-              <td><span style="font-family:'DM Mono',monospace;font-size:7.5px;color:#D4A843;background:rgba(212,168,67,0.12);padding:2px 4px;border-radius:3px">${ex.quality || 'DRILL'}</span></td>
-              <td style="font-family:'DM Mono',monospace;color:#DDD;font-size:8px">${prescribed}</td>
-              <td style="font-family:'DM Mono',monospace;color:#30D158;font-size:8px">${loggedText}</td>
-              <td style="text-align:center">${isDone ? '<span style="color:#30D158;font-weight:bold;font-size:9.5px">✓</span>' : '<span style="color:#555">○</span>'}</td>
+              <td style="padding:2px 4px"><span style="font-family:'DM Mono',monospace;font-size:6.5px;color:#D4A843;background:rgba(212,168,67,0.12);padding:1px 3px;border-radius:2px">${ex.quality || 'DRILL'}</span></td>
+              <td style="font-family:'DM Mono',monospace;color:#DDD;font-size:7px;padding:2px 4px;line-height:1.15">${prescribed}</td>
+              <td style="font-family:'DM Mono',monospace;color:#30D158;font-size:7px;padding:2px 4px;line-height:1.15">${loggedText}</td>
+              <td style="text-align:center;padding:2px 4px">${isDone ? '<span style="color:#30D158;font-weight:bold;font-size:8.5px">✓</span>' : '<span style="color:#444;font-size:7.5px">○</span>'}</td>
             </tr>
           `;
         });
