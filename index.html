@@ -4233,6 +4233,7 @@ let lpTimer = null;
 let lpTarget = null;
 let lpStartX = 0, lpStartY = 0;
 let lpFiredAt = 0;
+let lpLastTouchTime = 0;
 
 function openChangeWorkoutModal(sessionId) {
   if (!sessionId) sessionId = 's-0-0';
@@ -4426,7 +4427,7 @@ function applyCustomWorkouts() {
         if (time) time.textContent = 'ALL DAY';
 
         item.onclick = function(e) {
-          if (Date.now() - lpFiredAt < 400 || window.__longPressFired) {
+          if (window.__longPressFired || (lpFiredAt && Date.now() - lpFiredAt < 350)) {
             window.__longPressFired = false;
             return;
           }
@@ -4466,10 +4467,10 @@ function applyCustomWorkouts() {
       if (time && w.meta && w.meta[0]) time.textContent = w.meta[0];
       
       item.onclick = function(e) {
-        if (Date.now() - lpFiredAt < 400 || window.__longPressFired) {
+        if (window.__longPressFired || (lpFiredAt && Date.now() - lpFiredAt < 350)) {
           window.__longPressFired = false;
           return;
-        }
+          }
         openModal(key, sId, def.day);
       };
       item.classList.add('is-customized');
@@ -4481,7 +4482,7 @@ function applyCustomWorkouts() {
       if (time) time.textContent = def.time;
       if (def.key && WORKOUTS[def.key]) {
         item.onclick = function(e) {
-          if (Date.now() - lpFiredAt < 400 || window.__longPressFired) {
+          if (window.__longPressFired || (lpFiredAt && Date.now() - lpFiredAt < 350)) {
             window.__longPressFired = false;
             return;
           }
@@ -4525,8 +4526,8 @@ function applyCustomWorkouts() {
 
 function attachLongPressHandlers() {
   document.querySelectorAll('.session-item').forEach(el => {
-    if (el.dataset.lpBound === 'v4') return;
-    el.dataset.lpBound = 'v4';
+    if (el.dataset.lpBound === 'v5') return;
+    el.dataset.lpBound = 'v5';
 
     el.style.webkitTouchCallout = 'none';
     el.style.webkitUserSelect = 'none';
@@ -4538,6 +4539,7 @@ function attachLongPressHandlers() {
     });
 
     const startPress = (clientX, clientY) => {
+      window.__longPressFired = false;
       lpStartX = clientX;
       lpStartY = clientY;
       lpTarget = el;
@@ -4545,6 +4547,7 @@ function attachLongPressHandlers() {
 
       if (lpTimer) clearTimeout(lpTimer);
       lpTimer = setTimeout(() => {
+        lpTimer = null;
         el.classList.remove('is-pressing');
         lpFiredAt = Date.now();
         window.__longPressFired = true;
@@ -4556,7 +4559,7 @@ function attachLongPressHandlers() {
         }
 
         openChangeWorkoutModal(el.id);
-      }, 320); // 320ms fast, responsive long-press
+      }, 550); // 550ms hold opens catalogue; quick single tap opens workout modal
     };
 
     const cancelPress = () => {
@@ -4569,6 +4572,7 @@ function attachLongPressHandlers() {
 
     // Touch events for mobile
     el.addEventListener('touchstart', (e) => {
+      lpLastTouchTime = Date.now();
       if (e.target.closest('.check-circle')) return;
       if (e.touches.length > 1) { cancelPress(); return; }
       const touch = e.touches[0];
@@ -4576,50 +4580,64 @@ function attachLongPressHandlers() {
     }, { passive: true });
 
     el.addEventListener('touchmove', (e) => {
+      lpLastTouchTime = Date.now();
       if (!lpTimer) return;
       const touch = e.touches[0];
       const dx = Math.abs(touch.clientX - lpStartX);
       const dy = Math.abs(touch.clientY - lpStartY);
-      if (dx > 20 || dy > 20) cancelPress();
+      if (dx > 15 || dy > 15) cancelPress();
     }, { passive: true });
 
     el.addEventListener('touchend', (e) => {
+      lpLastTouchTime = Date.now();
       cancelPress();
-      if (Date.now() - lpFiredAt < 400 || window.__longPressFired) {
+      if (window.__longPressFired) {
+        window.__longPressFired = false;
+        lpFiredAt = Date.now();
         if (e.cancelable) e.preventDefault();
         e.stopPropagation();
       }
     });
 
     el.addEventListener('touchcancel', () => {
-      // If user stayed still until close to firing, allow it
+      lpLastTouchTime = Date.now();
       cancelPress();
+      window.__longPressFired = false;
     });
 
-    // Mouse events for desktop
+    // Mouse events for desktop (ignored after touch to prevent synthesized mouse double-trigger)
     el.addEventListener('mousedown', (e) => {
+      if (Date.now() - lpLastTouchTime < 1000) return;
       if (e.button !== 0) return;
       if (e.target.closest('.check-circle')) return;
       startPress(e.clientX, e.clientY);
     });
 
     el.addEventListener('mousemove', (e) => {
+      if (Date.now() - lpLastTouchTime < 1000) return;
       if (!lpTimer) return;
       const dx = Math.abs(e.clientX - lpStartX);
       const dy = Math.abs(e.clientY - lpStartY);
-      if (dx > 16 || dy > 16) cancelPress();
+      if (dx > 15 || dy > 15) cancelPress();
     });
 
-    el.addEventListener('mouseup', cancelPress);
-    el.addEventListener('mouseleave', cancelPress);
+    el.addEventListener('mouseup', () => {
+      if (Date.now() - lpLastTouchTime < 1000) return;
+      cancelPress();
+      if (window.__longPressFired) {
+        lpFiredAt = Date.now();
+      }
+    });
+
+    el.addEventListener('mouseleave', () => {
+      if (Date.now() - lpLastTouchTime < 1000) return;
+      cancelPress();
+    });
   });
 }
 
 function openModal(key,sessionId,dayIdx){
-  if (Date.now() - lpFiredAt < 500 || window.__longPressFired) {
-    window.__longPressFired = false;
-    return;
-  }
+  window.__longPressFired = false;
   const w=WORKOUTS[key];if(!w)return;
   currentModalSession=sessionId;currentModalKey=key;currentModalDay=dayIdx;
   document.getElementById('m-type').textContent=w.type;document.getElementById('m-type').style.color=w.color;
