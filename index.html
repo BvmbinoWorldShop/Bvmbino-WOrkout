@@ -1742,19 +1742,26 @@ body.is-printing-pdf {
 @media print {
   @page {
     size: 210mm 297mm;
-    margin: 0;
+    margin: 0mm !important;
   }
 
   *, *::before, *::after {
     box-sizing: border-box !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* Critical: disable fixed full-screen pseudo-element gradient during print so browser preserves 100% vector text */
+  body::before, body::after {
+    display: none !important;
+    content: none !important;
   }
 
   html, body {
     width: 210mm !important;
     max-width: 210mm !important;
     min-width: 210mm !important;
-    height: 100% !important;
-    margin: 0 auto !important;
+    margin: 0 !important;
     padding: 0 !important;
     background: #060608 !important;
     color: #FFFFFF !important;
@@ -1773,7 +1780,7 @@ body.is-printing-pdf {
     width: 210mm !important;
     max-width: 210mm !important;
     min-width: 210mm !important;
-    margin: 0 auto !important;
+    margin: 0 !important;
     padding: 0 !important;
     background: #060608 !important;
     color: #FFFFFF !important;
@@ -1783,15 +1790,23 @@ body.is-printing-pdf {
     width: 210mm !important;
     max-width: 210mm !important;
     min-width: 210mm !important;
-    min-height: 290mm !important;
+    height: 297mm !important;
+    max-height: 297mm !important;
+    min-height: 297mm !important;
     box-sizing: border-box !important;
-    display: flex !important;
-    flex-direction: column !important;
-    justify-content: flex-start !important;
-    padding: 8mm 10mm !important;
+    display: block !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: hidden !important;
     background: #060608 !important;
     page-break-inside: avoid !important;
     break-inside: avoid !important;
+  }
+
+  .pdf-page svg {
+    width: 210mm !important;
+    height: 297mm !important;
+    display: block !important;
   }
 
   .pdf-page-1 {
@@ -1977,8 +1992,8 @@ body.is-printing-pdf {
     <div class="week-day" data-day="2" onclick="jumpToDay(2)"><div class="wd-name">WED</div><div class="wd-dot"></div><div class="wd-pct" id="wd-2">0%</div></div>
     <div class="week-day" data-day="3" onclick="jumpToDay(3)"><div class="wd-name">THU</div><div class="wd-dot"></div><div class="wd-pct" id="wd-3">0%</div></div>
     <div class="week-day" data-day="4" onclick="jumpToDay(4)"><div class="wd-name">FRI</div><div class="wd-dot"></div><div class="wd-pct" id="wd-4">0%</div></div>
-    <div class="week-day" data-day="5"><div class="wd-name">SAT</div><div class="wd-dot"></div><div class="wd-pct">REST</div></div>
-    <div class="week-day" data-day="6"><div class="wd-name">SUN</div><div class="wd-dot"></div><div class="wd-pct">REST</div></div>
+    <div class="week-day" data-day="5" onclick="jumpToDay(5)"><div class="wd-name">SAT</div><div class="wd-dot"></div><div class="wd-pct" id="wd-5">0%</div></div>
+    <div class="week-day" data-day="6" onclick="jumpToDay(6)"><div class="wd-name">SUN</div><div class="wd-dot"></div><div class="wd-pct" id="wd-6">0%</div></div>
   </div>
   <div style="height:20px"></div>
 
@@ -2110,6 +2125,30 @@ body.is-printing-pdf {
           <div class="session-item" onclick="openModal('pool-b','s-4-2',4)" id="s-4-2"><div class="session-dot" style="background:#3498DB"></div><div class="session-info"><div class="session-name">POOL SESSION B</div><div class="session-meta">ACTIVE RECOVERY · 5 PROTOCOLS</div></div><div class="session-time">45 MIN</div><div class="check-circle" onclick="toggleSession(event,'s-4-2',4)"><div class="check-icon">✓</div></div></div>
         </div>
       </div>
+      <!-- SAT -->
+      <div class="day-card" id="card-5">
+        <div class="day-card-top">
+          <div class="day-badge">// SATURDAY · OPEN / OPTIONAL DAY</div>
+          <div class="day-name-row"><div class="day-name">SATURDAY</div><div class="today-pill" id="today-5" style="display:none">TODAY</div></div>
+          <div class="day-focus">No Workout Preselected · Tap or Hold Below to Add a Workout</div>
+          <div class="day-progress-row"><div class="day-prog-bar"><div class="day-prog-fill" id="prog-5" style="width:0%"></div></div><div class="day-prog-text" id="prog-txt-5">0/0</div></div>
+        </div>
+        <div class="day-sessions">
+          <div class="session-item" onclick="openChangeWorkoutModal('s-5-0')" id="s-5-0" style="border:1px dashed rgba(212,168,67,0.35);background:rgba(255,255,255,0.02)"><div class="session-dot" style="background:#555568"></div><div class="session-info"><div class="session-name">+ ADD WORKOUT SESSION</div><div class="session-meta">NO WORKOUT SELECTED · TAP OR HOLD TO ADD</div></div><div class="session-time">OPTIONAL</div><div class="check-circle" style="display:none" onclick="toggleSession(event,'s-5-0',5)"><div class="check-icon">✓</div></div></div>
+        </div>
+      </div>
+      <!-- SUN -->
+      <div class="day-card" id="card-6">
+        <div class="day-card-top">
+          <div class="day-badge">// SUNDAY · OPEN / OPTIONAL DAY</div>
+          <div class="day-name-row"><div class="day-name">SUNDAY</div><div class="today-pill" id="today-6" style="display:none">TODAY</div></div>
+          <div class="day-focus">No Workout Preselected · Tap or Hold Below to Add a Workout</div>
+          <div class="day-progress-row"><div class="day-prog-bar"><div class="day-prog-fill" id="prog-6" style="width:0%"></div></div><div class="day-prog-text" id="prog-txt-6">0/0</div></div>
+        </div>
+        <div class="day-sessions">
+          <div class="session-item" onclick="openChangeWorkoutModal('s-6-0')" id="s-6-0" style="border:1px dashed rgba(212,168,67,0.35);background:rgba(255,255,255,0.02)"><div class="session-dot" style="background:#555568"></div><div class="session-info"><div class="session-name">+ ADD WORKOUT SESSION</div><div class="session-meta">NO WORKOUT SELECTED · TAP OR HOLD TO ADD</div></div><div class="session-time">OPTIONAL</div><div class="check-circle" style="display:none" onclick="toggleSession(event,'s-6-0',6)"><div class="check-icon">✓</div></div></div>
+        </div>
+      </div>
     </div>
     <div class="carousel-dots" id="day-dots">
       <div class="dot active" onclick="gotoCard('day-carousel',0,'day-dots')"></div>
@@ -2117,6 +2156,8 @@ body.is-printing-pdf {
       <div class="dot" onclick="gotoCard('day-carousel',2,'day-dots')"></div>
       <div class="dot" onclick="gotoCard('day-carousel',3,'day-dots')"></div>
       <div class="dot" onclick="gotoCard('day-carousel',4,'day-dots')"></div>
+      <div class="dot" onclick="gotoCard('day-carousel',5,'day-dots')"></div>
+      <div class="dot" onclick="gotoCard('day-carousel',6,'day-dots')"></div>
     </div>
   </div>
   <div class="divider"></div>
@@ -3091,7 +3132,7 @@ function getExSets(ex){
 }
 
 
-const DAY_TOTALS=[3,3,3,2,3];
+const DAY_TOTALS=[3,3,3,2,3,0,0];
 const STORE_KEY='bvmbino_v3';
 
 // ══════════════════════════════════════════════
@@ -3583,7 +3624,7 @@ function refreshStreakUI(){
 // RESTORE STATE
 // ══════════════════════════════════════════════
 function restoreState(){
-  for(let d=0;d<5;d++){const dTot=DAY_TOTALS[d]||3;for(let j=0;j<dTot;j++){const sId=`s-${d}-${j}`;const el=document.getElementById(sId);if(el){if(APP.sessions[sId])el.classList.add('done');else el.classList.remove('done');}}recalcDayProgress(d);}
+  for(let d=0;d<7;d++){const dTot=d>=5?1:(DAY_TOTALS[d]||3);for(let j=0;j<dTot;j++){const sId=`s-${d}-${j}`;const el=document.getElementById(sId);if(el){if(APP.sessions[sId])el.classList.add('done');else el.classList.remove('done');}}recalcDayProgress(d);}
   Object.keys(APP.mentalSteps).forEach(id=>{const el=document.getElementById(id);if(el)el.classList.add('done');});
   checkDailyResets();
   Object.keys(APP.warmupSteps||{}).forEach(id=>{const el=document.getElementById(id);if(el)el.classList.add('done');});
@@ -3787,8 +3828,8 @@ function updateClock(){
 }
 
 function updateTodayBadge(){
-  const dow=new Date().getDay();const map={1:0,2:1,3:2,4:3,5:4};const tc=map[dow];
-  for(let i=0;i<5;i++){
+  const dow=new Date().getDay();const map={1:0,2:1,3:2,4:3,5:4,6:5,0:6};const tc=map[dow];
+  for(let i=0;i<7;i++){
     const pill=document.getElementById('today-'+i);const card=document.getElementById('card-'+i);
     const show=i===tc;if(pill)pill.style.display=show?'':'none';if(card)card.classList.toggle('today',show);
     const wd=document.querySelector(`#week-strip .week-day[data-day="${i}"]`);if(wd)wd.classList.toggle('active',i===tc);
@@ -3832,7 +3873,7 @@ document.addEventListener('DOMContentLoaded',()=>{
 
 function jumpToDay(di){
   gotoCard('day-carousel',di,'day-dots');
-  for(let i=0;i<5;i++)document.querySelector(`#week-strip .week-day[data-day="${i}"]`)?.classList.toggle('active',i===di);
+  for(let i=0;i<7;i++)document.querySelector(`#week-strip .week-day[data-day="${i}"]`)?.classList.toggle('active',i===di);
 }
 
 // ══════════════════════════════════════════════
@@ -3855,27 +3896,38 @@ function toggleSession(e,id,dayIdx){
 function recalcDayProgress(dayIdx){
   // Check if day is in Rest Day mode
   const restSessionId = Object.keys(DEFAULT_SESSIONS).find(sId => DEFAULT_SESSIONS[sId].day === dayIdx && APP.customWorkouts && APP.customWorkouts[sId] === 'rest-day');
-  let done=0, total=DAY_TOTALS[dayIdx];
+  let done=0, total=DAY_TOTALS[dayIdx]||0;
   if (restSessionId) {
     total = 1;
     if (APP.sessions[restSessionId]) done = 1;
+  } else if (dayIdx >= 5) {
+    const wkKey = APP.customWorkouts && APP.customWorkouts[`s-${dayIdx}-0`];
+    if (wkKey) {
+      total = 1;
+      if (APP.sessions[`s-${dayIdx}-0`]) done = 1;
+    } else {
+      total = 0;
+      done = 0;
+    }
   } else {
     for(let j=0;j<DAY_TOTALS[dayIdx];j++)if(APP.sessions[`s-${dayIdx}-${j}`])done++;
   }
-  const pct=Math.round(done/total*100);
+  const pct=total>0?Math.round(done/total*100):0;
   const fill=document.getElementById('prog-'+dayIdx),txt=document.getElementById('prog-txt-'+dayIdx),wd=document.getElementById('wd-'+dayIdx);
   if(fill)fill.style.width=pct+'%';if(txt)txt.textContent=`${done}/${total}`;
-  if(wd){wd.textContent=pct+'%';wd.style.color=pct===100?'var(--green)':'var(--text-dim)';}
-  document.querySelector(`#week-strip .week-day[data-day="${dayIdx}"]`)?.classList.toggle('completed',pct===100&&dayIdx<5);
+  if(wd){wd.textContent=pct+'%';wd.style.color=(pct===100&&total>0)?'var(--green)':'var(--text-dim)';}
+  document.querySelector(`#week-strip .week-day[data-day="${dayIdx}"]`)?.classList.toggle('completed',pct===100&&total>0);
 }
 
-const DAY_NAMES=['MONDAY','TUESDAY','WEDNESDAY','THURSDAY','FRIDAY'];
+const DAY_NAMES=['MONDAY','TUESDAY','WEDNESDAY','THURSDAY','FRIDAY','SATURDAY','SUNDAY'];
 const DAY_SUMMARIES=[
   'WEIGHT ROOM A · FASCIA ELASTIC · VISUALIZATION',
   'BASKETBALL A · POOL SESSION A · FOCUS ROUTINE',
   'WEIGHT ROOM B · FASCIA ROTATIONAL · BREATH CONTROL',
   'BASKETBALL B · WEIGHT ROOM C',
-  'BASKETBALL C · FASCIA MULTI-DIR · POOL SESSION B'
+  'BASKETBALL C · FASCIA MULTI-DIR · POOL SESSION B',
+  'OPTIONAL WEEKEND WORKOUT SESSION',
+  'OPTIONAL WEEKEND WORKOUT SESSION'
 ];
 
 function playSuccessSound(){
@@ -3903,14 +3955,21 @@ function closeCompleteOverlay(){
 function checkDayComplete(dayIdx){
   if(dayIdx<0)return;
   const restSessionId = Object.keys(DEFAULT_SESSIONS).find(sId => DEFAULT_SESSIONS[sId].day === dayIdx && APP.customWorkouts && APP.customWorkouts[sId] === 'rest-day');
-  let done=0, required=DAY_TOTALS[dayIdx];
+  let done=0, required=DAY_TOTALS[dayIdx]||0;
   if (restSessionId) {
     required = 1;
     if (APP.sessions[restSessionId]) done = 1;
+  } else if (dayIdx >= 5) {
+    if (APP.customWorkouts && APP.customWorkouts[`s-${dayIdx}-0`]) {
+      required = 1;
+      if (APP.sessions[`s-${dayIdx}-0`]) done = 1;
+    } else {
+      return;
+    }
   } else {
     for(let j=0;j<DAY_TOTALS[dayIdx];j++)if(APP.sessions[`s-${dayIdx}-${j}`])done++;
   }
-  if(done!==required)return;
+  if(required===0||done!==required)return;
   // Already shown this completion today?
   const key=`complete-${dayIdx}-${getWeekKey()}`;
   if(APP.shownComplete&&APP.shownComplete[key])return;
@@ -4198,7 +4257,9 @@ const DEFAULT_SESSIONS = {
   's-3-1': { key: 'weight-c', name: 'WEIGHT ROOM C', meta: 'EXPLOSIVE HYPERTROPHY · 6 EXERCISES', color: '#E74C3C', time: '60 MIN', day: 3 },
   's-4-0': { key: 'bball-c', name: 'BASKETBALL C', meta: 'LIVE RUNS · FULL INTENSITY', color: 'var(--gold)', time: '75 MIN', day: 4 },
   's-4-1': { key: 'fascia-c', name: 'FASCIA MULTI-DIR', meta: 'MULTI-DIRECTIONAL · 6 DRILLS', color: '#9B59B6', time: '35 MIN', day: 4 },
-  's-4-2': { key: 'pool-b', name: 'POOL SESSION B', meta: 'WEEK-END FLUSH · 5 PROTOCOLS', color: '#3498DB', time: '45 MIN', day: 4 }
+  's-4-2': { key: 'pool-b', name: 'POOL SESSION B', meta: 'WEEK-END FLUSH · 5 PROTOCOLS', color: '#3498DB', time: '45 MIN', day: 4 },
+  's-5-0': { key: null, name: '+ ADD WORKOUT SESSION', meta: 'NO WORKOUT SELECTED · TAP OR HOLD TO ADD', color: '#555568', time: 'OPTIONAL', day: 5, optional: true },
+  's-6-0': { key: null, name: '+ ADD WORKOUT SESSION', meta: 'NO WORKOUT SELECTED · TAP OR HOLD TO ADD', color: '#555568', time: 'OPTIONAL', day: 6, optional: true }
 };
 
 const WORKOUT_TYPE_OPTIONS = [
@@ -4243,7 +4304,7 @@ function openChangeWorkoutModal(sessionId) {
   const def = DEFAULT_SESSIONS[sessionId];
   const curKey = (APP.customWorkouts && APP.customWorkouts[sessionId]) || (def ? def.key : null);
   const dayIdx = def ? def.day : 0;
-  const dayNames = ['MONDAY','TUESDAY','WEDNESDAY','THURSDAY','FRIDAY'];
+  const dayNames = ['MONDAY','TUESDAY','WEDNESDAY','THURSDAY','FRIDAY','SATURDAY','SUNDAY'];
   
   const badgeEl = document.getElementById('cws-badge');
   if (badgeEl) badgeEl.textContent = '// ' + (dayNames[dayIdx] || 'DAY') + ' · WORKOUT CATALOGUE';
@@ -4307,17 +4368,22 @@ function selectWorkoutType(sessionId, newKey) {
   const dayIdx = def ? def.day : -1;
 
   if (newKey === 'RESET') {
-    // Reset all custom sessions on this day back to scheduled
+    // Reset all custom sessions on this day back to scheduled (or clear optional Sat/Sun workout)
     if (dayIdx >= 0) {
       Object.keys(DEFAULT_SESSIONS).forEach(sId => {
         if (DEFAULT_SESSIONS[sId].day === dayIdx) {
           delete APP.customWorkouts[sId];
+          if (dayIdx >= 5 && APP.sessions && APP.sessions[sId]) {
+            delete APP.sessions[sId];
+            const el = document.getElementById(sId);
+            if (el) el.classList.remove('done');
+          }
         }
       });
     } else {
       delete APP.customWorkouts[sessionId];
     }
-    showToast('REVERTED TO SCHEDULED PROGRAM 🔄', 'toast-success');
+    showToast(dayIdx >= 5 ? 'WEEKEND WORKOUT CLEARED ✓' : 'REVERTED TO SCHEDULED PROGRAM 🔄', 'toast-success');
     if (typeof SoundFX !== 'undefined' && SoundFX.vibrate) SoundFX.vibrate(50);
   } else if (newKey === 'rest-day') {
     // FULL REST DAY: Clears all other workouts on that day to leave only this Rest Day program!
@@ -4370,7 +4436,9 @@ const DEFAULT_DAY_FOCUS = [
   'Game Speed Shooting & Finishing + Pool Hydro Recovery',
   'Posterior Chain & Deadlifts + Rotational Fascia Force',
   'Full-Court Live Scrimmage + Explosive Push Press Armor',
-  'Full Live Runs + Multi-Dir + Pool Flush'
+  'Full Live Runs + Multi-Dir + Pool Flush',
+  'No Workout Preselected · Tap or Hold Below to Add a Workout',
+  'No Workout Preselected · Tap or Hold Below to Add a Workout'
 ];
 
 const DEFAULT_DAY_BADGES = [
@@ -4378,13 +4446,15 @@ const DEFAULT_DAY_BADGES = [
   '// TUESDAY · SKILL INTEGRATION',
   '// WEDNESDAY · STRENGTH + POWER',
   '// THURSDAY · PEAK PERFORMANCE',
-  '// FRIDAY · INTEGRATION DAY'
+  '// FRIDAY · INTEGRATION DAY',
+  '// SATURDAY · OPEN / OPTIONAL DAY',
+  '// SUNDAY · OPEN / OPTIONAL DAY'
 ];
 
 function applyCustomWorkouts() {
   if (!APP.customWorkouts) APP.customWorkouts = {};
 
-  const dayWorkouts = [[], [], [], [], []];
+  const dayWorkouts = [[], [], [], [], [], [], []];
 
   // 1. Identify which days have a Rest Day activated
   const restDayByDay = {};
@@ -4407,16 +4477,20 @@ function applyCustomWorkouts() {
     const def = DEFAULT_SESSIONS[sId];
     const customKey = APP.customWorkouts[sId];
     const key = customKey || def.key;
-    const w = WORKOUTS[key];
+    const w = key ? WORKOUTS[key] : null;
     const dayHasRest = restDayByDay[def.day];
+    const checkCircle = item.querySelector('.check-circle');
 
     // IF THIS DAY IS IN REST DAY MODE:
     if (dayHasRest) {
       if (dayHasRest === sId) {
         // THIS IS THE REST DAY PROGRAM! SHOW IT ALONE WITH BLUE THEME
         item.style.display = 'flex';
+        item.style.border = '';
+        item.style.background = '';
         item.classList.add('is-customized');
         item.classList.add('is-rest-session');
+        if (checkCircle) checkCircle.style.display = 'flex';
 
         const dot = item.querySelector('.session-dot');
         const name = item.querySelector('.session-name');
@@ -4444,7 +4518,7 @@ function applyCustomWorkouts() {
       return;
     }
 
-    // NORMAL DAY: SHOW WORKOUT NORMALLY
+    // NORMAL DAY OR OPTIONAL WEEKEND DAY:
     item.style.display = 'flex';
     item.classList.remove('is-rest-session');
 
@@ -4455,16 +4529,21 @@ function applyCustomWorkouts() {
     const cleanTitle = (WORKOUT_DISPLAY_NAMES[key] || (w ? w.title : def.name));
 
     if (customKey && w) {
+      item.style.border = '';
+      item.style.background = '';
+      if (checkCircle) checkCircle.style.display = 'flex';
       if (dot) dot.style.background = w.color;
       if (name) {
-        name.innerHTML = cleanTitle + ' <span class="swapped-badge">SWAPPED</span>';
+        name.innerHTML = cleanTitle + ' <span class="swapped-badge">' + (def.optional ? 'ADDED' : 'SWAPPED') + '</span>';
       }
       if (meta) {
         let shortMeta = '';
         if (w.exercises && w.exercises.length) shortMeta = w.exercises.length + ' EXERCISES';
         else if (w.meta && w.meta[1]) shortMeta = w.meta[1];
         else shortMeta = 'CUSTOM';
-        meta.innerHTML = '<span style="color:var(--text-dim)">PREV: ' + def.name + '</span> · <span style="color:var(--gold)">' + shortMeta + '</span>';
+        meta.innerHTML = def.optional
+          ? '<span style="color:var(--gold)">' + shortMeta + ' · TAP TO LOG WEIGHT/REPS</span>'
+          : '<span style="color:var(--text-dim)">PREV: ' + def.name + '</span> · <span style="color:var(--gold)">' + shortMeta + '</span>';
       }
       if (time && w.meta && w.meta[0]) time.textContent = w.meta[0];
       
@@ -4472,12 +4551,32 @@ function applyCustomWorkouts() {
         if (window.__longPressFired || (lpFiredAt && Date.now() - lpFiredAt < 350)) {
           window.__longPressFired = false;
           return;
-          }
+        }
         openModal(key, sId, def.day);
       };
       item.classList.add('is-customized');
       dayWorkouts[def.day].push(cleanTitle);
+    } else if (def.optional) {
+      // Optional weekend slot with NO workout preselected
+      item.style.border = '1px dashed rgba(212,168,67,0.35)';
+      item.style.background = 'rgba(255,255,255,0.02)';
+      if (checkCircle) checkCircle.style.display = 'none';
+      if (dot) dot.style.background = '#555568';
+      if (name) name.textContent = '+ ADD WORKOUT SESSION';
+      if (meta) meta.textContent = 'NO WORKOUT SELECTED · TAP OR HOLD TO ADD';
+      if (time) time.textContent = 'OPTIONAL';
+      item.onclick = function(e) {
+        if (window.__longPressFired || (lpFiredAt && Date.now() - lpFiredAt < 350)) {
+          window.__longPressFired = false;
+          return;
+        }
+        openChangeWorkoutModal(sId);
+      };
+      item.classList.remove('is-customized');
     } else {
+      item.style.border = '';
+      item.style.background = '';
+      if (checkCircle) checkCircle.style.display = 'flex';
       if (dot) dot.style.background = def.color;
       if (name) name.textContent = def.name;
       if (meta) meta.textContent = def.meta;
@@ -4497,8 +4596,8 @@ function applyCustomWorkouts() {
   });
 
   // Update Day Cards: Day Focus & Full Day Rest Blue Theme
-  const dayNames = ['MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY'];
-  for (let d = 0; d < 5; d++) {
+  const dayNames = ['MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY', 'SUNDAY'];
+  for (let d = 0; d < 7; d++) {
     const cardEl = document.getElementById('card-' + d);
     if (!cardEl) continue;
 
@@ -4963,16 +5062,22 @@ function buildReport(historyItem){
   const mDone = isHistory ? (historyItem.mDone || 0) : Object.keys(APP.mentalSteps).length;
   const rcDone = isHistory ? (historyItem.rcDone || 0) : Object.keys(APP.recovery).length;
   
-  // Day-by-day completion including Sat/Sun
+  // Day-by-day completion including Sat/Sun (Saturday/Sunday default to 0% when no workout is selected)
+  const activeCustomWorkoutsForDays = (historyItem && historyItem.customWorkouts) ? historyItem.customWorkouts : (APP.customWorkouts || {});
   const dayNames=['MON','TUE','WED','THU','FRI','SAT','SUN'];
   const dayTotals=[3,3,3,2,3,0,0];
   const dayData=dayNames.map((name,d)=>{
-    const dTot=dayTotals[d];
+    let dTot=dayTotals[d];
     let dDone=0;
-    if(dTot>0){
+    if(d>=5){
+      if(activeCustomWorkoutsForDays[`s-${d}-0`]){
+        dTot=1;
+        if(activeSessions[`s-${d}-0`])dDone=1;
+      }
+    }else if(dTot>0){
       for(let j=0;j<dTot;j++)if(activeSessions[`s-${d}-${j}`])dDone++;
     }
-    const dPct=dTot>0?Math.round((dDone/dTot)*100):(d===5?100:0);
+    const dPct=dTot>0?Math.round((dDone/dTot)*100):0;
     return{name,done:dDone,total:dTot,pct:dPct};
   });
 
@@ -5158,11 +5263,11 @@ function buildReport(historyItem){
   // Completed sessions log with full exercise sets and data
   let completedSessionsHTML = '';
   const completedList = [];
-  const dayNamesFull = ['MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY'];
-  const dayShortNames = ['MON', 'TUE', 'WED', 'THU', 'FRI'];
+  const dayNamesFull = ['MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY', 'SUNDAY'];
+  const dayShortNames = ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'];
 
-  for (let d = 0; d < 5; d++) {
-    const dTot = DAY_TOTALS[d] || 3;
+  for (let d = 0; d < 7; d++) {
+    const dTot = d >= 5 ? (activeCustomWorkouts[`s-${d}-0`] ? 1 : 0) : (DAY_TOTALS[d] || 3);
     for (let j = 0; j < dTot; j++) {
       const sId = 's-' + d + '-' + j;
       if (activeSessions[sId]) {
@@ -5544,6 +5649,49 @@ function buildReport(historyItem){
         ${compBarsSvg}
       </svg>
     </div>
+
+    <!-- CHART 1B: 7-DAY BODY WEIGHT TREND -->
+    ${(() => {
+      const bwPoints = [];
+      const nowD = new Date();
+      const dShort = ['SUN','MON','TUE','WED','THU','FRI','SAT'];
+      for (let i = 6; i >= 0; i--) {
+        const dt = new Date(nowD);
+        dt.setDate(nowD.getDate() - i);
+        const dk = dt.getFullYear() + '-' + String(dt.getMonth() + 1).padStart(2, '0') + '-' + String(dt.getDate()).padStart(2, '0');
+        const v = activeWeightLogs[dk] ? parseFloat(activeWeightLogs[dk]) : null;
+        bwPoints.push({ day: dShort[dt.getDay()], val: v !== null ? v : (parseFloat(curWeight) || 94.5) });
+      }
+      const bwMin = Math.min(93.0, ...bwPoints.map(p => p.val)) - 0.5;
+      const bwMax = Math.max(96.0, ...bwPoints.map(p => p.val)) + 0.5;
+      const getBWX = (idx) => aPadL + (idx / Math.max(1, bwPoints.length - 1)) * aChartW;
+      const getBWY = (val) => aPadT + aChartH - ((val - bwMin) / (bwMax - bwMin)) * aChartH;
+      let bwPath = '', bwDots = '';
+      bwPoints.forEach((p, i) => {
+        const x = getBWX(i), y = getBWY(p.val);
+        bwPath += (i === 0 ? 'M ' : ' L ') + x + ' ' + y;
+        const col = (p.val >= 94.0 && p.val <= 95.0) ? '#30D158' : '#D4A843';
+        bwDots += '<circle cx="' + x + '" cy="' + y + '" r="3.5" fill="' + col + '" stroke="#060608" stroke-width="1.5" />' +
+          '<text x="' + x + '" y="' + Math.max(10, y - 6) + '" font-family="\'DM Mono\', monospace" font-size="7.5" fill="#FFFFFF" text-anchor="middle">' + p.val.toFixed(1) + '</text>' +
+          '<text x="' + x + '" y="' + (aSvgH - 5) + '" font-family="\'DM Mono\', monospace" font-size="8" fill="#555568" text-anchor="middle">' + p.day + '</text>';
+      });
+      const y95 = getBWY(95.0), y94 = getBWY(94.0);
+      return '<div class="rp-chart-card" style="border-color:rgba(212,168,67,0.3)">' +
+        '<div class="rp-chart-head"><div class="rp-chart-title" style="color:var(--gold)">⚖️ 7-DAY BODY WEIGHT TREND</div><div style="font-family:\'DM Mono\',monospace;font-size:8px;color:#30D158">TARGET: 94.0–95.0 KG</div></div>' +
+        '<svg class="rp-chart-svg" viewBox="0 0 ' + aSvgW + ' ' + aSvgH + '">' +
+          '<rect x="' + aPadL + '" y="' + y95 + '" width="' + aChartW + '" height="' + Math.max(2, y94 - y95) + '" fill="rgba(48,209,88,0.08)" />' +
+          '<line x1="' + aPadL + '" y1="' + y95 + '" x2="' + (aSvgW - aPadR) + '" y2="' + y95 + '" stroke="rgba(48,209,88,0.35)" stroke-dasharray="3,3" />' +
+          '<line x1="' + aPadL + '" y1="' + y94 + '" x2="' + (aSvgW - aPadR) + '" y2="' + y94 + '" stroke="rgba(48,209,88,0.35)" stroke-dasharray="3,3" />' +
+          '<text x="' + (aPadL - 4) + '" y="' + (y95 + 3) + '" font-family="\'DM Mono\', monospace" font-size="7.5" fill="#30D158" text-anchor="end">95</text>' +
+          '<text x="' + (aPadL - 4) + '" y="' + (y94 + 3) + '" font-family="\'DM Mono\', monospace" font-size="7.5" fill="#30D158" text-anchor="end">94</text>' +
+          '<path d="' + bwPath + '" fill="none" stroke="#D4A843" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />' +
+          bwDots +
+        '</svg>' +
+        '<div style="display:flex;justify-content:space-between;align-items:center;padding-top:6px;border-top:1px solid var(--border2);font-family:\'DM Mono\',monospace;font-size:9px">' +
+          '<span>Current: <strong style="color:var(--gold)">' + curWeight + ' KG</strong> · 7-Day Avg: <strong style="color:#fff">' + avgWeight + ' KG</strong></span>' +
+          '<span style="color:#30D158;font-weight:600">✓ COMPETITION WEIGHT ZONE</span>' +
+        '</div></div>';
+    })()}
 
     <!-- CHART 2: ACHILLES PAIN TREND -->
     <div class="rp-chart-card" style="border-color:rgba(224,52,52,0.25)">
@@ -6059,7 +6207,7 @@ function renderPDFDossier(historyItem) {
         if (activeSessions['s-' + d + '-' + j]) dDone++;
       }
     }
-    const dPct = dTot > 0 ? Math.round((dDone / dTot) * 100) : (d === 5 ? 100 : 0);
+    const dPct = dTot > 0 ? Math.round((dDone / dTot) * 100) : 0;
     const bH = Math.max(6, (dPct / 100) * 46);
     const y = 52 - bH;
     const color = dPct === 100 ? '#30D158' : (dPct > 0 ? '#D4A843' : 'rgba(255,255,255,0.08)');
@@ -6103,7 +6251,7 @@ function renderPDFDossier(historyItem) {
       const key = customKey || (def ? def.key : null);
       const w = (key && WORKOUTS[key]) ? WORKOUTS[key] : null;
       const isDone = !!activeSessions[sId];
-      const dayShort = ['MON', 'TUE', 'WED', 'THU', 'FRI'][def ? def.day : 0];
+      const dayShort = ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'][def ? def.day : 0];
 
       if (w && w.exercises && w.exercises.length > 0) {
         w.exercises.forEach((ex, exIdx) => {
@@ -6142,6 +6290,13 @@ function renderPDFDossier(historyItem) {
 
   const container = document.getElementById('pdf-dossier');
   if (!container) return;
+  if (typeof renderA4DarkCanvases === 'function') {
+    const { svg1, svg2 } = renderA4DarkCanvases(item, true);
+    if (svg1 && svg2) {
+      container.innerHTML = '<div class="pdf-page pdf-page-1">' + svg1 + '</div><div class="pdf-page pdf-page-2">' + svg2 + '</div>';
+      return;
+    }
+  }
 
   container.innerHTML = `
     <!-- ════════════ PAGE 1: EXECUTIVE & PHYSIOLOGICAL HEALTH (1 PAGE FULL A4) ════════════ -->
@@ -6547,7 +6702,98 @@ function buildTwoPagePDFBlob(jpegDataUrl1, jpegDataUrl2, imgW, imgH) {
   return new Blob(chunks, { type: 'application/pdf' });
 }
 
+function createSVGContext(W, H) {
+  const mCanvas = document.createElement('canvas');
+  const mCtx = mCanvas.getContext('2d');
+  const els = [];
+  let pathCmds = [];
+  let circles = [];
+  let lineDash = [];
+  const esc = (s) => String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  const ctx = {
+    isSVG: true,
+    fillStyle: '#000000',
+    strokeStyle: '#000000',
+    lineWidth: 1,
+    font: '400 12px sans-serif',
+    textAlign: 'left',
+    globalAlpha: 1,
+    createRadialGradient() {
+      return { isGrad: true, addColorStop() {} };
+    },
+    measureText(s) {
+      mCtx.font = this.font;
+      return mCtx.measureText(s);
+    },
+    fillRect(x, y, w, h) {
+      const fill = (this.fillStyle && this.fillStyle.isGrad) ? 'url(#pdfBgGlow)' : this.fillStyle;
+      const op = this.globalAlpha < 1 ? ' opacity="' + this.globalAlpha + '"' : '';
+      els.push('<rect x="' + x + '" y="' + y + '" width="' + w + '" height="' + h + '" fill="' + esc(fill) + '"' + op + ' />');
+    },
+    drawRoundedRect(x, y, w, h, r, fill, stroke, lineW) {
+      const f = fill ? esc(fill) : 'none';
+      const s = stroke ? ' stroke="' + esc(stroke) + '" stroke-width="' + (lineW || 1) + '"' : '';
+      const op = this.globalAlpha < 1 ? ' opacity="' + this.globalAlpha + '"' : '';
+      els.push('<rect x="' + x + '" y="' + y + '" width="' + w + '" height="' + h + '" rx="' + r + '" ry="' + r + '" fill="' + f + '"' + s + op + ' />');
+    },
+    fillText(text, x, y) {
+      const m = String(this.font).match(/^(\d+)\s+([\d.]+)px\s+(.+)$/);
+      const fw = m ? m[1] : '400';
+      const fs = m ? m[2] : '12';
+      const ff = m ? m[3].replace(/"/g, "'") : 'sans-serif';
+      const anchor = this.textAlign === 'center' ? 'middle' : (this.textAlign === 'right' ? 'end' : 'start');
+      const op = this.globalAlpha < 1 ? ' opacity="' + this.globalAlpha + '"' : '';
+      els.push('<text x="' + x + '" y="' + y + '" font-family="' + esc(ff) + '" font-size="' + fs + '" font-weight="' + fw + '" fill="' + esc(this.fillStyle) + '" text-anchor="' + anchor + '"' + op + '>' + esc(text) + '</text>');
+    },
+    beginPath() {
+      pathCmds = [];
+      circles = [];
+    },
+    moveTo(x, y) {
+      pathCmds.push('M ' + x + ' ' + y);
+    },
+    lineTo(x, y) {
+      pathCmds.push('L ' + x + ' ' + y);
+    },
+    quadraticCurveTo(cx, cy, x, y) {
+      pathCmds.push('Q ' + cx + ' ' + cy + ' ' + x + ' ' + y);
+    },
+    closePath() {
+      pathCmds.push('Z');
+    },
+    arc(x, y, r) {
+      circles.push({ x, y, r });
+    },
+    setLineDash(arr) {
+      lineDash = Array.isArray(arr) ? arr : [];
+    },
+    stroke() {
+      if (pathCmds.length) {
+        const dash = lineDash.length ? ' stroke-dasharray="' + lineDash.join(',') + '"' : '';
+        els.push('<path d="' + pathCmds.join(' ') + '" fill="none" stroke="' + esc(this.strokeStyle) + '" stroke-width="' + (this.lineWidth || 1) + '" stroke-linecap="round" stroke-linejoin="round"' + dash + ' />');
+      }
+    },
+    fill() {
+      if (circles.length) {
+        circles.forEach(c => {
+          els.push('<circle cx="' + c.x + '" cy="' + c.y + '" r="' + c.r + '" fill="' + esc(this.fillStyle) + '" />');
+        });
+      } else if (pathCmds.length) {
+        els.push('<path d="' + pathCmds.join(' ') + '" fill="' + esc(this.fillStyle) + '" />');
+      }
+    },
+    toSVG() {
+      return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ' + W + ' ' + H + '" width="100%" height="100%" preserveAspectRatio="none">' +
+        '<defs><radialGradient id="pdfBgGlow" cx="50%" cy="0%" r="55%"><stop offset="0%" stop-color="#D4A843" stop-opacity="0.08"/><stop offset="100%" stop-color="#060608" stop-opacity="0"/></radialGradient></defs>' +
+        els.join('') +
+        '</svg>';
+    }
+  };
+  return ctx;
+}
+
 function drawRoundedRect(ctx, x, y, w, h, r, fill, stroke, lineW) {
+  if (ctx && ctx.isSVG) { ctx.drawRoundedRect(x, y, w, h, r, fill, stroke, lineW); return; }
   ctx.beginPath();
   ctx.moveTo(x + r, y);
   ctx.lineTo(x + w - r, y);
@@ -6580,7 +6826,7 @@ function fitText(ctx, text, maxWidth) {
   return cut + '…';
 }
 
-function renderA4DarkCanvases(historyItem) {
+function renderA4DarkCanvases(historyItem, useSVG) {
   const item = historyItem || window.CURRENT_REPORT_ITEM;
   const isHistory = !!item;
   const curWeek = isHistory ? item.week : (APP.weekKey || 'CURRENT WEEK');
@@ -6712,7 +6958,7 @@ function renderA4DarkCanvases(historyItem) {
   const c1 = document.createElement('canvas');
   c1.width = W;
   c1.height = H;
-  const ctx1 = c1.getContext('2d');
+  const ctx1 = useSVG ? createSVGContext(W, H) : c1.getContext('2d');
 
   // 100% Full-Bleed Dark Background (#060608) - Zero white anywhere
   ctx1.fillStyle = '#060608';
@@ -6837,12 +7083,17 @@ function renderA4DarkCanvases(historyItem) {
   const cSpace = (colW - 64 - cBarW * 7) / 6;
   dayNames7.forEach((dName, d) => {
     const bx = padX + 32 + d * (cBarW + cSpace);
-    const dTot = dayTotals7[d];
+    let dTot = dayTotals7[d];
     let dDone = 0;
-    if (dTot > 0) {
+    if (d >= 5) {
+      if (activeCustomWorkouts['s-' + d + '-0']) {
+        dTot = 1;
+        if (activeSessions['s-' + d + '-0']) dDone = 1;
+      }
+    } else if (dTot > 0) {
       for (let j = 0; j < dTot; j++) if (activeSessions['s-' + d + '-' + j]) dDone++;
     }
-    const dPct = dTot > 0 ? Math.round((dDone / dTot) * 100) : (d === 5 ? 100 : 0);
+    const dPct = dTot > 0 ? Math.round((dDone / dTot) * 100) : 0;
     const bh = Math.max(12, (dPct / 100) * 118);
     const by = 740 - bh;
     const barCol = dPct === 100 ? '#30D158' : (dPct > 0 ? '#D4A843' : 'rgba(255,255,255,0.12)');
@@ -6952,19 +7203,18 @@ function renderA4DarkCanvases(historyItem) {
     ctx1.fillText(b.sub, bx + 18, 914);
   });
 
-  // Lower 2-Column Section: 7-Day Weight Curve + Daily Training Execution (y = 956, h = 524)
-  // Left Card: 7-Day Body Weight Trend & Biometric Curve
-  drawRoundedRect(ctx1, padX, 956, colW, 524, 10, '#111116', 'rgba(212,168,67,0.35)', 1.5);
+  // Lower 2-Column Section: Left = 7-Day Body Weight Trend + 7-Day Achilles Pain Trend | Right = Mon-Sun Execution (y = 956, h = 524)
+  // Left Top Card: 7-Day Body Weight Trend & Competition Zone (y = 956, h = 254)
+  drawRoundedRect(ctx1, padX, 956, colW, 254, 10, '#111116', 'rgba(212,168,67,0.35)', 1.5);
   ctx1.fillStyle = '#D4A843';
-  ctx1.font = '700 19px "Bebas Neue", "Barlow Condensed", sans-serif';
-  ctx1.fillText('7-DAY BODY WEIGHT TREND & COMPETITION ZONE', padX + 18, 988);
+  ctx1.font = '700 18px "Bebas Neue", "Barlow Condensed", sans-serif';
+  ctx1.fillText('7-DAY BODY WEIGHT TREND & COMPETITION ZONE', padX + 18, 984);
   ctx1.fillStyle = '#30D158';
-  ctx1.font = '700 11px "DM Mono", monospace';
+  ctx1.font = '700 10.5px "DM Mono", monospace';
   ctx1.textAlign = 'right';
-  ctx1.fillText('TARGET: 94.0–95.0 KG', padX + colW - 18, 986);
+  ctx1.fillText('AVG: ' + avgWeight + ' KG · TARGET: 94.0–95.0 KG', padX + colW - 18, 982);
   ctx1.textAlign = 'left';
 
-  // Build 7-day weight points
   const wPoints = [];
   const nowD = new Date();
   const dNamesShort = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
@@ -6977,11 +7227,10 @@ function renderA4DarkCanvases(historyItem) {
   }
   const wMin = Math.min(93.0, ...wPoints.map(p => p.val)) - 0.5;
   const wMax = Math.max(96.0, ...wPoints.map(p => p.val)) + 0.5;
-  const chartX = padX + 46, chartY = 1025, chartW = colW - 76, chartH = 240;
+  const chartX = padX + 46, chartY = 1012, chartW = colW - 76, chartH = 152;
   const getWX = (i) => chartX + (i / 6) * chartW;
   const getWY = (v) => chartY + chartH - ((v - wMin) / (wMax - wMin)) * chartH;
 
-  // Competition target band (94.0 - 95.0 kg)
   const y95 = getWY(95.0), y94 = getWY(94.0);
   ctx1.fillStyle = 'rgba(48,209,88,0.09)';
   ctx1.fillRect(chartX, y95, chartW, y94 - y95);
@@ -6994,14 +7243,13 @@ function renderA4DarkCanvases(historyItem) {
   ctx1.setLineDash([]);
 
   ctx1.fillStyle = '#30D158';
-  ctx1.font = '600 11px "DM Mono", monospace';
+  ctx1.font = '600 10.5px "DM Mono", monospace';
   ctx1.textAlign = 'right';
   ctx1.fillText('95.0', chartX - 8, y95 + 4);
   ctx1.fillText('94.0', chartX - 8, y94 + 4);
 
-  // Weight line & dots
   ctx1.strokeStyle = '#D4A843';
-  ctx1.lineWidth = 3;
+  ctx1.lineWidth = 2.8;
   ctx1.beginPath();
   wPoints.forEach((p, i) => {
     const px = getWX(i), py = getWY(p.val);
@@ -7014,38 +7262,99 @@ function renderA4DarkCanvases(historyItem) {
     const px = getWX(i), py = getWY(p.val);
     ctx1.fillStyle = (p.val >= 94.0 && p.val <= 95.0) ? '#30D158' : '#D4A843';
     ctx1.beginPath();
-    ctx1.arc(px, py, 6, 0, Math.PI * 2);
+    ctx1.arc(px, py, 5, 0, Math.PI * 2);
     ctx1.fill();
     ctx1.fillStyle = '#FFFFFF';
-    ctx1.font = '700 11.5px "DM Mono", monospace';
+    ctx1.font = '700 10.5px "DM Mono", monospace';
     ctx1.textAlign = 'center';
-    ctx1.fillText(p.val.toFixed(1), px, py - 12);
+    ctx1.fillText(p.val.toFixed(1), px, py - 10);
     ctx1.fillStyle = '#999AB0';
-    ctx1.font = '600 11.5px "DM Mono", monospace';
-    ctx1.fillText(p.day, px, chartY + chartH + 24);
+    ctx1.font = '600 11px "DM Mono", monospace';
+    ctx1.fillText(p.day, px, chartY + chartH + 22);
   });
   ctx1.textAlign = 'left';
 
-  // Biometric summary boxes at bottom of Weight Card
-  drawRoundedRect(ctx1, padX + 18, 1320, colW - 36, 140, 8, 'rgba(255,255,255,0.03)', 'rgba(255,255,255,0.08)', 1);
-  ctx1.fillStyle = '#D4A843';
-  ctx1.font = '700 12px "DM Mono", monospace';
-  ctx1.fillText('// BIOMETRIC & HYDRATION COMPLIANCE SUMMARY', padX + 32, 1348);
-  ctx1.fillStyle = '#E8E8F0';
-  ctx1.font = '500 13.5px "Barlow", sans-serif';
-  ctx1.fillText('• Current Logged Weight: ' + curWeight + ' kg   |   7-Day Rolling Average: ' + avgWeight + ' kg', padX + 32, 1378);
-  ctx1.fillText('• Daily Hydration Target: 3.5L Water + Electrolytes (1500mg Sodium + Magnesium)', padX + 32, 1406);
-  ctx1.fillText('• Post-Session Tendon Nutrition: 20g Collagen Peptides + Vitamin C 45m Pre-Load', padX + 32, 1434);
+  // Left Bottom Card: 7-Day Achilles Pain & Recovery Trend (y = 1226, h = 254)
+  drawRoundedRect(ctx1, padX, 1226, colW, 254, 10, '#111116', 'rgba(224,52,52,0.4)', 1.5);
+  ctx1.fillStyle = '#FF6B6B';
+  ctx1.font = '700 18px "Bebas Neue", "Barlow Condensed", sans-serif';
+  ctx1.fillText('7-DAY ACHILLES PAIN & RECOVERY TREND (DURING VS 24H POST)', padX + 18, 1254);
+  ctx1.fillStyle = '#30D158';
+  ctx1.font = '700 10px "DM Mono", monospace';
+  ctx1.textAlign = 'right';
+  ctx1.fillText('DURING: ' + avgADuring + '/5 · 24H POST: ' + avgAAfter + '/5', padX + colW - 18, 1252);
+  ctx1.textAlign = 'left';
 
-  // Right Card: Weekly Schedule & Day-by-Day Execution (x = rx, y = 956, h = 524)
+  const aChartX = padX + 46, aChartY = 1280, aChartW = colW - 76, aChartH = 152;
+  const getAX = (i) => aChartX + (i / Math.max(1, achillesTrend.length - 1)) * aChartW;
+  const getAY = (v) => aChartY + aChartH - (Math.min(5, Math.max(0, v)) / 5) * aChartH;
+  const ay2 = getAY(2), ay4 = getAY(4), ay0 = getAY(0);
+
+  // Safe adaptation zone (0 - 2/5)
+  ctx1.fillStyle = 'rgba(48,209,88,0.08)';
+  ctx1.fillRect(aChartX, ay2, aChartW, ay0 - ay2);
+  ctx1.strokeStyle = 'rgba(48,209,88,0.35)';
+  ctx1.setLineDash([4, 4]);
+  ctx1.beginPath();
+  ctx1.moveTo(aChartX, ay2); ctx1.lineTo(aChartX + aChartW, ay2);
+  ctx1.moveTo(aChartX, ay4); ctx1.lineTo(aChartX + aChartW, ay4);
+  ctx1.stroke();
+  ctx1.setLineDash([]);
+
+  ctx1.fillStyle = '#30D158';
+  ctx1.font = '600 10.5px "DM Mono", monospace';
+  ctx1.textAlign = 'right';
+  ctx1.fillText('2/5', aChartX - 8, ay2 + 4);
+  ctx1.fillStyle = '#FFD60A';
+  ctx1.fillText('4/5', aChartX - 8, ay4 + 4);
+
+  // 24h Post line (#3478F6)
+  ctx1.strokeStyle = '#3478F6';
+  ctx1.lineWidth = 2.6;
+  ctx1.beginPath();
+  achillesTrend.forEach((p, i) => {
+    const px = getAX(i), py = getAY(p.after || 0);
+    if (i === 0) ctx1.moveTo(px, py);
+    else ctx1.lineTo(px, py);
+  });
+  ctx1.stroke();
+
+  // During Session line (#E03434)
+  ctx1.strokeStyle = '#E03434';
+  ctx1.lineWidth = 2.6;
+  ctx1.beginPath();
+  achillesTrend.forEach((p, i) => {
+    const px = getAX(i), py = getAY(p.during || 0);
+    if (i === 0) ctx1.moveTo(px, py);
+    else ctx1.lineTo(px, py);
+  });
+  ctx1.stroke();
+
+  achillesTrend.forEach((p, i) => {
+    const px = getAX(i), pyd = getAY(p.during || 0), pya = getAY(p.after || 0);
+    ctx1.fillStyle = '#3478F6';
+    ctx1.beginPath(); ctx1.arc(px, pya, 4.5, 0, Math.PI * 2); ctx1.fill();
+    ctx1.fillStyle = '#E03434';
+    ctx1.beginPath(); ctx1.arc(px, pyd, 4.5, 0, Math.PI * 2); ctx1.fill();
+    ctx1.fillStyle = '#FFFFFF';
+    ctx1.font = '700 10px "DM Mono", monospace';
+    ctx1.textAlign = 'center';
+    ctx1.fillText((p.during || 0) + '/' + (p.after || 0), px, Math.min(pyd, pya) - 9);
+    ctx1.fillStyle = '#999AB0';
+    ctx1.font = '600 11px "DM Mono", monospace';
+    ctx1.fillText(p.day || dNamesShort[i % 7], px, aChartY + aChartH + 22);
+  });
+  ctx1.textAlign = 'left';
+
+  // Right Card: Weekly Schedule & Day-by-Day Execution (MON — SUN) (x = rx, y = 956, h = 524)
   drawRoundedRect(ctx1, rx, 956, colW, 524, 10, '#111116', 'rgba(212,168,67,0.35)', 1.5);
   ctx1.fillStyle = '#FFFFFF';
   ctx1.font = '700 19px "Bebas Neue", "Barlow Condensed", sans-serif';
-  ctx1.fillText('WEEKLY TRAINING SCHEDULE & EXECUTION (MON — FRI)', rx + 18, 988);
+  ctx1.fillText('WEEKLY TRAINING SCHEDULE & EXECUTION (MON — SUN)', rx + 18, 988);
   ctx1.fillStyle = '#30D158';
   ctx1.font = '700 11px "DM Mono", monospace';
   ctx1.textAlign = 'right';
-  ctx1.fillText(doneCount + '/14 SESSIONS LOGGED', rx + colW - 18, 986);
+  ctx1.fillText(doneCount + '/14 CORE SESSIONS LOGGED', rx + colW - 18, 986);
   ctx1.textAlign = 'left';
 
   const dayFullLabels = [
@@ -7053,17 +7362,32 @@ function renderA4DarkCanvases(historyItem) {
     { name: 'TUESDAY', tag: 'SKILL + HYDRO RECOVERY', ids: ['s-1-0', 's-1-1', 's-1-2'] },
     { name: 'WEDNESDAY', tag: 'POSTERIOR + ROTATIONAL', ids: ['s-2-0', 's-2-1', 's-2-2'] },
     { name: 'THURSDAY', tag: 'PEAK COMPETITIVE DAY', ids: ['s-3-0', 's-3-1'] },
-    { name: 'FRIDAY', tag: 'FULL INTEGRATION + POOL', ids: ['s-4-0', 's-4-1', 's-4-2'] }
+    { name: 'FRIDAY', tag: 'FULL INTEGRATION + POOL', ids: ['s-4-0', 's-4-1', 's-4-2'] },
+    { name: 'SATURDAY', tag: 'OPTIONAL / OPEN DAY', ids: ['s-5-0'], optional: true },
+    { name: 'SUNDAY', tag: 'OPTIONAL / OPEN DAY', ids: ['s-6-0'], optional: true }
   ];
 
   dayFullLabels.forEach((dObj, dIdx) => {
-    const dy = 1012 + dIdx * 90;
-    drawRoundedRect(ctx1, rx + 18, dy, colW - 36, 78, 8, 'rgba(255,255,255,0.025)', 'rgba(255,255,255,0.08)', 1);
+    const dy = 1004 + dIdx * 66;
+    drawRoundedRect(ctx1, rx + 18, dy, colW - 36, 58, 8, 'rgba(255,255,255,0.025)', 'rgba(255,255,255,0.08)', 1);
 
     let dDoneCount = 0;
+    let reqCount = dObj.ids.length;
     const sTitles = [];
     const restSId = dObj.ids.find(id => activeCustomWorkouts[id] === 'rest-day');
-    if (restSId) {
+    if (dObj.optional) {
+      const cKey = activeCustomWorkouts[dObj.ids[0]];
+      if (cKey) {
+        reqCount = 1;
+        if (activeSessions[dObj.ids[0]]) dDoneCount = 1;
+        sTitles.push(WORKOUT_DISPLAY_NAMES[cKey] || 'CUSTOM WORKOUT');
+      } else {
+        reqCount = 0;
+        dDoneCount = 0;
+        sTitles.push('No Workout Selected · Optional Open Slot');
+      }
+    } else if (restSId) {
+      reqCount = 1;
       sTitles.push('FULL REST DAY — OFF & SLEEP');
       if (activeSessions[restSId]) dDoneCount = 1;
     } else {
@@ -7075,24 +7399,23 @@ function renderA4DarkCanvases(historyItem) {
         sTitles.push(WORKOUT_DISPLAY_NAMES[k] || (def ? def.name : 'SESSION'));
       });
     }
-    const reqCount = restSId ? 1 : dObj.ids.length;
-    const isDayComplete = dDoneCount >= reqCount;
+    const isDayComplete = reqCount > 0 && dDoneCount >= reqCount;
 
     ctx1.fillStyle = '#D4A843';
-    ctx1.font = '700 13px "DM Mono", monospace';
-    ctx1.fillText(dObj.name + ' · ' + dObj.tag, rx + 32, dy + 28);
-
-    ctx1.fillStyle = '#E8E8F0';
-    ctx1.font = '600 13.5px "Barlow", sans-serif';
-    ctx1.fillText(fitText(ctx1, sTitles.join('  ·  '), colW - 175), rx + 32, dy + 56);
-
-    const badgeBg = isDayComplete ? 'rgba(48,209,88,0.18)' : 'rgba(212,168,67,0.15)';
-    const badgeCol = isDayComplete ? '#30D158' : '#D4A843';
-    drawRoundedRect(ctx1, rx + colW - 128, dy + 22, 94, 32, 6, badgeBg, badgeCol, 1);
-    ctx1.fillStyle = badgeCol;
     ctx1.font = '700 12px "DM Mono", monospace';
+    ctx1.fillText(dObj.name + ' · ' + dObj.tag, rx + 28, dy + 22);
+
+    ctx1.fillStyle = reqCount === 0 ? '#888898' : '#E8E8F0';
+    ctx1.font = '600 12.5px "Barlow", sans-serif';
+    ctx1.fillText(fitText(ctx1, sTitles.join('  ·  '), colW - 170), rx + 28, dy + 44);
+
+    const badgeBg = isDayComplete ? 'rgba(48,209,88,0.18)' : (reqCount === 0 ? 'rgba(255,255,255,0.05)' : 'rgba(212,168,67,0.15)');
+    const badgeCol = isDayComplete ? '#30D158' : (reqCount === 0 ? '#888898' : '#D4A843');
+    drawRoundedRect(ctx1, rx + colW - 124, dy + 15, 90, 28, 6, badgeBg, badgeCol, 1);
+    ctx1.fillStyle = badgeCol;
+    ctx1.font = '700 11px "DM Mono", monospace';
     ctx1.textAlign = 'center';
-    ctx1.fillText(dDoneCount + '/' + reqCount + (isDayComplete ? ' ✓' : ''), rx + colW - 81, dy + 43);
+    ctx1.fillText(dDoneCount + '/' + reqCount + (isDayComplete ? ' ✓' : ''), rx + colW - 79, dy + 33);
     ctx1.textAlign = 'left';
   });
 
@@ -7135,7 +7458,7 @@ function renderA4DarkCanvases(historyItem) {
   const c2 = document.createElement('canvas');
   c2.width = W;
   c2.height = H;
-  const ctx2 = c2.getContext('2d');
+  const ctx2 = useSVG ? createSVGContext(W, H) : c2.getContext('2d');
 
   // 100% Full-Bleed Dark Background (#060608) - Zero white anywhere
   ctx2.fillStyle = '#060608';
@@ -7292,10 +7615,22 @@ function renderA4DarkCanvases(historyItem) {
     });
   }
 
-  const weightRows = collectCategoryExercises(['s-0-0', 's-2-0', 's-3-1']);
-  const bballRows = collectCategoryExercises(['s-1-0', 's-3-0', 's-4-0']);
-  const fasciaRows = collectCategoryExercises(['s-0-1', 's-2-1', 's-4-1']);
-  const poolRows = collectCategoryExercises(['s-1-1', 's-1-2', 's-4-2']);
+  const wIds = ['s-0-0', 's-2-0', 's-3-1'];
+  const bIds = ['s-1-0', 's-3-0', 's-4-0'];
+  const fIds = ['s-0-1', 's-2-1', 's-4-1'];
+  const pIds = ['s-1-1', 's-1-2', 's-4-2'];
+  ['s-5-0', 's-6-0'].forEach(sId => {
+    const ck = activeCustomWorkouts[sId];
+    if (!ck) return;
+    if (ck.startsWith('weight')) wIds.push(sId);
+    else if (ck.startsWith('bball')) bIds.push(sId);
+    else if (ck.startsWith('fascia') || ck === 'achilles-rehab' || ck === 'track-speed') fIds.push(sId);
+    else pIds.push(sId);
+  });
+  const weightRows = collectCategoryExercises(wIds);
+  const bballRows = collectCategoryExercises(bIds);
+  const fasciaRows = collectCategoryExercises(fIds);
+  const poolRows = collectCategoryExercises(pIds);
 
   // Left Column: Weight Room (15 rows, h=780) + Basketball (13 rows, h=682)
   drawCategoryCard(padX, 168, colW, 780, 'WEIGHT ROOM — MAX POWER & CAT METHOD', 'MON · WED · THU', '#FF6B6B', weightRows, 'LOGGED');
@@ -7316,33 +7651,27 @@ function renderA4DarkCanvases(historyItem) {
   ctx2.fillText('PAGE 2 OF 2 — END OF REPORT', W - padX, 1682);
   ctx2.textAlign = 'left';
 
-  return { c1, c2, wNum };
+  return { c1, c2, svg1: useSVG ? ctx1.toSVG() : null, svg2: useSVG ? ctx2.toSVG() : null, wNum };
 }
 
 function exportReportPDF(historyItem) {
   const item = historyItem || window.CURRENT_REPORT_ITEM;
   try {
-    renderPDFDossier(item);
-    showToast('GENERATING 2-PAGE DARK A4 PDF... 📄', 'toast-fire');
+    const { svg1, svg2, wNum } = renderA4DarkCanvases(item, true);
+    const container = document.getElementById('pdf-dossier');
+    if (container && svg1 && svg2) {
+      container.innerHTML = '<div class="pdf-page pdf-page-1">' + svg1 + '</div><div class="pdf-page pdf-page-2">' + svg2 + '</div>';
+    } else {
+      renderPDFDossier(item);
+    }
+    const prevTitle = document.title;
+    document.title = 'Tiegbe Bamba — Week ' + (wNum || 9) + ' Performance Report';
+    showToast('OPENING PRINT / SAVE AS PDF... 📄', 'toast-fire');
     if (typeof SoundFX !== 'undefined' && SoundFX.vibrate) SoundFX.vibrate(80);
-
-    const { c1, c2, wNum } = renderA4DarkCanvases(item);
-    const jpg1 = c1.toDataURL('image/jpeg', 0.94);
-    const jpg2 = c2.toDataURL('image/jpeg', 0.94);
-    const pdfBlob = buildTwoPagePDFBlob(jpg1, jpg2, c1.width, c1.height);
-
-    const fileName = 'Tiegbe-Bamba-Week-' + wNum + '-Report.pdf';
-    const pdfUrl = URL.createObjectURL(pdfBlob);
-
-    const dlAnchor = document.createElement('a');
-    dlAnchor.href = pdfUrl;
-    dlAnchor.download = fileName;
-    document.body.appendChild(dlAnchor);
-    dlAnchor.click();
-    dlAnchor.remove();
-
-    setTimeout(() => URL.revokeObjectURL(pdfUrl), 15000);
-    showToast('2-PAGE DARK A4 PDF DOWNLOADED ✓', 'toast-success');
+    setTimeout(() => {
+      window.print();
+      setTimeout(() => { document.title = prevTitle; }, 1000);
+    }, 120);
   } catch (err) {
     showToast('PDF EXPORT ERROR: ' + err.message, 'toast-warn');
   }
