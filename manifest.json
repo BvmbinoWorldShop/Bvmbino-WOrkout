@@ -1,0 +1,19 @@
+{
+  "name": "BVMBINO Training System",
+  "short_name": "BVMBINO",
+  "description": "Elite Off-Season Basketball & Athletic Performance Training System",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#060608",
+  "theme_color": "#060608",
+  "icons": [
+    {
+      "src": "./hero_img.jpg",
+      "sizes": "512x512",
+      "type": "image/jpeg",
+      "purpose": "any maskable"
+    }
+  ]
+}

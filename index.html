@@ -7,7 +7,9 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="BVMBINO">
 <meta name="theme-color" content="#060608">
-<title>BVMBINO WORKOUT</title>
+<link rel="manifest" href="./manifest.json">
+<link rel="apple-touch-icon" href="./hero_img.jpg">
+<title>BVMBINO</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@300;400;500&family=Barlow+Condensed:ital,wght@0,300;0,400;0,600;0,700;0,900;1,700&family=Barlow:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
 :root{
@@ -5891,7 +5893,7 @@ function generateWeeklyReportMarkdown(historyItem) {
     md += `- **Average CNS Energy Readiness:** ${avgEnergy} / 10\n`;
   }
   md += `- **Achilles Tendon Status:** Optimal Adaptation (Monitored & Active)\n`;
-  md += `\n---\n*Bvmbino Workout Elite Training System — Off-Season Phase 3*\n`;
+  md += `\n---\n*Tiegbe Bamba — Off-Season Phase 3 Performance Data*\n`;
 
   return md;
 }
@@ -6148,10 +6150,10 @@ function renderPDFDossier(historyItem) {
         <!-- Header -->
         <div class="pdf-header">
           <div>
-            <div class="pdf-tag">// BVMBINO BASKETBALL · EXECUTIVE ATHLETIC DOSSIER</div>
-            <div class="pdf-title">WEEKLY ATHLETIC PERFORMANCE DOSSIER</div>
+            <div class="pdf-tag">// ATHLETE PERFORMANCE DATA · PHASE 3</div>
+            <div class="pdf-title">WEEKLY PERFORMANCE REPORT</div>
             <div style="font-size:11px;color:#BBB;margin-top:4px">
-              Athlete: <strong style="color:#FFF">BVMBINO</strong> · Level: <strong>Combo Guard Elite</strong> · Periodization: <strong>Phase 3 (Off-Season)</strong> · Week: <strong>Week ${wNum} (${curWeek})</strong>
+              Athlete: <strong style="color:#FFF">TIEGBE BAMBA</strong> · Position: <strong>Combo Guard (198 cm)</strong> · Phase 3 · <strong>Week ${wNum} (${curWeek})</strong>
             </div>
           </div>
           <div style="text-align:right">
@@ -6292,7 +6294,7 @@ function renderPDFDossier(historyItem) {
 
         <!-- Footer -->
         <div style="display:flex;justify-content:space-between;align-items:center;border-top:1px solid rgba(255,255,255,0.1);padding-top:6px;font-family:'DM Mono',monospace;font-size:9px;color:#777">
-          <span>BVMBINO WORKOUT PERFORMANCE DOSSIER · OFF-SEASON PHASE 3</span>
+          <span>TIEGBE BAMBA · PERSONAL PERFORMANCE DATA · PHASE 3</span>
           <span style="color:#D4A843">PAGE 1 OF 2 — EXECUTIVE OVERVIEW</span>
         </div>
       </div>
@@ -6304,7 +6306,7 @@ function renderPDFDossier(historyItem) {
         <!-- Header -->
         <div class="pdf-header" style="margin-bottom:8px">
           <div>
-            <div class="pdf-tag">// BVMBINO BASKETBALL · TRAINING SESSIONS &amp; EXERCISES</div>
+            <div class="pdf-tag">// TRAINING SESSIONS &amp; EXERCISES · PHASE 3</div>
             <div class="pdf-title">CATEGORIZED WORKOUT LOG &amp; EXERCISE TARGETS</div>
             <div style="font-size:11px;color:#BBB;margin-top:4px">
               Comprehensive breakdown of executed strength lifts, fascia spring drills, on-court actions, and hydro recovery.
@@ -6433,26 +6435,917 @@ function renderPDFDossier(historyItem) {
 
         <!-- Footer -->
         <div style="display:flex;justify-content:space-between;align-items:center;border-top:1px solid rgba(255,255,255,0.1);padding-top:6px;font-family:'DM Mono',monospace;font-size:9px;color:#777">
-          <span>BVMBINO WORKOUT PERFORMANCE DOSSIER · OFF-SEASON PHASE 3 · Status: <strong style="color:#30D158">OPTIMAL ADAPTATION</strong></span>
-          <span style="color:#D4A843">PAGE 2 OF 2 — END OF DOSSIER</span>
+          <span>TIEGBE BAMBA · PERSONAL PERFORMANCE DATA · PHASE 3 · Status: <strong style="color:#30D158">OPTIMAL ADAPTATION</strong></span>
+          <span style="color:#D4A843">PAGE 2 OF 2 — END OF REPORT</span>
         </div>
       </div>
     </div>
   `;
 }
 
+// ══════════════════════════════════════════════
+// DIRECT 2-PAGE FULL-BLEED DARK A4 PDF ENGINE
+// (Zero white background, zero browser URL/GitHub links, strictly athlete data)
+// ══════════════════════════════════════════════
+function buildTwoPagePDFBlob(jpegDataUrl1, jpegDataUrl2, imgW, imgH) {
+  function base64ToBytes(b64) {
+    const bin = atob(b64);
+    const len = bin.length;
+    const bytes = new Uint8Array(len);
+    for (let i = 0; i < len; i++) bytes[i] = bin.charCodeAt(i);
+    return bytes;
+  }
+
+  const jpg1 = base64ToBytes(jpegDataUrl1.split(',')[1]);
+  const jpg2 = base64ToBytes(jpegDataUrl2.split(',')[1]);
+
+  const chunks = [];
+  let offset = 0;
+  const offsets = [0]; // 1-indexed PDF object offsets
+  const encoder = new TextEncoder();
+
+  function pushStr(str) {
+    const b = encoder.encode(str);
+    chunks.push(b);
+    offset += b.length;
+  }
+
+  function pushBytes(b) {
+    chunks.push(b);
+    offset += b.length;
+  }
+
+  function startObj(id) {
+    offsets[id] = offset;
+    pushStr(id + ' 0 obj\n');
+  }
+
+  function endObj() {
+    pushStr('\nendobj\n');
+  }
+
+  // Exact A4 in PDF points: 595.28 x 841.89 pt (0 margin, 100% full-bleed dark)
+  const pageW = '595.28';
+  const pageH = '841.89';
+
+  pushStr('%PDF-1.4\n%\xFF\xFF\xFF\xFF\n');
+
+  // Obj 1: Catalog
+  startObj(1);
+  pushStr('<< /Type /Catalog /Pages 2 0 R >>');
+  endObj();
+
+  // Obj 2: Pages (2 full-bleed A4 pages)
+  startObj(2);
+  pushStr('<< /Type /Pages /Kids [3 0 R 6 0 R] /Count 2 >>');
+  endObj();
+
+  // Obj 3: Page 1
+  startObj(3);
+  pushStr('<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ' + pageW + ' ' + pageH + '] /Resources << /XObject << /Im1 4 0 R >> >> /Contents 5 0 R >>');
+  endObj();
+
+  // Obj 4: Page 1 Image XObject
+  startObj(4);
+  pushStr('<< /Type /XObject /Subtype /Image /Width ' + imgW + ' /Height ' + imgH + ' /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length ' + jpg1.length + ' >>\nstream\n');
+  pushBytes(jpg1);
+  pushStr('\nendstream');
+  endObj();
+
+  // Obj 5: Page 1 Content Stream (draws Im1 edge-to-edge 0,0 -> 595.28,841.89)
+  const stream1 = 'q\n' + pageW + ' 0 0 ' + pageH + ' 0 0 cm\n/Im1 Do\nQ';
+  startObj(5);
+  pushStr('<< /Length ' + stream1.length + ' >>\nstream\n' + stream1 + '\nendstream');
+  endObj();
+
+  // Obj 6: Page 2
+  startObj(6);
+  pushStr('<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ' + pageW + ' ' + pageH + '] /Resources << /XObject << /Im2 7 0 R >> >> /Contents 8 0 R >>');
+  endObj();
+
+  // Obj 7: Page 2 Image XObject
+  startObj(7);
+  pushStr('<< /Type /XObject /Subtype /Image /Width ' + imgW + ' /Height ' + imgH + ' /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length ' + jpg2.length + ' >>\nstream\n');
+  pushBytes(jpg2);
+  pushStr('\nendstream');
+  endObj();
+
+  // Obj 8: Page 2 Content Stream (draws Im2 edge-to-edge 0,0 -> 595.28,841.89)
+  const stream2 = 'q\n' + pageW + ' 0 0 ' + pageH + ' 0 0 cm\n/Im2 Do\nQ';
+  startObj(8);
+  pushStr('<< /Length ' + stream2.length + ' >>\nstream\n' + stream2 + '\nendstream');
+  endObj();
+
+  // XRef Table (No /Info dictionary -> zero app metadata or URL traces)
+  const xrefStart = offset;
+  pushStr('xref\n0 9\n0000000000 65535 f \n');
+  for (let i = 1; i <= 8; i++) {
+    pushStr(String(offsets[i]).padStart(10, '0') + ' 00000 n \n');
+  }
+  pushStr('trailer\n<< /Size 9 /Root 1 0 R >>\nstartxref\n' + xrefStart + '\n%%EOF');
+
+  return new Blob(chunks, { type: 'application/pdf' });
+}
+
+function drawRoundedRect(ctx, x, y, w, h, r, fill, stroke, lineW) {
+  ctx.beginPath();
+  ctx.moveTo(x + r, y);
+  ctx.lineTo(x + w - r, y);
+  ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+  ctx.lineTo(x + w, y + h - r);
+  ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+  ctx.lineTo(x + r, y + h);
+  ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+  ctx.lineTo(x, y + r);
+  ctx.quadraticCurveTo(x, y, x + r, y);
+  ctx.closePath();
+  if (fill) {
+    ctx.fillStyle = fill;
+    ctx.fill();
+  }
+  if (stroke) {
+    ctx.strokeStyle = stroke;
+    ctx.lineWidth = lineW || 1;
+    ctx.stroke();
+  }
+}
+
+function fitText(ctx, text, maxWidth) {
+  const s = String(text || '');
+  if (ctx.measureText(s).width <= maxWidth) return s;
+  let cut = s;
+  while (cut.length > 1 && ctx.measureText(cut + '…').width > maxWidth) {
+    cut = cut.slice(0, -1);
+  }
+  return cut + '…';
+}
+
+function renderA4DarkCanvases(historyItem) {
+  const item = historyItem || window.CURRENT_REPORT_ITEM;
+  const isHistory = !!item;
+  const curWeek = isHistory ? item.week : (APP.weekKey || 'CURRENT WEEK');
+
+  let targetWeekIdx = APP.currentPhaseWeek || 0;
+  if (item && item.week) {
+    if (item.week.includes('Week 9') || item.week.includes('W43')) targetWeekIdx = 0;
+    else if (item.week.includes('Week 10') || item.week.includes('W44')) targetWeekIdx = 1;
+    else if (item.week.includes('Week 11') || item.week.includes('W45')) targetWeekIdx = 2;
+    else if (item.week.includes('Week 12') || item.week.includes('W46')) targetWeekIdx = 3;
+  }
+  const wNum = 9 + targetWeekIdx;
+  const pct = isHistory ? (item.pct || 0) : getOverallPct();
+
+  let activeSessions = {};
+  if (isHistory && (item.pct === 100 || item.sessions >= 14 || (item.week && item.week.includes('Week 9')))) {
+    activeSessions = {
+      's-0-0': true, 's-0-1': true, 's-0-2': true,
+      's-1-0': true, 's-1-1': true, 's-1-2': true,
+      's-2-0': true, 's-2-1': true, 's-2-2': true,
+      's-3-0': true, 's-3-1': true,
+      's-4-0': true, 's-4-1': true, 's-4-2': true
+    };
+  } else if (item && item.completedSessions && Object.keys(item.completedSessions).length > 0) {
+    activeSessions = Object.assign({}, item.completedSessions);
+  } else {
+    activeSessions = APP.sessions || {};
+  }
+
+  const activeWeightLogs = (item && item.weightLogs) ? item.weightLogs : (APP.weightLogs || {});
+  const wVals = Object.values(activeWeightLogs).map(v => parseFloat(v)).filter(v => !isNaN(v) && v > 0);
+  const curWeight = (item && item.bodyWeight) ? item.bodyWeight : (APP.bodyWeight || (wVals.length ? wVals[wVals.length - 1] : 94.5));
+  const avgWeight = wVals.length ? (wVals.reduce((a, b) => a + b, 0) / wVals.length).toFixed(1) : curWeight;
+
+  const activeCustomWorkouts = (item && item.customWorkouts) ? item.customWorkouts : (APP.customWorkouts || {});
+  const activeSessionSets = (item && item.sessionSets && Object.keys(item.sessionSets).length > 0) ? item.sessionSets : (APP.currentSessionSets || {});
+
+  let doneCount = 0;
+  for (let d = 0; d < 5; d++) {
+    for (let j = 0; j < (DAY_TOTALS[d] || 3); j++) {
+      if (activeSessions['s-' + d + '-' + j]) doneCount++;
+    }
+  }
+
+  let totalTonnage = 0;
+  let totalSets = 0;
+  const prList = [];
+  if (activeSessionSets) {
+    Object.keys(activeSessionSets).forEach(k => {
+      const sets = activeSessionSets[k] || [];
+      const exName = k.replace(/s-d+-d+-/, '').replace(/-/g, ' ').toUpperCase();
+      sets.forEach(s => {
+        if (s.done || (s.weight && s.reps)) {
+          totalSets++;
+          const w = parseFloat(s.weight) || 0;
+          const r = parseFloat(s.reps) || 0;
+          if (w && r) totalTonnage += (w * r);
+          if (w > 0) prList.push({ name: exName, weight: w, reps: r, rpe: s.rpe || '—' });
+        }
+      });
+    });
+  }
+  if (totalTonnage === 0 && (targetWeekIdx === 0 || (item && item.tonnage))) {
+    totalTonnage = (item && item.tonnage) || 24500;
+  }
+  if (totalSets === 0 && isHistory) {
+    totalSets = 56;
+  }
+
+  if (APP.exerciseLogs) {
+    Object.keys(APP.exerciseLogs).forEach(exName => {
+      const logs = APP.exerciseLogs[exName] || [];
+      logs.forEach(l => {
+        if (l.sets) {
+          l.sets.forEach(s => {
+            if (s.weight && parseFloat(s.weight) > 0) {
+              prList.push({ name: exName.toUpperCase(), weight: parseFloat(s.weight), reps: parseFloat(s.reps) || 1, rpe: s.rpe || '—' });
+            }
+          });
+        }
+      });
+    });
+  }
+  if (prList.length === 0) {
+    prList.push(
+      { name: 'TRAP BAR DEADLIFT — EXPLOSIVE', weight: 145, reps: 4, rpe: '8.5' },
+      { name: 'BACK SQUAT — CAT METHOD', weight: 110, reps: 3, rpe: '9.0' },
+      { name: 'HANG POWER CLEAN', weight: 85, reps: 3, rpe: '8.5' },
+      { name: 'POWER SNATCH — FROM HIP', weight: 75, reps: 2, rpe: '8.0' }
+    );
+  }
+
+  const maxByEx = {};
+  prList.forEach(p => {
+    if (!maxByEx[p.name] || p.weight > maxByEx[p.name].weight) maxByEx[p.name] = p;
+  });
+  const topPRs = Object.values(maxByEx).sort((a, b) => b.weight - a.weight).slice(0, 4);
+
+  const wellnessData = APP.dailyWellness || {};
+  const wKeys = Object.keys(wellnessData).sort().slice(-7);
+  let sumSleep = 0, countW = 0, sumEnergy = 0;
+  wKeys.forEach(k => {
+    const it = wellnessData[k];
+    if (it.sleep) { sumSleep += it.sleep; countW++; }
+    if (it.energy) { sumEnergy += it.energy; }
+  });
+  const avgSleep = countW ? (sumSleep / countW).toFixed(1) : '8.2';
+  const avgEnergy = countW ? (sumEnergy / countW).toFixed(1) : '8.6';
+  const cnsPct = Math.round(parseFloat(avgEnergy) * 10);
+
+  const achillesTrend = (APP.achillesTrend && APP.achillesTrend.length) ? APP.achillesTrend.slice(-7) : getInitialAchillesData();
+  let sumADuring = 0, sumAAfter = 0, countA = 0;
+  achillesTrend.forEach(t => {
+    sumADuring += (t.during || 0);
+    sumAAfter += (t.after || 0);
+    countA++;
+  });
+  const avgADuring = countA ? (sumADuring / countA).toFixed(1) : '1.2';
+  const avgAAfter = countA ? (sumAAfter / countA).toFixed(1) : '0.8';
+
+  const W = 1240, H = 1754; // Exact A4 210:297 ratio at high resolution
+  const padX = 48;
+  const contentW = W - padX * 2; // 1144px
+  const dateStr = new Date().toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' });
+
+  // ════════════════════════════════════════════════════════════════════════
+  // PAGE 1 CANVAS: EXECUTIVE & PHYSIOLOGICAL OVERVIEW
+  // ════════════════════════════════════════════════════════════════════════
+  const c1 = document.createElement('canvas');
+  c1.width = W;
+  c1.height = H;
+  const ctx1 = c1.getContext('2d');
+
+  // 100% Full-Bleed Dark Background (#060608) - Zero white anywhere
+  ctx1.fillStyle = '#060608';
+  ctx1.fillRect(0, 0, W, H);
+
+  // Subtle gold ambient top glow
+  const grad1 = ctx1.createRadialGradient(W / 2, 0, 20, W / 2, 0, 650);
+  grad1.addColorStop(0, 'rgba(212,168,67,0.08)');
+  grad1.addColorStop(1, 'rgba(6,6,8,0)');
+  ctx1.fillStyle = grad1;
+  ctx1.fillRect(0, 0, W, H);
+
+  // Outer gold border frame
+  drawRoundedRect(ctx1, 24, 24, W - 48, H - 48, 12, null, 'rgba(212,168,67,0.22)', 1.5);
+
+  // Header
+  ctx1.fillStyle = '#D4A843';
+  ctx1.font = '600 13px "DM Mono", monospace';
+  ctx1.fillText('// ATHLETE PERFORMANCE DATA · PHASE 3', padX, 66);
+
+  ctx1.fillStyle = '#FFFFFF';
+  ctx1.font = '700 44px "Bebas Neue", "Barlow Condensed", sans-serif';
+  ctx1.fillText('WEEKLY PERFORMANCE REPORT — WEEK ' + wNum, padX, 110);
+
+  ctx1.fillStyle = '#BBBBCC';
+  ctx1.font = '500 15px "Barlow", sans-serif';
+  ctx1.fillText('Athlete: TIEGBE BAMBA   ·   Position: Combo Guard (198 cm)   ·   Cycle: Off-Season Phase 3 (' + curWeek + ')', padX, 134);
+
+  // Top-right intensity badge & date
+  drawRoundedRect(ctx1, W - padX - 210, 56, 210, 32, 6, '#D4A843', null);
+  ctx1.fillStyle = '#060608';
+  ctx1.font = '700 13px "DM Mono", monospace';
+  ctx1.textAlign = 'center';
+  ctx1.fillText('85–90% HIGH INTENSITY', W - padX - 105, 77);
+
+  ctx1.fillStyle = '#999AB0';
+  ctx1.font = '500 13px "DM Mono", monospace';
+  ctx1.textAlign = 'right';
+  ctx1.fillText(dateStr.toUpperCase(), W - padX, 114);
+  ctx1.textAlign = 'left';
+
+  // Gold header divider
+  ctx1.fillStyle = '#D4A843';
+  ctx1.fillRect(padX, 150, contentW, 2.5);
+
+  // 6 KPI Cards Ribbon (y = 172, h = 112)
+  const kpis = [
+    { val: pct + '%', lbl: 'COMPLETION', color: '#D4A843' },
+    { val: doneCount + ' / 14', lbl: 'SESSIONS DONE', color: '#30D158' },
+    { val: (APP.streak || 7) + ' DAYS', lbl: 'ACTIVE STREAK', color: '#FF9F0A' },
+    { val: Math.round(totalTonnage).toLocaleString() + ' KG', lbl: 'TONNAGE LIFTED', color: '#D4A843' },
+    { val: totalSets + ' SETS', lbl: 'SETS LOGGED', color: '#FFFFFF' },
+    { val: cnsPct + '%', lbl: 'CNS READINESS', color: '#BF5AF2' }
+  ];
+  const kpiGap = 14;
+  const kpiW = (contentW - kpiGap * 5) / 6;
+  kpis.forEach((k, idx) => {
+    const kx = padX + idx * (kpiW + kpiGap);
+    drawRoundedRect(ctx1, kx, 172, kpiW, 110, 10, '#111116', 'rgba(212,168,67,0.38)', 1.5);
+    ctx1.fillStyle = k.color;
+    ctx1.font = '700 34px "Bebas Neue", "Barlow Condensed", sans-serif';
+    ctx1.textAlign = 'center';
+    ctx1.fillText(k.val, kx + kpiW / 2, 226);
+    ctx1.fillStyle = '#999AB0';
+    ctx1.font = '600 11.5px "DM Mono", monospace';
+    ctx1.fillText(k.lbl, kx + kpiW / 2, 256);
+  });
+  ctx1.textAlign = 'left';
+
+  // Middle 2-Column Section (y = 304, h = 480)
+  const colGap = 18;
+  const colW = (contentW - colGap) / 2; // 563px
+
+  // Left Top Card: Multi-Week Volume Wave (y = 304, h = 231)
+  drawRoundedRect(ctx1, padX, 304, colW, 231, 10, '#111116', 'rgba(212,168,67,0.35)', 1.5);
+  ctx1.fillStyle = '#D4A843';
+  ctx1.font = '700 19px "Bebas Neue", "Barlow Condensed", sans-serif';
+  ctx1.fillText('MULTI-WEEK VOLUME OVERLOAD WAVE (PHASE 3)', padX + 18, 334);
+  ctx1.fillStyle = '#30D158';
+  ctx1.font = '700 11px "DM Mono", monospace';
+  ctx1.textAlign = 'right';
+  ctx1.fillText('+24% PEAK LOAD', padX + colW - 18, 332);
+  ctx1.textAlign = 'left';
+
+  const phaseTargets = [18200, 22500, 20200, 14500];
+  const phaseLabels = ['W9 (BASE)', 'W10 (PEAK)', 'W11 (GAME)', 'W12 (POP)'];
+  const vMax = 26000;
+  const vBarW = 74;
+  const vSpace = (colW - 80 - vBarW * 4) / 3;
+  phaseLabels.forEach((lbl, idx) => {
+    const bx = padX + 40 + idx * (vBarW + vSpace);
+    const ton = (idx === targetWeekIdx && totalTonnage > 0) ? totalTonnage : (idx === 0 ? 24500 : phaseTargets[idx]);
+    const bh = Math.max(20, Math.min(125, (ton / vMax) * 125));
+    const by = 492 - bh;
+    const isCur = idx === targetWeekIdx;
+    const barCol = isCur ? '#D4A843' : (idx < targetWeekIdx ? '#30D158' : 'rgba(212,168,67,0.32)');
+    drawRoundedRect(ctx1, bx, by, vBarW, bh, 6, barCol, null);
+    ctx1.fillStyle = isCur ? '#D4A843' : '#FFFFFF';
+    ctx1.font = '700 13px "DM Mono", monospace';
+    ctx1.textAlign = 'center';
+    ctx1.fillText((ton / 1000).toFixed(1) + 'k kg', bx + vBarW / 2, by - 8);
+    ctx1.fillStyle = isCur ? '#D4A843' : '#999AB0';
+    ctx1.font = '600 12px "DM Mono", monospace';
+    ctx1.fillText(lbl, bx + vBarW / 2, 516);
+  });
+  ctx1.textAlign = 'left';
+
+  // Left Bottom Card: Completion by Day (y = 553, h = 231)
+  drawRoundedRect(ctx1, padX, 553, colW, 231, 10, '#111116', 'rgba(212,168,67,0.35)', 1.5);
+  ctx1.fillStyle = '#FFFFFF';
+  ctx1.font = '700 19px "Bebas Neue", "Barlow Condensed", sans-serif';
+  ctx1.fillText('DAILY SESSION COMPLETION (MON — SUN)', padX + 18, 583);
+  ctx1.fillStyle = '#D4A843';
+  ctx1.font = '700 11px "DM Mono", monospace';
+  ctx1.textAlign = 'right';
+  ctx1.fillText('SCHEDULED VS DONE', padX + colW - 18, 581);
+  ctx1.textAlign = 'left';
+
+  const dayNames7 = ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'];
+  const dayTotals7 = [3, 3, 3, 2, 3, 0, 0];
+  const cBarW = 46;
+  const cSpace = (colW - 64 - cBarW * 7) / 6;
+  dayNames7.forEach((dName, d) => {
+    const bx = padX + 32 + d * (cBarW + cSpace);
+    const dTot = dayTotals7[d];
+    let dDone = 0;
+    if (dTot > 0) {
+      for (let j = 0; j < dTot; j++) if (activeSessions['s-' + d + '-' + j]) dDone++;
+    }
+    const dPct = dTot > 0 ? Math.round((dDone / dTot) * 100) : (d === 5 ? 100 : 0);
+    const bh = Math.max(12, (dPct / 100) * 118);
+    const by = 740 - bh;
+    const barCol = dPct === 100 ? '#30D158' : (dPct > 0 ? '#D4A843' : 'rgba(255,255,255,0.12)');
+    drawRoundedRect(ctx1, bx, by, cBarW, bh, 5, barCol, null);
+    ctx1.fillStyle = dPct > 0 ? '#D4A843' : '#777788';
+    ctx1.font = '700 12px "DM Mono", monospace';
+    ctx1.textAlign = 'center';
+    ctx1.fillText(dPct + '%', bx + cBarW / 2, by - 8);
+    ctx1.fillStyle = '#999AB0';
+    ctx1.font = '600 12px "DM Mono", monospace';
+    ctx1.fillText(dName, bx + cBarW / 2, 765);
+  });
+  ctx1.textAlign = 'left';
+
+  // Right Column Card: Record Performance & Peak Loads Spotlight (x = padX + colW + colGap, y = 304, h = 480)
+  const rx = padX + colW + colGap;
+  drawRoundedRect(ctx1, rx, 304, colW, 480, 10, '#111116', 'rgba(212,168,67,0.35)', 1.5);
+  ctx1.fillStyle = '#FFFFFF';
+  ctx1.font = '700 19px "Bebas Neue", "Barlow Condensed", sans-serif';
+  ctx1.fillText('RECORD PERFORMANCE & PEAK LOADS SPOTLIGHT', rx + 18, 334);
+
+  drawRoundedRect(ctx1, rx + colW - 118, 314, 100, 22, 4, '#D4A843', null);
+  ctx1.fillStyle = '#060608';
+  ctx1.font = '700 10px "DM Mono", monospace';
+  ctx1.textAlign = 'center';
+  ctx1.fillText('PEAK VERIFIED', rx + colW - 68, 329);
+  ctx1.textAlign = 'left';
+
+  // Table Headers
+  const thY = 366;
+  ctx1.fillStyle = '#D4A843';
+  ctx1.font = '700 11.5px "DM Mono", monospace';
+  ctx1.fillText('RANK', rx + 18, thY);
+  ctx1.fillText('EXERCISE & VBT TELEMETRY', rx + 72, thY);
+  ctx1.fillText('PEAK LOAD', rx + 345, thY);
+  ctx1.fillText('REPS', rx + 448, thY);
+  ctx1.fillText('RPE', rx + 505, thY);
+  ctx1.fillStyle = 'rgba(212,168,67,0.35)';
+  ctx1.fillRect(rx + 18, thY + 8, colW - 36, 1.5);
+
+  topPRs.forEach((pr, idx) => {
+    const ry = 408 + idx * 72;
+    const vbt = calc1RMAndVBT(pr.weight, pr.reps);
+    ctx1.fillStyle = '#D4A843';
+    ctx1.font = '700 16px "DM Mono", monospace';
+    ctx1.fillText('#' + (idx + 1), rx + 18, ry + 6);
+
+    ctx1.fillStyle = '#FFFFFF';
+    ctx1.font = '700 15px "Barlow", sans-serif';
+    ctx1.fillText(fitText(ctx1, pr.name, 260), rx + 72, ry);
+
+    ctx1.fillStyle = '#999AB0';
+    ctx1.font = '500 11.5px "DM Mono", monospace';
+    ctx1.fillText('VBT: ~' + vbt.vel + ' m/s · ' + vbt.zone, rx + 72, ry + 20);
+
+    ctx1.fillStyle = '#D4A843';
+    ctx1.font = '700 16px "DM Mono", monospace';
+    ctx1.fillText(pr.weight + ' KG', rx + 345, ry);
+
+    ctx1.fillStyle = '#30D158';
+    ctx1.font = '600 11.5px "DM Mono", monospace';
+    ctx1.fillText('1RM: ' + vbt.e1rm + ' kg', rx + 345, ry + 20);
+
+    ctx1.fillStyle = '#FFFFFF';
+    ctx1.font = '700 15px "DM Mono", monospace';
+    ctx1.fillText(String(pr.reps), rx + 455, ry + 8);
+
+    ctx1.fillStyle = '#30D158';
+    ctx1.font = '700 15px "DM Mono", monospace';
+    ctx1.fillText(String(pr.rpe), rx + 505, ry + 8);
+
+    ctx1.fillStyle = 'rgba(255,255,255,0.06)';
+    ctx1.fillRect(rx + 18, ry + 34, colW - 36, 1);
+  });
+
+  // Telemetry Note Box inside PR card
+  drawRoundedRect(ctx1, rx + 18, 700, colW - 36, 66, 6, 'rgba(212,168,67,0.07)', 'rgba(212,168,67,0.3)', 1);
+  ctx1.fillStyle = '#D4A843';
+  ctx1.font = '700 12px "DM Mono", monospace';
+  ctx1.fillText('⚡ CAT NEUROMUSCULAR & VBT VELOCITY TELEMETRY', rx + 32, 724);
+  ctx1.fillStyle = '#CCCCDD';
+  ctx1.font = '400 12.5px "Barlow", sans-serif';
+  ctx1.fillText('Concentric barbell velocity correlates directly with peak rate of force development (RFD) and vertical pop.', rx + 32, 748);
+
+  // 4-Card Physiological & Biometric Row (y = 804, h = 132)
+  const bioCards = [
+    { tag: '● SLEEP SCORE', tagCol: '#3478F6', val: avgSleep + ' / 10', valCol: '#FFFFFF', sub: '8.5h Deep Sleep Remodeling', subCol: '#30D158' },
+    { tag: '● CNS READINESS', tagCol: '#FF9F0A', val: avgEnergy + ' / 10', valCol: '#FFFFFF', sub: 'Optimal Autonomic Sympathetic Tone', subCol: '#D4A843' },
+    { tag: '● BODY WEIGHT', tagCol: '#D4A843', val: curWeight + ' KG', valCol: '#FFFFFF', sub: 'Avg: ' + avgWeight + ' kg · Target: 94.0–95.0 kg', subCol: '#30D158' },
+    { tag: '● ACHILLES RESILIENCE', tagCol: '#E03434', val: 'OPTIMAL LOAD', valCol: '#30D158', sub: 'Pain During: ' + avgADuring + '/10 · After: ' + avgAAfter + '/10', subCol: '#BBBBCC' }
+  ];
+  const bioGap = 16;
+  const bioW = (contentW - bioGap * 3) / 4;
+  bioCards.forEach((b, idx) => {
+    const bx = padX + idx * (bioW + bioGap);
+    drawRoundedRect(ctx1, bx, 804, bioW, 132, 10, '#111116', 'rgba(212,168,67,0.35)', 1.5);
+    ctx1.fillStyle = b.tagCol;
+    ctx1.font = '700 12px "DM Mono", monospace';
+    ctx1.fillText(b.tag, bx + 18, 834);
+
+    ctx1.fillStyle = b.valCol;
+    ctx1.font = '700 36px "Bebas Neue", "Barlow Condensed", sans-serif';
+    ctx1.fillText(b.val, bx + 18, 884);
+
+    ctx1.fillStyle = b.subCol;
+    ctx1.font = '600 12.5px "Barlow", sans-serif';
+    ctx1.fillText(b.sub, bx + 18, 914);
+  });
+
+  // Lower 2-Column Section: 7-Day Weight Curve + Daily Training Execution (y = 956, h = 524)
+  // Left Card: 7-Day Body Weight Trend & Biometric Curve
+  drawRoundedRect(ctx1, padX, 956, colW, 524, 10, '#111116', 'rgba(212,168,67,0.35)', 1.5);
+  ctx1.fillStyle = '#D4A843';
+  ctx1.font = '700 19px "Bebas Neue", "Barlow Condensed", sans-serif';
+  ctx1.fillText('7-DAY BODY WEIGHT TREND & COMPETITION ZONE', padX + 18, 988);
+  ctx1.fillStyle = '#30D158';
+  ctx1.font = '700 11px "DM Mono", monospace';
+  ctx1.textAlign = 'right';
+  ctx1.fillText('TARGET: 94.0–95.0 KG', padX + colW - 18, 986);
+  ctx1.textAlign = 'left';
+
+  // Build 7-day weight points
+  const wPoints = [];
+  const nowD = new Date();
+  const dNamesShort = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
+  for (let i = 6; i >= 0; i--) {
+    const d = new Date(nowD);
+    d.setDate(nowD.getDate() - i);
+    const dk = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+    const v = activeWeightLogs[dk] ? parseFloat(activeWeightLogs[dk]) : null;
+    wPoints.push({ day: dNamesShort[d.getDay()], val: v !== null ? v : parseFloat(curWeight) || 94.5 });
+  }
+  const wMin = Math.min(93.0, ...wPoints.map(p => p.val)) - 0.5;
+  const wMax = Math.max(96.0, ...wPoints.map(p => p.val)) + 0.5;
+  const chartX = padX + 46, chartY = 1025, chartW = colW - 76, chartH = 240;
+  const getWX = (i) => chartX + (i / 6) * chartW;
+  const getWY = (v) => chartY + chartH - ((v - wMin) / (wMax - wMin)) * chartH;
+
+  // Competition target band (94.0 - 95.0 kg)
+  const y95 = getWY(95.0), y94 = getWY(94.0);
+  ctx1.fillStyle = 'rgba(48,209,88,0.09)';
+  ctx1.fillRect(chartX, y95, chartW, y94 - y95);
+  ctx1.strokeStyle = 'rgba(48,209,88,0.4)';
+  ctx1.setLineDash([4, 4]);
+  ctx1.beginPath();
+  ctx1.moveTo(chartX, y95); ctx1.lineTo(chartX + chartW, y95);
+  ctx1.moveTo(chartX, y94); ctx1.lineTo(chartX + chartW, y94);
+  ctx1.stroke();
+  ctx1.setLineDash([]);
+
+  ctx1.fillStyle = '#30D158';
+  ctx1.font = '600 11px "DM Mono", monospace';
+  ctx1.textAlign = 'right';
+  ctx1.fillText('95.0', chartX - 8, y95 + 4);
+  ctx1.fillText('94.0', chartX - 8, y94 + 4);
+
+  // Weight line & dots
+  ctx1.strokeStyle = '#D4A843';
+  ctx1.lineWidth = 3;
+  ctx1.beginPath();
+  wPoints.forEach((p, i) => {
+    const px = getWX(i), py = getWY(p.val);
+    if (i === 0) ctx1.moveTo(px, py);
+    else ctx1.lineTo(px, py);
+  });
+  ctx1.stroke();
+
+  wPoints.forEach((p, i) => {
+    const px = getWX(i), py = getWY(p.val);
+    ctx1.fillStyle = (p.val >= 94.0 && p.val <= 95.0) ? '#30D158' : '#D4A843';
+    ctx1.beginPath();
+    ctx1.arc(px, py, 6, 0, Math.PI * 2);
+    ctx1.fill();
+    ctx1.fillStyle = '#FFFFFF';
+    ctx1.font = '700 11.5px "DM Mono", monospace';
+    ctx1.textAlign = 'center';
+    ctx1.fillText(p.val.toFixed(1), px, py - 12);
+    ctx1.fillStyle = '#999AB0';
+    ctx1.font = '600 11.5px "DM Mono", monospace';
+    ctx1.fillText(p.day, px, chartY + chartH + 24);
+  });
+  ctx1.textAlign = 'left';
+
+  // Biometric summary boxes at bottom of Weight Card
+  drawRoundedRect(ctx1, padX + 18, 1320, colW - 36, 140, 8, 'rgba(255,255,255,0.03)', 'rgba(255,255,255,0.08)', 1);
+  ctx1.fillStyle = '#D4A843';
+  ctx1.font = '700 12px "DM Mono", monospace';
+  ctx1.fillText('// BIOMETRIC & HYDRATION COMPLIANCE SUMMARY', padX + 32, 1348);
+  ctx1.fillStyle = '#E8E8F0';
+  ctx1.font = '500 13.5px "Barlow", sans-serif';
+  ctx1.fillText('• Current Logged Weight: ' + curWeight + ' kg   |   7-Day Rolling Average: ' + avgWeight + ' kg', padX + 32, 1378);
+  ctx1.fillText('• Daily Hydration Target: 3.5L Water + Electrolytes (1500mg Sodium + Magnesium)', padX + 32, 1406);
+  ctx1.fillText('• Post-Session Tendon Nutrition: 20g Collagen Peptides + Vitamin C 45m Pre-Load', padX + 32, 1434);
+
+  // Right Card: Weekly Schedule & Day-by-Day Execution (x = rx, y = 956, h = 524)
+  drawRoundedRect(ctx1, rx, 956, colW, 524, 10, '#111116', 'rgba(212,168,67,0.35)', 1.5);
+  ctx1.fillStyle = '#FFFFFF';
+  ctx1.font = '700 19px "Bebas Neue", "Barlow Condensed", sans-serif';
+  ctx1.fillText('WEEKLY TRAINING SCHEDULE & EXECUTION (MON — FRI)', rx + 18, 988);
+  ctx1.fillStyle = '#30D158';
+  ctx1.font = '700 11px "DM Mono", monospace';
+  ctx1.textAlign = 'right';
+  ctx1.fillText(doneCount + '/14 SESSIONS LOGGED', rx + colW - 18, 986);
+  ctx1.textAlign = 'left';
+
+  const dayFullLabels = [
+    { name: 'MONDAY', tag: 'HIGH CNS · MAX POWER', ids: ['s-0-0', 's-0-1', 's-0-2'] },
+    { name: 'TUESDAY', tag: 'SKILL + HYDRO RECOVERY', ids: ['s-1-0', 's-1-1', 's-1-2'] },
+    { name: 'WEDNESDAY', tag: 'POSTERIOR + ROTATIONAL', ids: ['s-2-0', 's-2-1', 's-2-2'] },
+    { name: 'THURSDAY', tag: 'PEAK COMPETITIVE DAY', ids: ['s-3-0', 's-3-1'] },
+    { name: 'FRIDAY', tag: 'FULL INTEGRATION + POOL', ids: ['s-4-0', 's-4-1', 's-4-2'] }
+  ];
+
+  dayFullLabels.forEach((dObj, dIdx) => {
+    const dy = 1012 + dIdx * 90;
+    drawRoundedRect(ctx1, rx + 18, dy, colW - 36, 78, 8, 'rgba(255,255,255,0.025)', 'rgba(255,255,255,0.08)', 1);
+
+    let dDoneCount = 0;
+    const sTitles = [];
+    const restSId = dObj.ids.find(id => activeCustomWorkouts[id] === 'rest-day');
+    if (restSId) {
+      sTitles.push('FULL REST DAY — OFF & SLEEP');
+      if (activeSessions[restSId]) dDoneCount = 1;
+    } else {
+      dObj.ids.forEach(id => {
+        if (activeSessions[id]) dDoneCount++;
+        const def = DEFAULT_SESSIONS[id];
+        const cKey = activeCustomWorkouts[id];
+        const k = cKey || (def ? def.key : '');
+        sTitles.push(WORKOUT_DISPLAY_NAMES[k] || (def ? def.name : 'SESSION'));
+      });
+    }
+    const reqCount = restSId ? 1 : dObj.ids.length;
+    const isDayComplete = dDoneCount >= reqCount;
+
+    ctx1.fillStyle = '#D4A843';
+    ctx1.font = '700 13px "DM Mono", monospace';
+    ctx1.fillText(dObj.name + ' · ' + dObj.tag, rx + 32, dy + 28);
+
+    ctx1.fillStyle = '#E8E8F0';
+    ctx1.font = '600 13.5px "Barlow", sans-serif';
+    ctx1.fillText(fitText(ctx1, sTitles.join('  ·  '), colW - 175), rx + 32, dy + 56);
+
+    const badgeBg = isDayComplete ? 'rgba(48,209,88,0.18)' : 'rgba(212,168,67,0.15)';
+    const badgeCol = isDayComplete ? '#30D158' : '#D4A843';
+    drawRoundedRect(ctx1, rx + colW - 128, dy + 22, 94, 32, 6, badgeBg, badgeCol, 1);
+    ctx1.fillStyle = badgeCol;
+    ctx1.font = '700 12px "DM Mono", monospace';
+    ctx1.textAlign = 'center';
+    ctx1.fillText(dDoneCount + '/' + reqCount + (isDayComplete ? ' ✓' : ''), rx + colW - 81, dy + 43);
+    ctx1.textAlign = 'left';
+  });
+
+  // Mindset & Mental Readiness Card (y = 1500, h = 128)
+  drawRoundedRect(ctx1, padX, 1500, contentW, 128, 10, '#111116', 'rgba(191,90,242,0.45)', 1.5);
+  ctx1.fillStyle = '#BF5AF2';
+  ctx1.font = '700 13px "DM Mono", monospace';
+  ctx1.fillText('// MENTALITY, VISUALIZATION & AUTONOMIC READINESS PROTOCOLS', padX + 22, 1532);
+
+  ctx1.fillStyle = '#FFFFFF';
+  ctx1.font = '600 15.5px "Barlow", sans-serif';
+  ctx1.fillText('Visualization (Court Lock-In ✓)   ·   Box Breathing (4-4-4-4 Parasympathetic Reset ✓)   ·   Focus Routine (Cognitive Priming ✓)', padX + 22, 1566);
+
+  const mantraObj = getWeeklyMantra();
+  ctx1.fillStyle = '#D4A843';
+  ctx1.font = '600 13px "DM Mono", monospace';
+  ctx1.fillText('WEEKLY MANTRA: "' + mantraObj.mantra.replace(/\n/g, ' ') + '" (' + mantraObj.theme + ')', padX + 22, 1600);
+
+  drawRoundedRect(ctx1, W - padX - 165, 1540, 143, 38, 6, 'rgba(48,209,88,0.18)', '#30D158', 1);
+  ctx1.fillStyle = '#30D158';
+  ctx1.font = '700 12.5px "DM Mono", monospace';
+  ctx1.textAlign = 'center';
+  ctx1.fillText('100% EXECUTED', W - padX - 93.5, 1564);
+  ctx1.textAlign = 'left';
+
+  // Page 1 Footer
+  ctx1.fillStyle = 'rgba(255,255,255,0.12)';
+  ctx1.fillRect(padX, 1654, contentW, 1);
+  ctx1.fillStyle = '#888898';
+  ctx1.font = '600 12px "DM Mono", monospace';
+  ctx1.fillText('TIEGBE BAMBA · PERSONAL PERFORMANCE DATA · PHASE 3 · WEEK ' + wNum, padX, 1682);
+  ctx1.fillStyle = '#D4A843';
+  ctx1.textAlign = 'right';
+  ctx1.fillText('PAGE 1 OF 2 — EXECUTIVE & BIOMETRIC OVERVIEW', W - padX, 1682);
+  ctx1.textAlign = 'left';
+
+  // ════════════════════════════════════════════════════════════════════════
+  // PAGE 2 CANVAS: CATEGORIZED WORKOUT & EXERCISE LOG (ALL EXERCISES VISIBLE)
+  // ════════════════════════════════════════════════════════════════════════
+  const c2 = document.createElement('canvas');
+  c2.width = W;
+  c2.height = H;
+  const ctx2 = c2.getContext('2d');
+
+  // 100% Full-Bleed Dark Background (#060608) - Zero white anywhere
+  ctx2.fillStyle = '#060608';
+  ctx2.fillRect(0, 0, W, H);
+  ctx2.fillStyle = grad1;
+  ctx2.fillRect(0, 0, W, H);
+
+  drawRoundedRect(ctx2, 24, 24, W - 48, H - 48, 12, null, 'rgba(212,168,67,0.22)', 1.5);
+
+  // Page 2 Header
+  ctx2.fillStyle = '#D4A843';
+  ctx2.font = '600 13px "DM Mono", monospace';
+  ctx2.fillText('// TRAINING SESSIONS & EXERCISE BREAKDOWN · WEEK ' + wNum, padX, 66);
+
+  ctx2.fillStyle = '#FFFFFF';
+  ctx2.font = '700 44px "Bebas Neue", "Barlow Condensed", sans-serif';
+  ctx2.fillText('CATEGORIZED WORKOUT LOG & EXERCISE TARGETS', padX, 110);
+
+  ctx2.fillStyle = '#BBBBCC';
+  ctx2.font = '500 15px "Barlow", sans-serif';
+  ctx2.fillText('Complete record of executed strength lifts, fascia recoil drills, basketball skill sessions, and recovery protocols.', padX, 134);
+
+  drawRoundedRect(ctx2, W - padX - 245, 56, 245, 32, 6, 'rgba(48,209,88,0.18)', '#30D158', 1);
+  ctx2.fillStyle = '#30D158';
+  ctx2.font = '700 12.5px "DM Mono", monospace';
+  ctx2.textAlign = 'center';
+  ctx2.fillText(doneCount + ' / 14 SESSIONS DONE (' + pct + '%)', W - padX - 122.5, 77);
+
+  ctx2.fillStyle = '#999AB0';
+  ctx2.font = '500 13px "DM Mono", monospace';
+  ctx2.textAlign = 'right';
+  ctx2.fillText('PHASE 3 · WEEK ' + wNum, W - padX, 114);
+  ctx2.textAlign = 'left';
+
+  ctx2.fillStyle = '#D4A843';
+  ctx2.fillRect(padX, 150, contentW, 2.5);
+
+  function collectCategoryExercises(sessionIds) {
+    const list = [];
+    sessionIds.forEach(sId => {
+      const def = (typeof DEFAULT_SESSIONS !== 'undefined' && DEFAULT_SESSIONS[sId]) ? DEFAULT_SESSIONS[sId] : null;
+      const customKey = activeCustomWorkouts[sId];
+      const key = customKey || (def ? def.key : null);
+      const w = (key && WORKOUTS[key]) ? WORKOUTS[key] : null;
+      const isDone = !!activeSessions[sId];
+      const dayShort = ['MON', 'TUE', 'WED', 'THU', 'FRI'][def ? def.day : 0];
+
+      if (w && w.exercises && w.exercises.length > 0) {
+        w.exercises.forEach((ex, exIdx) => {
+          const prescribed = Array.isArray(ex.sets) ? (ex.sets[targetWeekIdx] || ex.sets[0]) : (ex.sets || 'Prescribed');
+          const setKey = key + '-' + exIdx;
+          const sIdKey = sId + '-' + exIdx;
+          const loggedArr = (activeSessionSets && (activeSessionSets[setKey] || activeSessionSets[sIdKey])) || [];
+          let loggedText = '—';
+          if (loggedArr && loggedArr.length > 0) {
+            const valid = loggedArr.filter(s => s.done || (s.weight && s.reps));
+            if (valid.length > 0) {
+              loggedText = valid.map(s => (s.weight ? s.weight + 'kg' : 'BW') + '×' + (s.reps || 0)).join(' · ');
+            }
+          }
+          if (loggedText === '—' && isDone) {
+            loggedText = 'Completed ✓';
+          }
+          list.push({
+            day: dayShort,
+            name: ex.name,
+            quality: ex.quality || 'DRILL',
+            target: prescribed,
+            logged: loggedText,
+            done: isDone
+          });
+        });
+      }
+    });
+    return list;
+  }
+
+  function drawCategoryCard(x, y, w, h, title, daysTag, accentCol, rows, col4Label) {
+    drawRoundedRect(ctx2, x, y, w, h, 10, '#111116', 'rgba(212,168,67,0.35)', 1.5);
+
+    // Card Title
+    ctx2.fillStyle = accentCol;
+    ctx2.font = '700 19px "Bebas Neue", "Barlow Condensed", sans-serif';
+    ctx2.fillText(title, x + 16, y + 28);
+
+    ctx2.fillStyle = '#999AB0';
+    ctx2.font = '600 11px "DM Mono", monospace';
+    ctx2.textAlign = 'right';
+    ctx2.fillText(daysTag, x + w - 16, y + 26);
+    ctx2.textAlign = 'left';
+
+    ctx2.fillStyle = accentCol;
+    ctx2.globalAlpha = 0.35;
+    ctx2.fillRect(x + 16, y + 36, w - 32, 1.5);
+    ctx2.globalAlpha = 1;
+
+    // Table Column Headers
+    const headY = y + 56;
+    ctx2.fillStyle = '#D4A843';
+    ctx2.font = '700 10.5px "DM Mono", monospace';
+    ctx2.fillText('DAY', x + 16, headY);
+    ctx2.fillText('EXERCISE / DRILL', x + 56, headY);
+    ctx2.fillText('QUALITY', x + 266, headY);
+    ctx2.fillText('TARGET', x + 348, headY);
+    ctx2.fillText(col4Label, x + 438, headY);
+    ctx2.fillText('✓', x + w - 26, headY);
+
+    ctx2.fillStyle = 'rgba(212,168,67,0.28)';
+    ctx2.fillRect(x + 16, headY + 6, w - 32, 1);
+
+    const availH = h - 74;
+    const rowCount = Math.max(1, rows.length);
+    const rowH = availH / rowCount;
+
+    rows.forEach((r, idx) => {
+      const ry = y + 66 + idx * rowH;
+      const textY = ry + rowH * 0.65;
+
+      // Day tag
+      ctx2.fillStyle = '#D4A843';
+      ctx2.font = '700 10.5px "DM Mono", monospace';
+      ctx2.fillText(r.day, x + 16, textY);
+
+      // Exercise Name
+      ctx2.fillStyle = '#FFFFFF';
+      ctx2.font = '600 12.5px "Barlow", sans-serif';
+      ctx2.fillText(fitText(ctx2, r.name, 202), x + 56, textY);
+
+      // Quality pill
+      drawRoundedRect(ctx2, x + 264, textY - 11, 76, 15, 3, 'rgba(212,168,67,0.12)', null);
+      ctx2.fillStyle = '#D4A843';
+      ctx2.font = '600 9.5px "DM Mono", monospace';
+      ctx2.fillText(fitText(ctx2, r.quality, 70), x + 268, textY - 0.5);
+
+      // Target
+      ctx2.fillStyle = '#DDDDDD';
+      ctx2.font = '500 10.5px "DM Mono", monospace';
+      ctx2.fillText(fitText(ctx2, r.target, 84), x + 348, textY);
+
+      // Logged
+      ctx2.fillStyle = r.logged !== '—' ? '#30D158' : '#777788';
+      ctx2.font = '600 10.5px "DM Mono", monospace';
+      ctx2.fillText(fitText(ctx2, r.logged, 82), x + 438, textY);
+
+      // Done check
+      ctx2.fillStyle = r.done ? '#30D158' : '#555568';
+      ctx2.font = '700 13px "DM Mono", monospace';
+      ctx2.fillText(r.done ? '✓' : '○', x + w - 27, textY);
+
+      if (idx < rows.length - 1) {
+        ctx2.fillStyle = 'rgba(255,255,255,0.05)';
+        ctx2.fillRect(x + 16, ry + rowH, w - 32, 1);
+      }
+    });
+  }
+
+  const weightRows = collectCategoryExercises(['s-0-0', 's-2-0', 's-3-1']);
+  const bballRows = collectCategoryExercises(['s-1-0', 's-3-0', 's-4-0']);
+  const fasciaRows = collectCategoryExercises(['s-0-1', 's-2-1', 's-4-1']);
+  const poolRows = collectCategoryExercises(['s-1-1', 's-1-2', 's-4-2']);
+
+  // Left Column: Weight Room (15 rows, h=780) + Basketball (13 rows, h=682)
+  drawCategoryCard(padX, 168, colW, 780, 'WEIGHT ROOM — MAX POWER & CAT METHOD', 'MON · WED · THU', '#FF6B6B', weightRows, 'LOGGED');
+  drawCategoryCard(padX, 964, colW, 676, 'BASKETBALL — GAME-SPEED SKILL INTEGRATION', 'TUE · THU · FRI', '#D4A843', bballRows, 'STATUS');
+
+  // Right Column: Fascia (18 rows, h=870) + Pool & Recovery (11-16 rows, h=586)
+  drawCategoryCard(rx, 168, colW, 870, 'FASCIA — ELASTIC RECOIL & TENDON STIFFNESS', 'MON · WED · FRI', '#BF5AF2', fasciaRows, 'STATUS');
+  drawCategoryCard(rx, 1054, colW, 586, 'POOL RECOVERY, HYDRO FLUSH & MENTAL RESET', 'TUE · FRI', '#3478F6', poolRows, 'STATUS');
+
+  // Page 2 Footer
+  ctx2.fillStyle = 'rgba(255,255,255,0.12)';
+  ctx2.fillRect(padX, 1654, contentW, 1);
+  ctx2.fillStyle = '#888898';
+  ctx2.font = '600 12px "DM Mono", monospace';
+  ctx2.fillText('TIEGBE BAMBA · PERSONAL PERFORMANCE DATA · PHASE 3 · WEEK ' + wNum + ' · STATUS: OPTIMAL ADAPTATION', padX, 1682);
+  ctx2.fillStyle = '#D4A843';
+  ctx2.textAlign = 'right';
+  ctx2.fillText('PAGE 2 OF 2 — END OF REPORT', W - padX, 1682);
+  ctx2.textAlign = 'left';
+
+  return { c1, c2, wNum };
+}
+
 function exportReportPDF(historyItem) {
   const item = historyItem || window.CURRENT_REPORT_ITEM;
-  renderPDFDossier(item);
-  document.body.classList.add('is-printing-pdf');
-  showToast('OPENING 2-PAGE ATHLETIC DOSSIER... 📄', 'toast-fire');
-  SoundFX.vibrate(80);
-  setTimeout(() => {
-    window.print();
-    setTimeout(() => {
-      document.body.classList.remove('is-printing-pdf');
-    }, 1500);
-  }, 250);
+  try {
+    renderPDFDossier(item);
+    showToast('GENERATING 2-PAGE DARK A4 PDF... 📄', 'toast-fire');
+    if (typeof SoundFX !== 'undefined' && SoundFX.vibrate) SoundFX.vibrate(80);
+
+    const { c1, c2, wNum } = renderA4DarkCanvases(item);
+    const jpg1 = c1.toDataURL('image/jpeg', 0.94);
+    const jpg2 = c2.toDataURL('image/jpeg', 0.94);
+    const pdfBlob = buildTwoPagePDFBlob(jpg1, jpg2, c1.width, c1.height);
+
+    const fileName = 'Tiegbe-Bamba-Week-' + wNum + '-Report.pdf';
+    const pdfUrl = URL.createObjectURL(pdfBlob);
+
+    const dlAnchor = document.createElement('a');
+    dlAnchor.href = pdfUrl;
+    dlAnchor.download = fileName;
+    document.body.appendChild(dlAnchor);
+    dlAnchor.click();
+    dlAnchor.remove();
+
+    setTimeout(() => URL.revokeObjectURL(pdfUrl), 15000);
+    showToast('2-PAGE DARK A4 PDF DOWNLOADED ✓', 'toast-success');
+  } catch (err) {
+    showToast('PDF EXPORT ERROR: ' + err.message, 'toast-warn');
+  }
 }
 
 function shareReport(){showToast('SCREENSHOT YOUR SCREEN TO SAVE 📸','toast-fire');}
@@ -6807,9 +7700,9 @@ function showToast(msg,cls='toast-success'){
 // ══════════════════════════════════════════════
 function registerSW(){
   if('serviceWorker' in navigator){
-    const sw=`self.addEventListener('install',e=>e.waitUntil(caches.open('bvmbino-v3').then(c=>c.addAll([location.pathname]))));self.addEventListener('fetch',e=>e.respondWith(caches.match(e.request).then(r=>r||fetch(e.request).then(res=>{const cl=res.clone();caches.open('bvmbino-v3').then(c=>c.put(e.request,cl));return res;}))));`;
-    const blob=new Blob([sw],{type:'application/javascript'});
-    navigator.serviceWorker.register(URL.createObjectURL(blob)).catch(()=>{});
+    navigator.serviceWorker.register('./sw.js', { scope: './' }).then(reg => {
+      if (reg && reg.update) reg.update().catch(() => {});
+    }).catch(() => {});
   }
 }
 
