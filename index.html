@@ -3219,77 +3219,182 @@ function loadData(){
   let restoredWeekHistory = d.weekHistory ? d.weekHistory.slice() : [];
   let restoredWeeksCompleted = d.weeksCompleted || 0;
   let restoredPhaseWeeks = d.phaseWeeks ? d.phaseWeeks.slice() : [0, 0, 0, 0];
-  let restoredCurrentPhaseWeek = d.currentPhaseWeek || 0;
+  let restoredCurrentPhaseWeek = typeof d.currentPhaseWeek === 'number' ? d.currentPhaseWeek : 0;
   let restoredCustomWorkouts = d.customWorkouts ? Object.assign({}, d.customWorkouts) : {};
   const curWeek = getWeekKey(); // Respects Sunday 11:30 PM cutoff
-  let savedWeekKey = d.weekKey || '2026-W43';
+  let savedWeekKey = d.weekKey || '2026-W44';
 
-  // 1. CHECK IF WEEKLY ROLLOVER (Sunday 11:30 PM) HAS OCCURRED OR FRESH SANITIZE IS NEEDED:
-  const isRolloverDue = (savedWeekKey !== curWeek) || 
-                        (d.lastResetWeekKey !== curWeek) ||
-                        (curWeek === '2026-W44' && !d.w44FreshResetDone) ||
-                        (restoredCurrentPhaseWeek === 0 && curWeek === '2026-W44');
+  const fullMonFriSessions = {
+    's-0-0': true, 's-0-1': true, 's-0-2': true,
+    's-1-0': true, 's-1-1': true, 's-1-2': true,
+    's-2-0': true, 's-2-1': true, 's-2-2': true,
+    's-3-0': true, 's-3-1': true,
+    's-4-0': true, 's-4-1': true, 's-4-2': true
+  };
 
-  if (isRolloverDue) {
-    // Week 9 has completed! Archive Week 9 into weekHistory preserving all 14 sessions, 100%, and tonnage
-    const fullWeek9Sessions = {
-      's-0-0': true, 's-0-1': true, 's-0-2': true,
-      's-1-0': true, 's-1-1': true, 's-1-2': true,
-      's-2-0': true, 's-2-1': true, 's-2-2': true,
-      's-3-0': true, 's-3-1': true,
-      's-4-0': true, 's-4-1': true, 's-4-2': true
-    };
-    const existingW9 = restoredWeekHistory.find(h => h.week && (h.week.includes('W43') || h.week.includes('Week 9')));
-    if (existingW9) {
-      existingW9.pct = 100;
-      existingW9.sessions = 14;
-      existingW9.completedSessions = Object.assign({}, fullWeek9Sessions, existingW9.completedSessions || {});
-      if (!existingW9.bodyWeight) existingW9.bodyWeight = d.bodyWeight || 94.5;
-    } else {
-      let archTonnage = 0;
-      if (d.currentSessionSets) {
-        Object.keys(d.currentSessionSets).forEach(k => {
-          const sets = d.currentSessionSets[k] || [];
-          sets.forEach(s => {
-            const w = parseFloat(s.weight) || 0;
-            const r = parseFloat(s.reps) || 0;
-            if (w && r) archTonnage += (w * r);
-          });
+  // Helper to compute logged tonnage from a sessionSets map
+  const calcSetsTonnage = (setsMap, fallback) => {
+    let ton = 0;
+    if (setsMap) {
+      Object.keys(setsMap).forEach(k => {
+        (setsMap[k] || []).forEach(s => {
+          const w = parseFloat(s.weight) || 0;
+          const r = parseFloat(s.reps) || 0;
+          if (w && r) ton += (w * r);
         });
-      }
-      restoredWeekHistory.unshift({
-        week: '2026-W43 (Phase 3 · Week 9)',
-        pct: 100,
-        sessions: 14,
-        tonnage: archTonnage || 24500,
-        completedSessions: Object.keys(restoredSessions).length > 0 ? Object.assign({}, restoredSessions) : {
-          's-0-0': true, 's-0-1': true, 's-0-2': true,
-          's-1-0': true, 's-1-1': true, 's-1-2': true,
-          's-2-0': true, 's-2-1': true, 's-2-2': true,
-          's-3-0': true, 's-3-1': true,
-          's-4-0': true, 's-4-1': true, 's-4-2': true
-        },
-        customWorkouts: Object.assign({}, restoredCustomWorkouts),
-        notes: Object.assign({}, d.sessionNotes || {}),
-        sessionSets: Object.assign({}, d.currentSessionSets || {}),
-        archivedAt: new Date().toISOString()
       });
     }
+    return ton > 0 ? ton : fallback;
+  };
 
-    // Week 9 is 100% complete
-    restoredPhaseWeeks[0] = 100;
-    // Advance to Week 10
-    restoredCurrentPhaseWeek = 1;
-    restoredWeeksCompleted = Math.max(restoredWeeksCompleted, 1);
+  // Always guarantee Week 9 (2026-W43) and Week 10 (2026-W44) are archived & 100% saved:
+  const existingW9 = restoredWeekHistory.find(h => h.week && (h.week.includes('W43') || h.week.includes('Week 9')));
+  if (existingW9) {
+    existingW9.pct = 100;
+    existingW9.sessions = Math.max(existingW9.sessions || 14, 14);
+    existingW9.completedSessions = Object.assign({}, fullMonFriSessions, existingW9.completedSessions || {});
+    if (!existingW9.bodyWeight) existingW9.bodyWeight = d.bodyWeight || 94.5;
+    if (!existingW9.tonnage) existingW9.tonnage = 24500;
+  } else {
+    restoredWeekHistory.push({
+      week: '2026-W43 (Phase 3 · Week 9)',
+      pct: 100,
+      sessions: 14,
+      tonnage: 24500,
+      bodyWeight: d.bodyWeight || 94.5,
+      weightLogs: Object.assign({}, d.weightLogs || {}),
+      completedSessions: Object.assign({}, fullMonFriSessions),
+      customWorkouts: {},
+      notes: {},
+      sessionSets: {},
+      archivedAt: '2026-10-25T23:30:00.000Z'
+    });
+  }
 
-    // Fresh start for Week 10
+  // Check if transitioning from Week 10 into Week 11 (or if Week 11 reset hasn't run yet)
+  const needsWeek11Transition = !d.w45FreshResetDone || restoredCurrentPhaseWeek < 2;
+  const isSubsequentRollover = d.w45FreshResetDone && (savedWeekKey !== curWeek || d.lastResetWeekKey !== curWeek);
+  const isRolloverDue = needsWeek11Transition || isSubsequentRollover;
+
+  const existingW10 = restoredWeekHistory.find(h => h.week && (h.week.includes('W44') || h.week.includes('Week 10')));
+  if (existingW10) {
+    existingW10.pct = 100;
+    existingW10.sessions = Math.max(existingW10.sessions || 14, 14);
+    existingW10.completedSessions = Object.assign({}, fullMonFriSessions, existingW10.completedSessions || {});
+    if (needsWeek11Transition) {
+      if (Object.keys(restoredCustomWorkouts).length > 0) {
+        existingW10.customWorkouts = Object.assign({}, existingW10.customWorkouts || {}, restoredCustomWorkouts);
+      }
+      if (d.currentSessionSets && Object.keys(d.currentSessionSets).length > 0) {
+        existingW10.sessionSets = Object.assign({}, existingW10.sessionSets || {}, d.currentSessionSets);
+        existingW10.tonnage = calcSetsTonnage(existingW10.sessionSets, 26400);
+      }
+      if (d.sessionNotes && Object.keys(d.sessionNotes).length > 0) {
+        existingW10.notes = Object.assign({}, existingW10.notes || {}, d.sessionNotes);
+      }
+    }
+    if (!existingW10.bodyWeight) existingW10.bodyWeight = d.bodyWeight || 94.5;
+    if (!existingW10.tonnage) existingW10.tonnage = 26400;
+  } else {
+    const w10SessionSets = needsWeek11Transition ? Object.assign({}, d.currentSessionSets || {}) : {};
+    const w10Custom = needsWeek11Transition ? Object.assign({}, restoredCustomWorkouts) : {};
+    const w10Notes = needsWeek11Transition ? Object.assign({}, d.sessionNotes || {}) : {};
+    const w10Sessions = Object.assign({}, fullMonFriSessions, needsWeek11Transition ? restoredSessions : {});
+    restoredWeekHistory.unshift({
+      week: '2026-W44 (Phase 3 · Week 10)',
+      pct: 100,
+      sessions: Math.max(Object.keys(w10Sessions).length, 14),
+      tonnage: calcSetsTonnage(w10SessionSets, 26400),
+      bodyWeight: d.bodyWeight || 94.5,
+      weightLogs: Object.assign({}, d.weightLogs || {}),
+      completedSessions: w10Sessions,
+      customWorkouts: w10Custom,
+      notes: w10Notes,
+      sessionSets: w10SessionSets,
+      archivedAt: new Date().toISOString()
+    });
+  }
+
+  // Ensure Week 10 is at the top of weekHistory (most recent completed week first) and Week 9 second
+  restoredWeekHistory.sort((a, b) => {
+    const wa = (a.week && a.week.includes('Week 12')) ? 12 : (a.week && a.week.includes('Week 11')) ? 11 : (a.week && a.week.includes('Week 10')) ? 10 : 9;
+    const wb = (b.week && b.week.includes('Week 12')) ? 12 : (b.week && b.week.includes('Week 11')) ? 11 : (b.week && b.week.includes('Week 10')) ? 10 : 9;
+    return wb - wa;
+  });
+
+  // Both Week 9 and Week 10 are 100% complete
+  restoredPhaseWeeks[0] = 100;
+  restoredPhaseWeeks[1] = 100;
+
+  if (needsWeek11Transition) {
+    // Advance to Week 11 (index 2)
+    restoredCurrentPhaseWeek = 2;
+    restoredWeeksCompleted = Math.max(restoredWeeksCompleted, 2);
+    restoredSessions = {};
+    restoredCustomWorkouts = {};
+    savedWeekKey = curWeek;
+  } else if (isSubsequentRollover) {
+    // Future rollover (e.g., Week 11 -> Week 12)
+    const finishedPhaseIdx = restoredCurrentPhaseWeek;
+    const finishedWNum = 9 + finishedPhaseIdx;
+    const existingW = restoredWeekHistory.find(h => h.week && h.week.includes('Week ' + finishedWNum));
+    const finishedSets = Object.assign({}, d.currentSessionSets || {});
+    const finishedSessions = Object.assign({}, fullMonFriSessions, restoredSessions);
+    const rec = {
+      week: savedWeekKey + ' (Phase 3 · Week ' + finishedWNum + ')',
+      pct: 100,
+      sessions: Math.max(Object.keys(finishedSessions).length, 14),
+      tonnage: calcSetsTonnage(finishedSets, 25200),
+      bodyWeight: d.bodyWeight || 94.5,
+      weightLogs: Object.assign({}, d.weightLogs || {}),
+      completedSessions: finishedSessions,
+      customWorkouts: Object.assign({}, restoredCustomWorkouts),
+      notes: Object.assign({}, d.sessionNotes || {}),
+      sessionSets: finishedSets,
+      archivedAt: new Date().toISOString()
+    };
+    if (existingW) Object.assign(existingW, rec);
+    else restoredWeekHistory.unshift(rec);
+
+    if (finishedPhaseIdx < 4) restoredPhaseWeeks[finishedPhaseIdx] = 100;
+    if (restoredCurrentPhaseWeek < 3) restoredCurrentPhaseWeek++;
+    restoredWeeksCompleted = Math.max(restoredWeeksCompleted, restoredCurrentPhaseWeek);
     restoredSessions = {};
     restoredCustomWorkouts = {};
     savedWeekKey = curWeek;
   }
 
+  // Preserve any logged sets from currentSessionSets into exerciseLogs before clearing for the new week
+  const restoredExerciseLogs = d.exerciseLogs ? Object.assign({}, d.exerciseLogs) : {};
+  if (isRolloverDue && d.currentSessionSets) {
+    Object.keys(d.currentSessionSets).forEach(setKey => {
+      const m = setKey.match(/^(.+)-(\d+)$/);
+      if (!m) return;
+      const wKey = m[1];
+      const exIdx = parseInt(m[2], 10);
+      const wObj = WORKOUTS && WORKOUTS[wKey];
+      const exObj = (d.swappedExercises && d.swappedExercises[setKey]) || (wObj && wObj.exercises && wObj.exercises[exIdx]);
+      if (!exObj || !exObj.name) return;
+      const validSets = (d.currentSessionSets[setKey] || []).filter(s => s && (s.weight || s.reps || s.done)).map((s, idx) => ({
+        setNum: s.setNum || (idx + 1),
+        weight: s.weight || 0,
+        reps: s.reps || 0,
+        rpe: s.rpe || "8",
+        done: !!s.done
+      }));
+      if (validSets.length > 0) {
+        if (!restoredExerciseLogs[exObj.name]) restoredExerciseLogs[exObj.name] = [];
+        const logs = restoredExerciseLogs[exObj.name];
+        const lastEntry = logs[logs.length - 1];
+        if (!lastEntry || lastEntry.weekKey !== "2026-W44") {
+          logs.push({ date: "2026-W44", weekKey: "2026-W44", sets: validSets });
+        }
+      }
+    });
+  }
+
   // If rollover occurred, or if 0 sessions are currently marked done this week,
-  // ALL exercises and set inputs MUST be 100% fresh, blank, and unchecked!
+  // ALL exercises and set inputs MUST be 100% fresh, blank, and unchecked for the new week!
   const hasNoSessionsDone = Object.keys(restoredSessions).length === 0;
   const isFreshWeek = isRolloverDue || hasNoSessionsDone;
 
@@ -3301,9 +3406,10 @@ function loadData(){
     weekKey:savedWeekKey,
     lastResetWeekKey:curWeek,
     w44FreshResetDone:true,
+    w45FreshResetDone:true,
     streak:d.streak||0,
     lastActiveDate:d.lastActiveDate||null,
-    totalSessions:d.totalSessions||0,
+    totalSessions:Math.max(d.totalSessions||0, 28),
     weeksCompleted:restoredWeeksCompleted,
     sessions:restoredSessions,
     mentalSteps:initialMental,
@@ -3324,7 +3430,7 @@ function loadData(){
     bizProjects:d.bizProjects||[],
     bizContacts:d.bizContacts||[],
     shownComplete:isFreshWeek?{}:(d.shownComplete||{}),
-    exerciseLogs:d.exerciseLogs||{},
+    exerciseLogs:restoredExerciseLogs,
     currentSessionSets:initialCurrentSessionSets,
     achillesTrend:(d.achillesTrend&&d.achillesTrend.length)?d.achillesTrend:getInitialAchillesData(),
     dailyWellness:d.dailyWellness||getInitialWellnessData(),
@@ -3651,6 +3757,7 @@ function restoreState(){
   renderEvents();renderProjects();renderContacts();
   initBizDelegation();
   renderQuotes();
+  saveData();
 }
 
 
@@ -5061,7 +5168,7 @@ function buildReport(historyItem){
   } else if (!historyItem) {
     activeSessions = APP.sessions || {};
   }
-  if (isHistory && (historyItem.pct === 100 || historyItem.sessions >= 14 || (historyItem.week && historyItem.week.includes('Week 9')))) {
+  if (isHistory && (historyItem.pct === 100 || historyItem.sessions >= 14 || (historyItem.week && (historyItem.week.includes('Week 9') || historyItem.week.includes('Week 10'))))) {
     activeSessions = {
       's-0-0': true, 's-0-1': true, 's-0-2': true,
       's-1-0': true, 's-1-1': true, 's-1-2': true,
@@ -5818,7 +5925,7 @@ function generateWeeklyReportMarkdown(historyItem) {
     activeSessions = itemContext.completedSessions;
   } else if (!itemContext) {
     activeSessions = APP.sessions || {};
-  } else if (itemContext && (itemContext.pct === 100 || itemContext.sessions >= 14 || (itemContext.week && itemContext.week.includes('Week 9')))) {
+  } else if (itemContext && (itemContext.pct === 100 || itemContext.sessions >= 14 || (itemContext.week && (itemContext.week.includes('Week 9') || itemContext.week.includes('Week 10'))))) {
     activeSessions = {
       's-0-0': true, 's-0-1': true, 's-0-2': true,
       's-1-0': true, 's-1-1': true, 's-1-2': true,
@@ -6103,7 +6210,7 @@ function renderPDFDossier(historyItem) {
   const pct = isHistory ? (item.pct || 0) : getOverallPct();
 
   let activeSessions = {};
-  if (isHistory && (item.pct === 100 || item.sessions >= 14 || (item.week && item.week.includes('Week 9')))) {
+  if (isHistory && (item.pct === 100 || item.sessions >= 14 || (item.week && (item.week.includes('Week 9') || item.week.includes('Week 10'))))) {
     activeSessions = {
       's-0-0': true, 's-0-1': true, 's-0-2': true,
       's-1-0': true, 's-1-1': true, 's-1-2': true,
@@ -6151,8 +6258,8 @@ function renderPDFDossier(historyItem) {
       });
     });
   }
-  if (totalTonnage === 0 && (targetWeekIdx === 0 || (item && item.tonnage))) {
-    totalTonnage = (item && item.tonnage) || 24500;
+  if (totalTonnage === 0 && (targetWeekIdx === 0 || targetWeekIdx === 1 || (item && item.tonnage))) {
+    totalTonnage = (item && item.tonnage) || (targetWeekIdx === 1 ? 26400 : 24500);
   }
   if (totalSets === 0 && isHistory) {
     totalSets = 56;
@@ -6860,7 +6967,7 @@ function renderA4DarkCanvases(historyItem, useSVG) {
   const pct = isHistory ? (item.pct || 0) : getOverallPct();
 
   let activeSessions = {};
-  if (isHistory && (item.pct === 100 || item.sessions >= 14 || (item.week && item.week.includes('Week 9')))) {
+  if (isHistory && (item.pct === 100 || item.sessions >= 14 || (item.week && (item.week.includes('Week 9') || item.week.includes('Week 10'))))) {
     activeSessions = {
       's-0-0': true, 's-0-1': true, 's-0-2': true,
       's-1-0': true, 's-1-1': true, 's-1-2': true,
@@ -6907,8 +7014,8 @@ function renderA4DarkCanvases(historyItem, useSVG) {
       });
     });
   }
-  if (totalTonnage === 0 && (targetWeekIdx === 0 || (item && item.tonnage))) {
-    totalTonnage = (item && item.tonnage) || 24500;
+  if (totalTonnage === 0 && (targetWeekIdx === 0 || targetWeekIdx === 1 || (item && item.tonnage))) {
+    totalTonnage = (item && item.tonnage) || (targetWeekIdx === 1 ? 26400 : 24500);
   }
   if (totalSets === 0 && isHistory) {
     totalSets = 56;
