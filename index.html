@@ -1545,6 +1545,22 @@ body>*{position:relative;z-index:1}
   cursor: pointer;
   transition: all 0.2s ease;
 }
+#mental-week-strip .mc-tab-btn {
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--text-mid);
+}
+#mental-week-strip .mc-tab-btn.active {
+  background: rgba(212, 168, 67, 0.22);
+  border-color: var(--gold);
+  color: var(--gold);
+  font-weight: 700;
+  box-shadow: 0 0 10px rgba(212, 168, 67, 0.25);
+}
+.mc-purple .mc-tab-btn.active {
+  background: rgba(191, 90, 242, 0.25);
+  color: #D98FF8;
+}
 .mc-green .mc-tab-btn.active {
   background: rgba(48, 209, 88, 0.25);
   color: #30D158;
@@ -2275,22 +2291,23 @@ body.is-printing-pdf {
   <div class="divider"></div>
   <div class="sec-label">
     <div class="sec-title">DAILY & WEEKLY QUOTES</div>
-    <div class="sec-action" id="mental-day-indicator">// TODAY</div>
+    <div class="sec-action" id="mental-day-indicator">// TODAY · MONDAY (W11)</div>
   </div>
 
-  <!-- Day Selector Strip (Mon - Sun) -->
+  <!-- Day Selector Strip (Mon - Sun) & Week Rotation Strip (W9 - W12) -->
   <div style="display:flex;justify-content:space-between;align-items:center;padding:0 20px;margin-bottom:8px">
-    <div style="font-family:'DM Mono',monospace;font-size:8.5px;color:var(--gold);letter-spacing:1.5px" id="mental-active-rotation-label">// ACTIVE ROTATION · WEEK 9 PACK</div>
-    <div style="display:flex;gap:5px" id="mental-week-strip">
+    <div style="font-family:'DM Mono',monospace;font-size:8.5px;color:var(--gold);letter-spacing:1.5px" id="mental-active-rotation-label">// ACTIVE: MONDAY · WEEK 11 ROTATION</div>
+    <div style="display:flex;gap:5px;align-items:center" id="mental-week-strip">
       <button type="button" class="mc-tab-btn" data-mw="0" onclick="setMentalWeekPack(0)" style="padding:3px 7px;font-size:8px">W9</button>
       <button type="button" class="mc-tab-btn" data-mw="1" onclick="setMentalWeekPack(1)" style="padding:3px 7px;font-size:8px">W10</button>
-      <button type="button" class="mc-tab-btn" data-mw="2" onclick="setMentalWeekPack(2)" style="padding:3px 7px;font-size:8px">W11</button>
+      <button type="button" class="mc-tab-btn active" data-mw="2" onclick="setMentalWeekPack(2)" style="padding:3px 7px;font-size:8px">W11</button>
       <button type="button" class="mc-tab-btn" data-mw="3" onclick="setMentalWeekPack(3)" style="padding:3px 7px;font-size:8px">W12</button>
+      <button type="button" class="mc-tab-btn" onclick="cycleMentalWeekPack()" style="padding:3px 7px;font-size:8px;border:1px solid rgba(191,90,242,0.45);color:#D98FF8">↻</button>
     </div>
   </div>
 
   <div class="mental-days-strip" id="mental-days-strip">
-    <div class="md-day-pill" data-d="1" onclick="setMentalDay(1, this)">MON</div>
+    <div class="md-day-pill active" data-d="1" onclick="setMentalDay(1, this)">MON</div>
     <div class="md-day-pill" data-d="2" onclick="setMentalDay(2, this)">TUE</div>
     <div class="md-day-pill" data-d="3" onclick="setMentalDay(3, this)">WED</div>
     <div class="md-day-pill" data-d="4" onclick="setMentalDay(4, this)">THU</div>
@@ -2302,53 +2319,68 @@ body.is-printing-pdf {
   <div class="mental-card-col">
     <!-- 1. LIGHT BLUE: Quote of the Day -->
     <div class="mc-light-blue" id="card-quote-day">
-      <div class="mc-badge" id="qb-day-badge">// LIGHT BLUE · QUOTE OF THE DAY</div>
-      <div class="mc-quote" id="qb-day-text">"You don't have to be great to start, but you have to start to be great."</div>
-      <div class="mc-author" id="qb-day-author">— LES BROWN</div>
+      <div class="mc-badge" id="qb-day-badge">// LIGHT BLUE · MONDAY QUOTE (W11)</div>
+      <div class="mc-quote" id="qb-day-text">"The only limit to our realization of tomorrow will be our doubts of today."</div>
+      <div class="mc-author" id="qb-day-author">— FRANKLIN D. ROOSEVELT</div>
       <div class="mc-takeaway" id="qb-day-takeaway" style="font-size:11.5px;color:var(--text-mid);margin-top:8px;padding-top:8px;border-top:1px solid rgba(90,200,250,0.2);line-height:1.4">
-        Every championship run starts with showing up and attacking rep one.
+        Attack your Hang Power Cleans and CAT Back Squats with zero hesitation in your tendon.
       </div>
     </div>
 
-    <!-- 2. PURPLE: Quote & Mantra of the Week -->
+    <!-- 2. PURPLE: Athlete Mantra (Daily & Weekly Rotation) -->
     <div class="mc-purple" id="card-quote-week">
       <div class="mc-tab-row" style="margin-bottom:6px">
-        <div class="mc-badge" id="qb-week-badge" style="margin-bottom:0">// PURPLE · QUOTE & MANTRA OF THE WEEK</div>
-        <button type="button" class="mc-tab-btn" onclick="cycleMentalWeekPack()" style="padding:3px 8px;font-size:8px;border-color:rgba(191,90,242,0.4);color:#D98FF8">↻ NEXT WEEK</button>
+        <div class="mc-badge" id="qb-week-badge" style="margin-bottom:0">// PURPLE · MONDAY MANTRA (W11)</div>
+        <div class="mc-tabs">
+          <button type="button" class="mc-tab-btn active" id="tab-btn-mantra-day" onclick="switchMentalTab('mantra','day')">DAY MANTRA</button>
+          <button type="button" class="mc-tab-btn" id="tab-btn-mantra-week" onclick="switchMentalTab('mantra','week')">WEEK MANTRA</button>
+        </div>
       </div>
-      <div class="mc-quote" id="qb-week-text">"I TRUST MY BODY FULLY. I BUILD THE RECOIL. I AM UNBREAKABLE."</div>
-      <div class="mc-author" id="qb-week-author">— BVMBINO · PHASE 3 EXPLOSIVE PERFORMANCE MANTRA</div>
-      <div class="mc-takeaway" id="qb-week-takeaway" style="font-size:11.5px;color:var(--text-mid);margin-top:8px;padding-top:8px;border-top:1px solid rgba(191,90,242,0.2);line-height:1.4">
-        Anchor: Maximum Ground Reaction Force · Pure Elastic Recoil · Absolute Mental Dominance
+      <!-- Mantra Day View -->
+      <div id="mantra-view-day">
+        <div class="mc-quote" id="qb-week-text">"EVERY FIRST STEP IS LETHAL. I ABSORB FORCE AND EXPLODE PAST ANY DEFENDER."</div>
+        <div class="mc-author" id="qb-week-author">— BVMBINO · MONDAY W11 SPORT INTEGRATION MANTRA</div>
+        <div class="mc-takeaway" id="qb-week-takeaway" style="font-size:11.5px;color:var(--text-mid);margin-top:8px;padding-top:8px;border-top:1px solid rgba(191,90,242,0.2);line-height:1.4">
+          Week 11 Monday Anchor: Transfer heavy squat RFD directly into instant court acceleration and vertical pop.
+        </div>
+      </div>
+      <!-- Mantra Week View -->
+      <div id="mantra-view-week" style="display:none">
+        <div id="qb-mantra-week-title" style="font-family:'DM Mono',monospace;font-size:9.5px;color:#D98FF8;letter-spacing:1px;margin-bottom:6px">WEEK 11 · SPORT INTEGRATION &amp; UNILATERAL POP</div>
+        <div class="mc-quote" id="qb-mantra-week-text">"EVERY FIRST STEP IS LETHAL. I ABSORB FORCE AND EXPLODE PAST ANY DEFENDER."</div>
+        <div class="mc-author" id="qb-mantra-week-author">— BVMBINO · WEEK 11 SPORT INTEGRATION MANTRA</div>
+        <div class="mc-takeaway" id="qb-mantra-week-takeaway" style="font-size:11.5px;color:var(--text-mid);margin-top:8px;padding-top:8px;border-top:1px solid rgba(191,90,242,0.2);line-height:1.4">
+          Anchor: Single-Leg Reactive Stiffness · Game-Speed Deceleration · Positionless 6'7" Dominance.
+        </div>
       </div>
     </div>
 
     <!-- 3. GREEN: Islamic Wisdom (Daily Verse + Weekly Warrior Story) -->
     <div class="mc-green" id="card-islamic">
       <div class="mc-tab-row">
-        <div class="mc-badge" id="qb-islam-badge" style="margin-bottom:0">// GREEN · ISLAMIC REFLECTION</div>
+        <div class="mc-badge" id="qb-islam-badge" style="margin-bottom:0">// GREEN · MONDAY ISLAMIC REFLECTION (W11)</div>
         <div class="mc-tabs">
-          <button class="mc-tab-btn active" id="tab-btn-islam-day" onclick="switchMentalTab('islam','day')">DAY QUOTE</button>
-          <button class="mc-tab-btn" id="tab-btn-islam-week" onclick="switchMentalTab('islam','week')">QUOTE OF THE WEEK</button>
+          <button type="button" class="mc-tab-btn active" id="tab-btn-islam-day" onclick="switchMentalTab('islam','day')">DAY QUOTE</button>
+          <button type="button" class="mc-tab-btn" id="tab-btn-islam-week" onclick="switchMentalTab('islam','week')">QUOTE OF THE WEEK</button>
         </div>
       </div>
 
       <!-- Islam Day View -->
       <div id="islam-view-day">
-        <div class="mc-arabic" id="qb-islam-arabic">إِنَّ مَعَ الْعُسْرِ يُسْرًا</div>
-        <div class="mc-quote" id="qb-islam-text">"Indeed, with hardship comes ease."</div>
-        <div class="mc-author" id="qb-islam-author">— SURAH ASH-SHARH (94:6)</div>
-        <div class="mc-takeaway" id="qb-islam-takeaway">Adaptation only occurs under tension. The ease is forged inside the struggle.</div>
+        <div class="mc-arabic" id="qb-islam-arabic">فَإِذَا عَزَمْتَ فَتَوَكَّلْ عَلَى اللَّهِ</div>
+        <div class="mc-quote" id="qb-islam-text">"And when you have decided, then rely upon Allah."</div>
+        <div class="mc-author" id="qb-islam-author">— SURAH ALI 'IMRAN (3:159)</div>
+        <div class="mc-takeaway" id="qb-islam-takeaway">Once you step onto the court or barbell platform, kill all hesitation. Execute with total resolve.</div>
       </div>
 
       <!-- Islam Week View (Warrior Story & Quote) -->
       <div id="islam-view-week" style="display:none">
-        <div id="qb-islam-week-title" style="font-family:'DM Mono',monospace;font-size:9.5px;color:#30D158;letter-spacing:1px;margin-bottom:6px">KHALID IBN AL-WALID · THE SWORD OF ALLAH (SAIFULLAH)</div>
-        <div class="mc-arabic" id="qb-islam-week-arabic" style="font-size:16px;margin-bottom:4px">فَلَا نَامَتْ أَعْيُنُ الْجُبَنَاءِ</div>
-        <div class="mc-quote" id="qb-islam-week-text" style="font-size:19px">"May the eyes of cowards never sleep."</div>
-        <div class="mc-author" id="qb-islam-week-author">— KHALID IBN AL-WALID (BATTLE OF MU'TAH)</div>
+        <div id="qb-islam-week-title" style="font-family:'DM Mono',monospace;font-size:9.5px;color:#30D158;letter-spacing:1px;margin-bottom:6px">SALAHUDDIN AL-AYYUBI · THE HONOR OF UNBREAKABLE WILL</div>
+        <div class="mc-arabic" id="qb-islam-week-arabic" style="font-size:16px;margin-bottom:4px">إِنَّ الْمُلُوكَ إِذَا دَخَلُوا قَرْيَةً أَفْسَدُوهَا، وَأَنَا لَا أَنْتَقِمُ لِنَفْسِي</div>
+        <div class="mc-quote" id="qb-islam-week-text" style="font-size:19px">"I do not fight out of hatred for what is before me, but love for what is behind me."</div>
+        <div class="mc-author" id="qb-islam-week-author">— SALAHUDDIN AL-AYYUBI (LIBERATION OF JERUSALEM, 1187 CE)</div>
         <div class="mc-takeaway" id="qb-islam-week-takeaway">
-          Outnumbered 3,000 to over 100,000, Khalid broke 9 swords in combat, then engineered a calm dawn flank maneuver to extract his army without defeat. True power is cold tactical calm inside overwhelming adversity.
+          Physical dominance combined with supreme emotional regulation and chivalry. True warriors control their adrenaline and act with calculated nobility.
         </div>
       </div>
     </div>
@@ -2356,27 +2388,27 @@ body.is-printing-pdf {
     <!-- 4. ORANGE: Book Wisdom (Daily Principle + Weekly Masterclass) -->
     <div class="mc-orange" id="card-book">
       <div class="mc-tab-row">
-        <div class="mc-badge" id="qb-book-badge" style="margin-bottom:0">// ORANGE · BOOK MASTERY</div>
+        <div class="mc-badge" id="qb-book-badge" style="margin-bottom:0">// ORANGE · MONDAY BOOK MASTERY (W11)</div>
         <div class="mc-tabs">
-          <button class="mc-tab-btn active" id="tab-btn-book-day" onclick="switchMentalTab('book','day')">DAY QUOTE</button>
-          <button class="mc-tab-btn" id="tab-btn-book-week" onclick="switchMentalTab('book','week')">QUOTE OF THE WEEK</button>
+          <button type="button" class="mc-tab-btn active" id="tab-btn-book-day" onclick="switchMentalTab('book','day')">DAY QUOTE</button>
+          <button type="button" class="mc-tab-btn" id="tab-btn-book-week" onclick="switchMentalTab('book','week')">QUOTE OF THE WEEK</button>
         </div>
       </div>
 
       <!-- Book Day View -->
       <div id="book-view-day">
-        <div class="mc-quote" id="qb-book-text">"Rest at the end, not in the middle."</div>
-        <div class="mc-author" id="qb-book-author">— KOBE BRYANT · THE MAMBA MENTALITY</div>
-        <div class="mc-takeaway" id="qb-book-takeaway">Never bargain with your workout while fatigued. Finish every repetition with intent.</div>
+        <div class="mc-quote" id="qb-book-text">"You do not rise to the level of your goals. You fall to the level of your systems."</div>
+        <div class="mc-author" id="qb-book-author">— JAMES CLEAR (ATOMIC HABITS)</div>
+        <div class="mc-takeaway" id="qb-book-takeaway">The Monday schedule is non-negotiable. Execute the system and the results take care of themselves.</div>
       </div>
 
       <!-- Book Week View (Relentless Masterclass) -->
       <div id="book-view-week" style="display:none">
-        <div id="qb-book-week-title" style="font-family:'DM Mono',monospace;font-size:9.5px;color:#FF9F0A;letter-spacing:1px;margin-bottom:6px">TIM S. GROVER · RELENTLESS: FROM GOOD TO GREAT TO UNSTOPPABLE</div>
-        <div class="mc-quote" id="qb-book-week-text" style="font-size:19px">"Cleaners don't compete with anyone; they make everyone compete with them."</div>
-        <div class="mc-author" id="qb-book-week-author">— TIM GROVER (TRAINER TO KOBE BRYANT & MICHAEL JORDAN)</div>
+        <div id="qb-book-week-title" style="font-family:'DM Mono',monospace;font-size:9.5px;color:#FF9F0A;letter-spacing:1px;margin-bottom:6px">JAMES CLEAR · ATOMIC HABITS: SYSTEMS OVER GOALS</div>
+        <div class="mc-quote" id="qb-book-week-text" style="font-size:19px">"Every action you take is a vote for the type of athlete you wish to become. As the votes build up, so does the evidence of your new identity."</div>
+        <div class="mc-author" id="qb-book-week-author">— JAMES CLEAR (ATOMIC HABITS)</div>
         <div class="mc-takeaway" id="qb-book-week-takeaway">
-          When the pressure spikes and everyone else begins to panic, a Cleaner gets colder and calmer. You don't perform for credit, social media, or praise. Your preparation creates an automated instinct that cannot be shaken.
+          You don't become an elite pro by hoping for it. You become an elite pro by logging your weight, hitting your sleep target, and completing your ankle eccentric stretches daily.
         </div>
       </div>
     </div>
@@ -2480,9 +2512,9 @@ body.is-printing-pdf {
   <div class="profile-hero"><div class="profile-avatar">BV</div><div class="profile-name">BVMBINO</div><div class="profile-role">COMBO GUARD · OFF-SEASON PHASE 3</div></div>
   <!-- DAILY QUOTE ON PROFILE -->
   <div class="profile-quote-card">
-    <div style="font-family:'DM Mono',monospace;font-size:9px;color:var(--gold);letter-spacing:2px;margin-bottom:8px">// TODAY'S QUOTE</div>
-    <div style="font-family:'Bebas Neue',sans-serif;font-size:18px;color:#fff;letter-spacing:0.5px;line-height:1.25;margin-bottom:6px" id="profile-daily-quote">"Champions are built in the off-season."</div>
-    <div style="font-family:'DM Mono',monospace;font-size:9px;color:var(--text-dim);letter-spacing:1px" id="profile-daily-author">— Elite Mindset</div>
+    <div id="profile-quote-badge" style="font-family:'DM Mono',monospace;font-size:9px;color:var(--gold);letter-spacing:2px;margin-bottom:8px">// MONDAY QUOTE · WEEK 11</div>
+    <div style="font-family:'Bebas Neue',sans-serif;font-size:18px;color:#fff;letter-spacing:0.5px;line-height:1.25;margin-bottom:6px" id="profile-daily-quote">"The only limit to our realization of tomorrow will be our doubts of today."</div>
+    <div style="font-family:'DM Mono',monospace;font-size:9px;color:var(--text-dim);letter-spacing:1px" id="profile-daily-author">— FRANKLIN D. ROOSEVELT</div>
   </div>
 
   <div class="profile-stats">
@@ -3927,22 +3959,37 @@ const WEEKLY_MANTRAS = [
 ];
 
 function getDailyQuote() {
+  const dayNum = (typeof window.ACTIVE_MENTAL_DAY === 'number') ? window.ACTIVE_MENTAL_DAY : new Date().getDay();
+  const weekIdx = (typeof getMentalWeekIndex === 'function') ? getMentalWeekIndex() : ((APP && typeof APP.currentPhaseWeek === 'number') ? (APP.currentPhaseWeek % 4) : 2);
+  if (typeof DAILY_MENTAL_QUOTES !== 'undefined' && DAILY_MENTAL_QUOTES[dayNum]) {
+    const packs = DAILY_MENTAL_QUOTES[dayNum];
+    const pack = packs[weekIdx % packs.length];
+    if (pack && pack.dayQuote) {
+      return {
+        q: pack.dayQuote.text.replace(/^["“]|["”]$/g, ''),
+        a: pack.dayQuote.author.replace(/^—\s*/, '')
+      };
+    }
+  }
   const now = new Date();
   const start = new Date(now.getFullYear(), 0, 0);
-  const diff = now - start;
-  const dayOfYear = Math.floor(diff / 86400000);
-  // Rapid mathematical rotation so consecutive days never see similar themes
+  const dayOfYear = Math.floor((now - start) / 86400000);
   const qIdx = (dayOfYear * 7 + (now.getFullYear() % 10)) % DAILY_QUOTES.length;
   return DAILY_QUOTES[qIdx];
 }
 
 function getWeeklyMantra() {
-  const now = new Date();
-  const start = new Date(now.getFullYear(), 0, 1);
-  const weekNumOfYear = Math.ceil((((now - start) / 86400000) + start.getDay() + 1) / 7);
-  const offset = APP.currentPhaseWeek || 0;
-  const mIdx = (weekNumOfYear + offset) % WEEKLY_MANTRAS.length;
-  const m = WEEKLY_MANTRAS[mIdx];
+  const offset = (APP && typeof APP.currentPhaseWeek === 'number') ? APP.currentPhaseWeek : 2;
+  const weekIdx = offset % 4;
+  if (typeof WEEKLY_MENTAL_MANTRAS !== 'undefined' && WEEKLY_MENTAL_MANTRAS[weekIdx]) {
+    const wm = WEEKLY_MENTAL_MANTRAS[weekIdx];
+    return {
+      week: 9 + offset,
+      mantra: wm.quote.replace(/^["“]|["”]$/g, ''),
+      theme: wm.weekLabel.split('·')[1] ? wm.weekLabel.split('·')[1].trim() : wm.weekLabel
+    };
+  }
+  const m = WEEKLY_MANTRAS[weekIdx % WEEKLY_MANTRAS.length];
   return {
     week: 9 + offset,
     mantra: m.mantra,
@@ -3951,26 +3998,15 @@ function getWeeklyMantra() {
 }
 
 function renderQuotes() {
+  if (typeof initMentalQuotes === 'function') {
+    initMentalQuotes();
+    return;
+  }
   const q = getDailyQuote();
-  const m = getWeeklyMantra();
-
-  // Update mental page daily quote
-  const dqEl = document.getElementById('daily-quote-text');
-  const dqAuth = document.getElementById('daily-quote-author');
-  if (dqEl) dqEl.textContent = '\u201c' + q.q + '\u201d';
-  if (dqAuth) dqAuth.textContent = '\u2014 ' + q.a;
-
-  // Update mental page weekly mantra
-  const wmEl = document.getElementById('weekly-mantra-text');
-  const wmTheme = document.getElementById('weekly-mantra-theme');
-  if (wmEl) wmEl.innerHTML = m.mantra.replace(/\n/g, '<br>');
-  if (wmTheme) wmTheme.textContent = '// WEEK ' + m.week + ' · ' + m.theme;
-
-  // Update profile page daily quote
   const pqEl = document.getElementById('profile-daily-quote');
   const pqAuth = document.getElementById('profile-daily-author');
-  if (pqEl) pqEl.textContent = '\u201c' + q.q + '\u201d';
-  if (pqAuth) pqAuth.textContent = '\u2014 ' + q.a;
+  if (pqEl) pqEl.textContent = '“' + q.q + '”';
+  if (pqAuth) pqAuth.textContent = '— ' + q.a;
 }
 
 // ══════════════════════════════════════════════
@@ -3983,6 +4019,14 @@ function updateClock(){
   const clk = document.getElementById('clock');
   if (clk) clk.textContent=`${h}:${m.toString().padStart(2,'0')} ${ap}`;
   checkWeekReset(); // Automatic rollover check on every clock tick
+  if (window.__lastClockDay !== undefined && window.__lastClockDay !== n.getDay()) {
+    window.__lastClockDay = n.getDay();
+    checkDailyResets();
+    if (typeof initMentalQuotes === 'function') initMentalQuotes(true);
+    updateTodayBadge();
+  } else {
+    window.__lastClockDay = n.getDay();
+  }
   const days=['SUN','MON','TUE','WED','THU','FRI','SAT'];
   const months=['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
   const rd=document.getElementById('real-date');
@@ -4006,6 +4050,13 @@ function showPage(name){
   document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
   document.getElementById('page-'+name).classList.add('active');
   const ni=document.getElementById('nav-'+name);if(ni)ni.classList.add('active');
+  if ((name === 'mental' || name === 'profile') && typeof renderWeeklyMentalQuotes === 'function') {
+    const curPack = getMentalWeekIndex();
+    const curDay = (typeof window.ACTIVE_MENTAL_DAY === 'number') ? window.ACTIVE_MENTAL_DAY : new Date().getDay();
+    renderWeeklyMentalQuotes(curPack);
+    const pill = document.querySelector(`.md-day-pill[data-d="${curDay}"]`);
+    setMentalDay(curDay, pill, true);
+  }
   window.scrollTo(0,0);
 }
 
@@ -4020,12 +4071,18 @@ function gotoCard(cid,idx,did){
   const w=first?first.offsetWidth:240;
   el.scrollTo({left:idx*(w+12),behavior:'smooth'});
   updateDots(did,idx);
+  if (cid === 'day-carousel' && typeof setMentalDay === 'function') {
+    const mentalDay = (idx + 1) % 7;
+    const pill = document.querySelector(`.md-day-pill[data-d="${mentalDay}"]`);
+    setMentalDay(mentalDay, pill, false);
+  }
 }
 function updateDots(did,idx){document.querySelectorAll(`#${did} .dot`).forEach((d,i)=>d.classList.toggle('active',i===idx));}
 
 document.addEventListener('DOMContentLoaded',()=>{
+  checkWeekReset();
   applyCustomWorkouts();
-  initMentalQuotes();
+  initMentalQuotes(true);
   attachLongPressHandlers();
   [['day-carousel','day-dots'],['mental-carousel','mental-dots'],['pool-carousel','pool-dots'],['gallery-carousel','gallery-dots']].forEach(([cid,did])=>{
     const el=document.getElementById(cid);if(!el)return;
@@ -4039,7 +4096,7 @@ function jumpToDay(di){
   if (typeof setMentalDay === "function") {
     const mentalDay = (di + 1) % 7; // di: 0=MON(1)..5=SAT(6), 6=SUN(0)
     const pill = document.querySelector(`.md-day-pill[data-d="${mentalDay}"]`);
-    setMentalDay(mentalDay, pill, true);
+    setMentalDay(mentalDay, pill, false);
   }
 }
 
@@ -9493,21 +9550,25 @@ const DAILY_MENTAL_QUOTES = {
   1: [ // MONDAY ROTATING PACKS (W9, W10, W11, W12)
     {
       dayQuote: { text: '"You don\'t have to be great to start, but you have to start to be great."', author: '— LES BROWN', takeaway: 'Every championship week starts with showing up on Monday and attacking rep one with full intent.' },
+      mantraQuote: { text: '"I ATTACK THE BARBELL WITH VIOLENT SPEED. MY TENDONS ARE STEEL SPRINGS."', author: '— BVMBINO · MONDAY W9 HIGH-CNS MANTRA', takeaway: 'Week 9 Monday Anchor: Lock in triple extension on Hang Power Cleans and own every eccentric squat rep.' },
       islamQuote: { arabic: 'الْمُؤْمِنُ الْقَوِيُّ خَيْرٌ وَأَحَبُّ إِلَى اللَّهِ مِنَ الْمُؤْمِنِ الضَّعِيفِ', text: '"The strong believer is better and more beloved to Allah than the weak believer."', author: '— PROPHET MUHAMMAD ﷺ (SAHIH MUSLIM)', takeaway: 'Physical power, conditioning, and discipline are acts of devotion. Train to be formidable.' },
       bookQuote: { text: '"Rest at the end, not in the middle."', author: '— KOBE BRYANT (THE MAMBA MENTALITY)', takeaway: 'Never bargain with your training while fatigued. Complete every rep with intent.' }
     },
     {
       dayQuote: { text: '"Some people want it to happen, some wish it would happen, others make it happen."', author: '— MICHAEL JORDAN', takeaway: 'Set the tone for the entire week in Weight Room A. Command the barbell and own the paint.' },
+      mantraQuote: { text: '"HEAVY IRON CANNOT SLOW ME DOWN. I GENERATE MAXIMUM FORCE FROM THE FLOOR."', author: '— BVMBINO · MONDAY W10 PEAK LOAD MANTRA', takeaway: 'Week 10 Monday Anchor: 5-set peak mechanical overload. Drive through the sticking point with explosive intent.' },
       islamQuote: { arabic: 'وَتَوَكَّلْ عَلَى الْعَزِيزِ الرَّحِيمِ الَّذِي يَرَاكَ حِينَ تَقُومُ', text: '"And put your trust in the All-Mighty, the Most Merciful, who sees you when you stand."', author: '— SURAH ASH-SHU\'ARA (26:217)', takeaway: 'Your early morning workouts are witnessed. Trust the spiritual compounding of unseen labor.' },
       bookQuote: { text: '"A Cleaner does not compete with anyone else; they compete with what they are capable of becoming."', author: '— TIM GROVER (RELENTLESS)', takeaway: 'Stop comparing yourself to average peers. Hold yourself to world-cup championship execution.' }
     },
     {
       dayQuote: { text: '"The only limit to our realization of tomorrow will be our doubts of today."', author: '— FRANKLIN D. ROOSEVELT', takeaway: 'Attack your Hang Power Cleans and CAT Back Squats with zero hesitation in your tendon.' },
+      mantraQuote: { text: '"EVERY FIRST STEP IS LETHAL. I ABSORB FORCE AND EXPLODE PAST ANY DEFENDER."', author: '— BVMBINO · MONDAY W11 SPORT INTEGRATION MANTRA', takeaway: 'Week 11 Monday Anchor: Transfer heavy squat RFD directly into instant court acceleration and vertical pop.' },
       islamQuote: { arabic: 'فَإِذَا عَزَمْتَ فَتَوَكَّلْ عَلَى اللَّهِ', text: '"And when you have decided, then rely upon Allah."', author: '— SURAH ALI \'IMRAN (3:159)', takeaway: 'Once you step onto the court or barbell platform, kill all hesitation. Execute with total resolve.' },
       bookQuote: { text: '"You do not rise to the level of your goals. You fall to the level of your systems."', author: '— JAMES CLEAR (ATOMIC HABITS)', takeaway: 'The Monday schedule is non-negotiable. Execute the system and the results take care of themselves.' }
     },
     {
       dayQuote: { text: '"I hated every minute of training, but I said, don\'t quit. Suffer now and live the rest of your life as a champion."', author: '— MUHAMMAD ALI', takeaway: 'Embrace the heavy eccentric load today so the fourth quarter feels effortless.' },
+      mantraQuote: { text: '"MY NERVOUS SYSTEM IS SUPERCHARGED. I FLY EFFORTLESSLY ABOVE THE RIM."', author: '— BVMBINO · MONDAY W12 SUPERCOMPENSATION MANTRA', takeaway: 'Week 12 Monday Anchor: Maximum barbell velocity, crisp fascial recoil, and zero wasted energy.' },
       islamQuote: { arabic: 'إِنَّ مَعَ الْعُسْرِ يُسْرًا', text: '"Indeed, with hardship comes ease."', author: '— SURAH AL-INSHIRAH (94:6)', takeaway: 'Hardship does not precede ease; it contains it. The adaptation occurs right inside the fire.' },
       bookQuote: { text: '"We don\'t rise to the level of our expectations, we fall to the level of our training."', author: '— ARCHILOCHUS (STOIC MAXIM)', takeaway: 'Every fascial pogo jump and isometric hold builds your armor for game night.' }
     }
@@ -9516,21 +9577,25 @@ const DAILY_MENTAL_QUOTES = {
   2: [ // TUESDAY ROTATING PACKS (W9, W10, W11, W12)
     {
       dayQuote: { text: '"The separation is in the preparation. Every rep in the dark echoes under the arena lights."', author: '— RUSSELL WILSON', takeaway: 'Your Tuesday footwork, first-step reaction cues, and pool flush create game-day separation.' },
+      mantraQuote: { text: '"MY FOOTWORK IS SURGICAL. I CREATE SEPARATION ON EVERY SINGLE DRIBBLE."', author: '— BVMBINO · TUESDAY W9 SKILL PRECISION MANTRA', takeaway: 'Week 9 Tuesday Anchor: Sharp deceleration stops, high-point release, and full hydro decompression.' },
       islamQuote: { arabic: 'لَا يُكَلِّفُ اللَّهُ نَفْسًا إِلَّا وُسْعَهَا', text: '"Allah does not burden a soul beyond that it can bear."', author: '— SURAH AL-BAQARAH (2:286)', takeaway: 'You were engineered to endure this load. Do not ask for an easier path; develop broader shoulders.' },
       bookQuote: { text: '"Fall in love with boredom. Fall in love with the daily repetition of fundamentals."', author: '— JAMES CLEAR (ATOMIC HABITS)', takeaway: 'Championships are not won by flash; they are forged in the quiet mastery of footwork and reads.' }
     },
     {
       dayQuote: { text: '"Success is no accident. It is hard work, perseverance, learning, studying, and sacrifice."', author: '— PELÉ', takeaway: 'Treat every 2v2 pick-and-roll read and pull-up jumper as a high-stakes FIBA possession.' },
+      mantraQuote: { text: '"I READ THE FLOOR IN SLOW MOTION WHILE MOVING AT FULL FIBA GAME SPEED."', author: '— BVMBINO · TUESDAY W10 COURT VISION MANTRA', takeaway: 'Week 10 Tuesday Anchor: Punish every pick-and-roll coverage, then flush CNS fatigue in the pool.' },
       islamQuote: { arabic: 'إِنَّ اللَّهَ يُحِبُّ إِذَا عَمِلَ أَحَدُكُمْ عَمَلًا أَنْ يُتْقِنَهُ', text: '"Allah loves that when one of you does a work, he does it with perfection (Itqan)."', author: '— PROPHET MUHAMMAD ﷺ (BAYHAQI)', takeaway: 'Itqan means precision. Perfect technique in every decelerating drop step and pull-up jumper.' },
       bookQuote: { text: '"The mind is the athlete; the body is simply the means it uses to execute."', author: '— PHIL JACKSON (ELEVEN RINGS)', takeaway: 'Stay calm under physical pressure. Breathe, read the defense, make the ruthless play.' }
     },
     {
       dayQuote: { text: '"I\'m not going to let anyone outwork me in the gym when nobody is watching."', author: '— DAMIAN LILLARD', takeaway: 'Outwork your competition on Tuesday morning, then out-recover them in Pool Session A.' },
+      mantraQuote: { text: '"PACE, SPACE, AND VIOLENT CHANGE OF DIRECTION. NO DEFENDER CAN STAY IN FRONT OF ME."', author: '— BVMBINO · TUESDAY W11 GUARD DOMINANCE MANTRA', takeaway: 'Week 11 Tuesday Anchor: Elite hip fluidity on split-reads followed by contrast water recovery.' },
       islamQuote: { arabic: 'وَاسْتَعِينُوا بِالصَّبْرِ وَالصَّلَاةِ', text: '"And seek help through patience and prayer."', author: '— SURAH AL-BAQARAH (2:45)', takeaway: 'True patience is active resilience under heavy fire. Steady your heart before each drill.' },
       bookQuote: { text: '"Discipline equals freedom. The more disciplined your habits, the more agile your game."', author: '— JOCKO WILLINK (DISCIPLINE EQUALS FREEDOM)', takeaway: 'Eat clean, sleep 8.5 hours, hydrate. Discipline unlocks explosive physical freedom.' }
     },
     {
       dayQuote: { text: '"Focus on laying the single brick in front of you with absolute perfection."', author: '— WILL SMITH', takeaway: 'Win today\'s skill session and hydro decompression one drill at a time.' },
+      mantraQuote: { text: '"AUTOMATIC SHOOTING TOUCH. COLD-BLOODED EXECUTION FROM EVERY SPOT ON THE FLOOR."', author: '— BVMBINO · TUESDAY W12 SHOOTING MASTERY MANTRA', takeaway: 'Week 12 Tuesday Anchor: Game-speed rhythm jumpers and total joint restoration in Pool A.' },
       islamQuote: { arabic: 'وَقُل رَّبِّ زِدْنِي عِلْمًا', text: '"And say: My Lord, increase me in knowledge."', author: '— SURAH TA-HA (20:114)', takeaway: 'Be a student of the game. Study your biomechanics, your pick-and-roll reads, and recovery data.' },
       bookQuote: { text: '"The obstacle in the path becomes the path. Within every obstacle is an advantage."', author: '— RYAN HOLIDAY (THE OBSTACLE IS THE WAY)', takeaway: 'Ankle stiffness and tendon prehab are your secret weapons for higher explosive pop.' }
     }
@@ -9539,21 +9604,25 @@ const DAILY_MENTAL_QUOTES = {
   3: [ // WEDNESDAY ROTATING PACKS (W9, W10, W11, W12)
     {
       dayQuote: { text: '"Pain is temporary. It may last a minute, or an hour, or a day, but if I quit, it lasts forever."', author: '— ERIC THOMAS', takeaway: 'Wednesday is the mid-week crucible. Dominate Posterior Chain Weight Room B and Rotational Fascia.' },
+      mantraQuote: { text: '"MY POSTERIOR CHAIN IS BULLETPROOF. I PULL, HINGE, AND ROTATE WITH TOTAL CONTROL."', author: '— BVMBINO · WEDNESDAY W9 POSTERIOR ARMOR MANTRA', takeaway: 'Week 9 Wednesday Anchor: Hamstrings, glutes, and calves working as one unbreakable kinetic chain.' },
       islamQuote: { arabic: 'وَأَن لَّيْسَ لِلْإِنسَانِ إِلَّا مَا سَعَىٰ', text: '"And that there is not for man except that for which he strives."', author: '— SURAH AN-NAJM (53:39)', takeaway: 'Outcomes are written; effort is your only testament. Sweat is the currency of growth.' },
       bookQuote: { text: '"When your mind says you are done, you are only at 40% of your actual capacity."', author: '— DAVID GOGGINS (CAN\'T HURT ME)', takeaway: 'Callous your mind against the inner governor of fatigue. Push past the mid-week wall.' }
     },
     {
       dayQuote: { text: '"There are no shortcuts to any place worth going. Every kilogram on the bar must be earned."', author: '— BEVERLY SILLS', takeaway: 'Lock in your Power Snatches and Romanian Deadlifts with textbook eccentric control.' },
+      mantraQuote: { text: '"MID-WEEK FATIGUE DOES NOT EXIST. I DOMINATE THE SECOND HALF OF THE WEEK."', author: '— BVMBINO · WEDNESDAY W10 IRON WILL MANTRA', takeaway: 'Week 10 Wednesday Anchor: Heavy Romanian Deadlifts and rotational core torque under peak load.' },
       islamQuote: { arabic: 'إِنَّ اللَّهَ مَعَ الصَّابِرِينَ', text: '"Indeed, Allah is with the patient."', author: '— SURAH AL-BAQARAH (2:153)', takeaway: 'Long-term tendon remodeling requires consistent daily tension without skipping sessions.' },
       bookQuote: { text: '"Don\'t lower your standards to fit in. Raise your standards until everyone else has to catch up."', author: '— TIM GROVER (RELENTLESS)', takeaway: 'Bring high energy into the weight room. Set the standard through your work rate.' }
     },
     {
       dayQuote: { text: '"Hard work spotlights the character of people: some turn up their sleeves, some don\'t show up at all."', author: '— COACH JOHN WOODEN', takeaway: 'Mid-week consistency separates true pros from part-time competitors.' },
+      mantraQuote: { text: '"ROTATIONAL TORQUE AND UNILATERAL DRIVE. I WIN EVERY PHYSICAL COLLISION IN THE PAINT."', author: '— BVMBINO · WEDNESDAY W11 CONTACT BALANCE MANTRA', takeaway: 'Week 11 Wednesday Anchor: Absorb contact in mid-air and finish through any chest.' },
       islamQuote: { arabic: 'مَا أَصَابَكَ مِن حَسَنَةٍ فَمِنَ اللَّهِ', text: '"Whatever good comes to you is from Allah."', author: '— SURAH AN-NISA (4:79)', takeaway: 'Stay humble in your victories, ruthless in your preparation. Gratitude fuels endurance.' },
       bookQuote: { text: '"He who has a why to live can bear almost any how."', author: '— VIKTOR FRANKL / NIETZSCHE', takeaway: 'Your purpose is bigger than momentary burning in your hamstrings and calves.' }
     },
     {
       dayQuote: { text: '"Excellence is not a singular act, but a habit. You are what you repeatedly do."', author: '— ARISTOTLE', takeaway: 'Every rotational throw and Nordic curl reinforces bulletproof posterior-chain power.' },
+      mantraQuote: { text: '"FAST TWITCH, ZERO FRICTION. MY HIPS AND HAMSTRINGS UNCOIL LIKE LIGHTNING."', author: '— BVMBINO · WEDNESDAY W12 BALLISTIC POWER MANTRA', takeaway: 'Week 12 Wednesday Anchor: Explosive Power Snatches and parasympathetic breath mastery.' },
       islamQuote: { arabic: 'فَصَبْرٌ جَمِيلٌ وَاللَّهُ الْمُسْتَعَانُ', text: '"So beautiful patience is most fitting, and Allah is the One sought for help."', author: '— SURAH YUSUF (12:18)', takeaway: 'Composure when tired separates franchise athletes from role players.' },
       bookQuote: { text: '"Winning requires you to be different. You can\'t belong to the crowd and lead the team."', author: '— TIM GROVER (WINNING)', takeaway: 'Embrace the solitude of off-season work. The reward will be witnessed on the court.' }
     }
@@ -9562,21 +9631,25 @@ const DAILY_MENTAL_QUOTES = {
   4: [ // THURSDAY ROTATING PACKS (W9, W10, W11, W12)
     {
       dayQuote: { text: '"Pressure is a privilege — it only comes to those who earn it on the court."', author: '— BILLIE JEAN KING', takeaway: 'Thursday is Peak Competition Day: 1v1 live dribbles in AM and reactive Depth Jumps in PM.' },
+      mantraQuote: { text: '"I THRIVE UNDER PRESSURE. WHEN THE GAME SPEEDS UP, MY MIND GETS COLDER."', author: '— BVMBINO · THURSDAY W9 CLUTCH EXECUTION MANTRA', takeaway: 'Week 9 Thursday Anchor: Relentless 1v1 rim attacks in the morning; reactive depth jumps in the afternoon.' },
       islamQuote: { arabic: 'وَأَعِدُّوا لَهُم مَّا اسْتَطَعْتُم مِّن قُوَّةٍ', text: '"And prepare against them whatever you are able of power."', author: '— SURAH AL-ANFAL (8:60)', takeaway: 'Cultivating explosive speed and tendon resilience is an explicit mandate. Honor your preparation.' },
       bookQuote: { text: '"The impediment to action advances action. What stands in the way becomes the way."', author: '— MARCUS AURELIUS (MEDITATIONS)', takeaway: 'Heavy defenders and high fatigue are not interruptions to your game; they are the material of greatness.' }
     },
     {
       dayQuote: { text: '"The harder the battle in training, the sweeter the victory under fourth-quarter pressure."', author: '— LES BROWN', takeaway: 'Attack every 1v1 dribble series and transition sprint at full FIBA game speed.' },
+      mantraQuote: { text: '"TWO-WAY DOMINANCE. I LOCK DOWN ANY POSITION AND SCORE AT ALL THREE LEVELS."', author: '— BVMBINO · THURSDAY W10 POSITIONLESS POWER MANTRA', takeaway: 'Week 10 Thursday Anchor: 6\'7\" switch defense versatility paired with overhead Push Press power.' },
       islamQuote: { arabic: 'قُلْ لَنْ يُصِيبَنَا إِلَّا مَا كَتَبَ اللَّهُ لَنَا', text: '"Say: Nothing will happen to us except what Allah has decreed for us."', author: '— SURAH AT-TAWBAH (9:51)', takeaway: 'Fear of injury or bad games dissolves when you realize your destiny is secure. Play fearless.' },
       bookQuote: { text: '"Championship teams require ego surrender, relentless defense, and total communication."', author: '— PHIL JACKSON (SACRED HOOPS)', takeaway: 'Lead your teammates by holding yourself to a zero-mistake communication standard.' }
     },
     {
       dayQuote: { text: '"Do not pray for an easy life, pray for the strength to endure a difficult one."', author: '— BRUCE LEE', takeaway: 'Spring off the floor on your Depth Jumps with maximum tendon stiffness and minimal contact time.' },
+      mantraQuote: { text: '"INSTANT GROUND REACTION. I BOUNCE OFF THE HARDWOOD BEFORE ANYONE ELSE CAN REACT."', author: '— BVMBINO · THURSDAY W11 REACTIVE PLYO MANTRA', takeaway: 'Week 11 Thursday Anchor: Minimal ground contact time on Depth Jumps and lethal 3-dribble scoring.' },
       islamQuote: { arabic: 'رَبَّنَا أَفْرِغْ عَلَيْنَا صَبْرًا وَثَبِّتْ أَقْدَامَنَا', text: '"Our Lord, pour upon us patience and plant firmly our feet."', author: '— SURAH AL-BAQARAH (2:250)', takeaway: 'Firm feet on defense and dynamic balance on court come from physical and spiritual grounding.' },
       bookQuote: { text: '"Small disciplines repeated with consistency every day lead to great achievements."', author: '— JOHN C. MAXWELL', takeaway: 'Achilles monitoring, front squat depth, and posture: never skip the details.' }
     },
     {
       dayQuote: { text: '"Everything negative — pressure, challenges — is all an opportunity for me to rise."', author: '— KOBE BRYANT', takeaway: 'Turn Thursday\'s double session into your personal proving ground.' },
+      mantraQuote: { text: '"PEAK ARENA READINESS. MY BODY AND MIND ARE SYNCHRONIZED FOR CHAMPIONSHIP BASKETBALL."', author: '— BVMBINO · THURSDAY W12 ARENA READY MANTRA', takeaway: 'Week 12 Thursday Anchor: Crisp live possessions and explosive upper-body speed-strength.' },
       islamQuote: { arabic: 'وَهُوَ مَعَكُمْ أَيْنَ مَا كُنتُمْ', text: '"And He is with you wherever you are."', author: '— SURAH AL-HADID (57:4)', takeaway: 'You are never training alone. Spiritual alignment gives inexhaustible energy.' },
       bookQuote: { text: '"The ego is the enemy of mastery. Always remain a student hungry for precision."', author: '— RYAN HOLIDAY (EGO IS THE ENEMY)', takeaway: 'Welcome load telemetry and velocity feedback. Be hyper-coachable.' }
     }
@@ -9585,21 +9658,25 @@ const DAILY_MENTAL_QUOTES = {
   5: [ // FRIDAY ROTATING PACKS (W9, W10, W11, W12)
     {
       dayQuote: { text: '"I\'ve failed over and over and over again in my life. And that is why I succeed."', author: '— MICHAEL JORDAN', takeaway: 'Close out the 5-day training block strong: Full-court scrimmage, multi-directional fascia, and hydro flush.' },
+      mantraQuote: { text: '"I FINISH EVERY TRAINING WEEK STRONGER THAN I STARTED. NO REPS LEFT BEHIND."', author: '— BVMBINO · FRIDAY W9 CLOSER MANTRA', takeaway: 'Week 9 Friday Anchor: Full-court 5v5 stamina, multi-directional agility, and hydro flush.' },
       islamQuote: { arabic: 'فَإِذَا فَرَغْتَ فَانصَبْ وَإِلَىٰ رَبِّكَ فَارْغَب', text: '"So when you have finished your duties, labor hard (in worship and discipline)."', author: '— SURAH AL-INSHIRAH (94:7-8)', takeaway: 'Endings are merely prompts for the next standard. Complete the workout, then center your spirit.' },
       bookQuote: { text: '"In the zone, there is no fear, no doubt, no hesitation. There is only instinctive execution."', author: '— TIM GROVER (RELENTLESS)', takeaway: 'Quiet the mental noise during Friday scrimmage and speed work. Trust your nervous system.' }
     },
     {
       dayQuote: { text: '"Today is Friday: finish the week with the exact same fire you started with on Monday."', author: '— BVMBINO · PHASE 3', takeaway: 'Don\'t coast into the weekend. Empty the tank on your 5v5 scrimmage and clutch free throws.' },
+      mantraQuote: { text: '"FOURTH-QUARTER LUNGS, FOURTH-QUARTER LEGS. TIRED IS ONLY AN ILLUSION."', author: '— BVMBINO · FRIDAY W10 CONDITIONING MANTRA', takeaway: 'Week 10 Friday Anchor: Knock down clutch free throws at 170+ BPM heart rate.' },
       islamQuote: { arabic: 'خَيْرُ يَوْمٍ طَلَعَتْ عَلَيْهِ الشَّمْسُ يَوْمُ الْجُمُعَةِ', text: '"The best day upon which the sun rises is Friday."', author: '— PROPHET MUHAMMAD ﷺ (SAHIH MUSLIM)', takeaway: 'Friday holds divine blessings. Align your hard training with high spiritual gratitude.' },
       bookQuote: { text: '"Greatness is about holding the standard when everyone else is looking for the weekend."', author: '— KOBE BRYANT (THE MAMBA MENTALITY)', takeaway: 'While others relax on Friday afternoon, complete your Pool Session B hydro flush and ankle prehab.' }
     },
     {
       dayQuote: { text: '"The price of success is hard work, dedication to the job at hand, and determination."', author: '— VINCE LOMBARDI', takeaway: 'Hit 85%+ on your tired-legs clutch free throws before stepping off the court.' },
+      mantraQuote: { text: '"I COMMAND THE FLOOR IN LIVE 5V5. VOCAL LEADER, RELENTLESS REBOUNDER, LETHAL CLOSER."', author: '— BVMBINO · FRIDAY W11 FLOOR GENERAL MANTRA', takeaway: 'Week 11 Friday Anchor: Own transition pace, lateral defensive slides, and weekend pool recovery.' },
       islamQuote: { arabic: 'إِنَّ اللَّهَ لَا يُضِيعُ أَجْرَ الْمُحْسِنِينَ', text: '"Indeed, Allah does not lose the reward of the doers of good."', author: '— SURAH AT-TAWBAH (9:120)', takeaway: 'Not a single dropped bead of sweat or logged kilogram is lost. Everything builds the foundation.' },
       bookQuote: { text: '"Be relentless. When you want something, don\'t stop until you get it, then demand even more."', author: '— TIM GROVER', takeaway: 'Finish your Friday court runs and deceleration sticks with maximum intent.' }
     },
     {
       dayQuote: { text: '"Confidence comes from hours, days, weeks, and years of constant preparation."', author: '— RGIII / PRO MAXIM', takeaway: '14 sessions from Monday to Friday: check off the final box with pride.' },
+      mantraQuote: { text: '"THE WORK IS BANKED. I STEP ONTO THE COURT WITH TOTAL CONFIDENCE IN MY PREPARATION."', author: '— BVMBINO · FRIDAY W12 MASTERPIECE MANTRA', takeaway: 'Week 12 Friday Anchor: Complete the 14-session block with championship polish and poise.' },
       islamQuote: { arabic: 'وَأَحْسِنُوا إِنَّ اللَّهَ يُحِبُّ الْمُحْسِنِينَ', text: '"And do good; indeed, Allah loves the doers of excellence (Ihsan)."', author: '— SURAH AL-BAQARAH (2:195)', takeaway: 'Ihsan is striving for perfection. Make every jumper in the workout look identical.' },
       bookQuote: { text: '"Mastery is not about perfection. It\'s about a relentless pursuit of the next level."', author: '— GEORGE LEONARD (MASTERY)', takeaway: 'End the Friday training block knowing you outworked yesterday\'s version of yourself.' }
     }
@@ -9608,21 +9685,25 @@ const DAILY_MENTAL_QUOTES = {
   6: [ // SATURDAY ROTATING PACKS (W9, W10, W11, W12)
     {
       dayQuote: { text: '"Winning is not a sometime thing; it\'s an all-the-time thing. You don\'t do things right once in a while."', author: '— VINCE LOMBARDI', takeaway: 'Saturday is for active restoration or an optional custom workout. Protect your body and tendon recovery.' },
+      mantraQuote: { text: '"RECOVERY IS MY SECRET WEAPON. EVERY CELL IN MY BODY IS REBUILDING STRONGER."', author: '— BVMBINO · SATURDAY W9 REGENERATION MANTRA', takeaway: 'Week 9 Saturday Anchor: Collagen synthesis, tissue mobility, hydration, and optional flush.' },
       islamQuote: { arabic: 'وَاعْبُدْ رَبَّكَ حَتَّىٰ يَأْتِيَكَ الْيَقِينُ', text: '"And serve your Lord until there comes unto you the certainty."', author: '— SURAH AL-HIJR (15:99)', takeaway: 'Consistency has no off-season. Recovery protocols and active restoration demand the same focus as lifting.' },
       bookQuote: { text: '"Good teams become great when the members trust each other enough to surrender the \'me\' for the \'we\'."', author: '— PHIL JACKSON (SACRED HOOPS)', takeaway: 'Saturday recovery restores the nervous system so you can lead your unit with poise and clarity.' }
     },
     {
       dayQuote: { text: '"Recovery is not laziness. It is the intelligent rebuilding of your competitive weapon."', author: '— BVMBINO · PERFORMANCE LAB', takeaway: 'Muscles and tendons grow stronger during supercompensation, not just under the barbell.' },
+      mantraQuote: { text: '"STILL MIND, SUPPLE JOINTS, RESILIENT TENDONS. I HONOR THE RECOVERY PROCESS."', author: '— BVMBINO · SATURDAY W10 TISSUE ARMOR MANTRA', takeaway: 'Week 10 Saturday Anchor: Decompress the spine and ankles after peak mechanical loading.' },
       islamQuote: { arabic: 'إِنَّ لِبَدَنِكَ عَلَيْكَ حَقًّا', text: '"Indeed, your body has a right over you."', author: '— PROPHET MUHAMMAD ﷺ (SAHIH AL-BUKHARI)', takeaway: 'Hydration, tissue work, and mobility are obligations to preserve your athletic gift.' },
       bookQuote: { text: '"Sleep is the single most effective thing we can do to reset our brain and body health each day."', author: '— DR. MATTHEW WALKER (WHY WE SLEEP)', takeaway: 'Protect your Saturday 9-hour sleep window for deep hormonal growth and tendon collagen synthesis.' }
     },
     {
       dayQuote: { text: '"The warrior who rests wisely fights with double the ferocity when the battle resumes."', author: '— SUN TZU (ART OF WAR)', takeaway: 'Flush inflammation, log your morning weight, and keep your Achilles pain at 0–1/5.' },
+      mantraQuote: { text: '"I PROTECT MY ATHLETIC LONGEVITY. SMART RECOVERY FUELS EXPLOSIVE LONGEVITY."', author: '— BVMBINO · SATURDAY W11 LONGEVITY MANTRA', takeaway: 'Week 11 Saturday Anchor: Keep Achilles pain at 0–1/5 and lock in 94.0–95.0 kg competition weight.' },
       islamQuote: { arabic: 'الَّذِينَ آمَنُوا وَتَطْمَئِنُّ قُلُوبُهُم بِذِكْرِ اللَّهِ', text: '"Those who have believed and whose hearts are assured by the remembrance of Allah."', author: '— SURAH AR-RA\'D (13:28)', takeaway: 'Inner calm eliminates muscular tension and accelerates parasympathetic nervous system recovery.' },
       bookQuote: { text: '"Stillness is where elite performers find clarity and precision amidst chaos."', author: '— RYAN HOLIDAY (STILLNESS IS THE KEY)', takeaway: 'Take 20 minutes of quiet visualization and box breathing today.' }
     },
     {
       dayQuote: { text: '"Champions are made by how they treat their bodies when the gym doors are closed."', author: '— LEBRON JAMES', takeaway: 'Nutrition, protein synthesis, and ankle mobility today set up next week\'s PRs.' },
+      mantraQuote: { text: '"CALM PARASYMPATHETIC BALANCE. MY BODY IS COILED AND READY FOR THE NEXT CAMPAIGN."', author: '— BVMBINO · SATURDAY W12 SUPERCOMPENSATION MANTRA', takeaway: 'Week 12 Saturday Anchor: Deep restoration, mobility flow, and mental clarity.' },
       islamQuote: { arabic: 'وَتَعَاوَنُوا عَلَى الْبِرِّ وَالتَّقْوَىٰ', text: '"And cooperate in righteousness and piety."', author: '— SURAH AL-MA\'IDAH (5:2)', takeaway: 'Support your family, connect with your circle, and recharge your emotional drive.' },
       bookQuote: { text: '"Energy management, not just time management, is the foundation of high performance."', author: '— JIM LOEHR (THE POWER OF FULL ENGAGEMENT)', takeaway: 'Oscillate between high intensity in the gym and deep tranquility during weekend restoration.' }
     }
@@ -9631,21 +9712,25 @@ const DAILY_MENTAL_QUOTES = {
   0: [ // SUNDAY ROTATING PACKS (W9, W10, W11, W12)
     {
       dayQuote: { text: '"Heroes come and go, but legends are forever. Lock in your mind for the week ahead."', author: '— KOBE BRYANT', takeaway: 'Review your 2-page Weekly Performance Dossier, visualize Monday\'s lifts, and rest deeply.' },
+      mantraQuote: { text: '"I AUDIT MY DATA, LOCK IN MY STANDARDS, AND PREPARE TO DOMINATE MONDAY MORNING."', author: '— BVMBINO · SUNDAY W9 COMMAND MANTRA', takeaway: 'Week 9 Sunday Anchor: Export your Weekly Performance Dossier and set next week\'s targets.' },
       islamQuote: { arabic: 'كُلُّ نَفْسٍ ذَائِقَةُ الْمَوْتِ ۖ وَإِنَّمَا تُوَفَّوْنَ أُجُورَكُمْ يَوْمَ الْقِيَامَةِ', text: '"Every soul will taste death, and you will only be given your full compensation on the Day of Resurrection."', author: '— SURAH ALI \'IMRAN (3:185)', takeaway: 'Time is finite. The career of an elite athlete is precious. Treat every week as a sacred campaign.' },
       bookQuote: { text: '"Don\'t count on motivation. Count on discipline. Be the person who shows up regardless."', author: '— JOCKO WILLINK (DISCIPLINE EQUALS FREEDOM)', takeaway: 'Sunday night is preparation time. Export your weekly report, set your Monday intention, and sleep ready.' }
     },
     {
       dayQuote: { text: '"Sunday is the bridge between this week\'s lessons and next week\'s dominance."', author: '— BVMBINO · COMMAND CENTER', takeaway: 'Audit your 7-day Achilles & Body Weight trends before the 11:30 PM weekly reset.' },
+      mantraQuote: { text: '"DISCIPLINE HAS NO OFF-DAY. MY SLEEP, NUTRITION, AND MINDSET ARE ALREADY IN MONDAY MODE."', author: '— BVMBINO · SUNDAY W10 PREPARATION MANTRA', takeaway: 'Week 10 Sunday Anchor: 9 hours of deep sleep and visualization before the 11:30 PM reset.' },
       islamQuote: { arabic: 'حَاسِبُوا أَنْفُسَكُمْ قَبْلَ أَنْ تُحَاسَبُوا', text: '"Take account of yourselves before you are called to account."', author: '— UMAR IBN AL-KHATTAB (RA)', takeaway: 'Perform an honest audit of your week. Did you hit every set? Did you log your body weight? Calibrate for Monday.' },
       bookQuote: { text: '"Give me six hours to chop down a tree and I will spend the first four sharpening the axe."', author: '— ABRAHAM LINCOLN', takeaway: 'Sunday restoration sharpens your central nervous system for Monday morning\'s heavy loads.' }
     },
     {
       dayQuote: { text: '"Champions do in the quiet of Sunday what they are celebrated for under the arena lights."', author: '— COACH PAT RILEY', takeaway: 'Mental rehearsal today makes tomorrow\'s physical execution automatic.' },
+      mantraQuote: { text: '"GRATITUDE FOR THE GRIND, HUNGER FOR THE NEXT LEVEL. I AM BUILT FOR THIS LIFE."', author: '— BVMBINO · SUNDAY W11 ELEVATION MANTRA', takeaway: 'Week 11 Sunday Anchor: Review your 7-day Achilles & Body Weight trends and visualize Week 12.' },
       islamQuote: { arabic: 'فَبِمَا رَحْمَةٍ مِّنَ اللَّهِ لِنتَ لَهُمْ', text: '"So by mercy from Allah, you were lenient with them."', author: '— SURAH ALI \'IMRAN (3:159)', takeaway: 'True athletic leaders elevate teammates with calm, confident composure.' },
       bookQuote: { text: '"Success is peace of mind in knowing you made the effort to become the best of which you are capable."', author: '— COACH JOHN WOODEN', takeaway: 'Go to sleep Sunday night with zero regrets and 100% readiness.' }
     },
     {
       dayQuote: { text: '"Reset the clock. Reset the nervous system. Tomorrow morning we hunt again."', author: '— PHASE 3 PROTOCOL', takeaway: 'Your body is recharged, your Achilles is resilient, and your mind is locked in.' },
+      mantraQuote: { text: '"PHASE 3 COMPLETE. MY BODY IS UNBREAKABLE, MY GAME IS SHARP, MY TIME IS NOW."', author: '— BVMBINO · SUNDAY W12 CHAMPIONSHIP MANTRA', takeaway: 'Week 12 Sunday Anchor: Full 4-week cycle mastered. Archive your dossier and step into peak season.' },
       islamQuote: { arabic: 'وَأَنَّ سَعْيَهُ سَوْفَ يُرَىٰ', text: '"And that his effort is going to be seen."', author: '— SURAH AN-NAJM (53:40)', takeaway: 'Every sacrifice you made this week will manifest in explosive on-court performance.' },
       bookQuote: { text: '"Focus on the process and the standard; the score will take care of itself."', author: '— BILL WALSH (THE SCORE TAKES CARE OF ITSELF)', takeaway: 'Lock in your nutrition, hydration, and gear for the new training week.' }
     }
@@ -9672,7 +9757,7 @@ const WEEKLY_MENTAL_MANTRAS = [
     weekLabel: "WEEK 11 · SPORT INTEGRATION & UNILATERAL POP",
     quote: '"EVERY FIRST STEP IS LETHAL. I ABSORB FORCE AND EXPLODE PAST ANY DEFENDER."',
     author: "— BVMBINO · WEEK 11 SPORT INTEGRATION MANTRA",
-    takeaway: "Anchor: Single-Leg Reactive Stiffness · Game-Speed Deceleration · Positionless 6\'7\" Dominance."
+    takeaway: "Anchor: Single-Leg Reactive Stiffness · Game-Speed Deceleration · Positionless 6'7\" Dominance."
   },
   {
     weekLabel: "WEEK 12 · SUPERCOMPENSATION & PEAK POP",
@@ -9687,7 +9772,7 @@ const WEEKLY_ISLAMIC_MASTERCLASSES = [
     hero: "KHALID IBN AL-WALID · THE SWORD OF ALLAH (SAIFULLAH)",
     arabic: "فَلَا نَامَتْ أَعْيُنُ الْجُبَنَاءِ",
     quote: '"May the eyes of cowards never sleep."',
-    author: "— KHALID IBN AL-WALID (BATTLE OF MU\'TAH)",
+    author: "— KHALID IBN AL-WALID (BATTLE OF MU'TAH)",
     takeaway: "Outnumbered 3,000 to over 100,000, Khalid broke 9 swords in combat, then engineered a calm dawn flank maneuver to extract his army without defeat. True power is cold tactical calm inside overwhelming adversity."
   },
   {
@@ -9718,22 +9803,22 @@ const WEEKLY_BOOK_MASTERCLASSES = [
     hero: "TIM S. GROVER · RELENTLESS: FROM GOOD TO GREAT TO UNSTOPPABLE",
     quote: '"Cleaners don\'t compete with anyone; they make everyone compete with them."',
     author: "— TIM GROVER (TRAINER TO KOBE BRYANT & MICHAEL JORDAN)",
-    takeaway: "When the pressure spikes and everyone else begins to panic, a Cleaner gets colder and calmer. You don\'t perform for credit, social media, or praise. Your preparation creates an automated instinct that cannot be shaken."
+    takeaway: "When the pressure spikes and everyone else begins to panic, a Cleaner gets colder and calmer. You don't perform for credit, social media, or praise. Your preparation creates an automated instinct that cannot be shaken."
   },
   {
     hero: "KOBE BRYANT · THE MAMBA MENTALITY: HOW I PLAY",
     quote: '"If you train twice a day and I train four times a day, there is no way you can catch me over five years."',
     author: "— KOBE BRYANT (5× NBA CHAMPION)",
-    takeaway: "The Mamba Mentality is about the process, not the destination. It\'s about loving the tedious, repetitive, unglamorous reps that build instinctive basketball mastery."
+    takeaway: "The Mamba Mentality is about the process, not the destination. It's about loving the tedious, repetitive, unglamorous reps that build instinctive basketball mastery."
   },
   {
     hero: "JAMES CLEAR · ATOMIC HABITS: SYSTEMS OVER GOALS",
     quote: '"Every action you take is a vote for the type of athlete you wish to become. As the votes build up, so does the evidence of your new identity."',
     author: "— JAMES CLEAR (ATOMIC HABITS)",
-    takeaway: "You don\'t become an elite pro by hoping for it. You become an elite pro by logging your weight, hitting your sleep target, and completing your ankle eccentric stretches daily."
+    takeaway: "You don't become an elite pro by hoping for it. You become an elite pro by logging your weight, hitting your sleep target, and completing your ankle eccentric stretches daily."
   },
   {
-    hero: "DAVID GOGGINS · CAN\'T HURT ME: MASTER YOUR MIND",
+    hero: "DAVID GOGGINS · CAN'T HURT ME: MASTER YOUR MIND",
     quote: '"When your mind is telling you that you\'re exhausted and cannot take another step, you are only at 40% of what your body is truly capable of."',
     author: "— DAVID GOGGINS (NAVY SEAL & ULTRA-ATHLETE)",
     takeaway: "Reach into your Cookie Jar of past triumphs whenever you feel the burn in your final set. You have survived every obstacle life has thrown at you."
@@ -9747,10 +9832,7 @@ function getMentalWeekIndex() {
   if (APP && typeof APP.currentPhaseWeek === "number") {
     return APP.currentPhaseWeek % 4;
   }
-  const now = new Date();
-  const start = new Date(now.getFullYear(), 0, 1);
-  const weekNumOfYear = Math.ceil((((now - start) / 86400000) + start.getDay() + 1) / 7);
-  return weekNumOfYear % 4;
+  return 2; // Default Week 11
 }
 
 function setMentalWeekPack(packIdx, silent) {
@@ -9785,17 +9867,22 @@ function renderWeeklyMentalQuotes(packIdx) {
     btn.classList.toggle("active", parseInt(btn.getAttribute("data-mw"), 10) === idx);
   });
 
-  // 1. Purple: Quote & Mantra of the Week
+  // 1. Purple: Weekly Mantra Masterclass View
   const wm = WEEKLY_MENTAL_MANTRAS[idx % WEEKLY_MENTAL_MANTRAS.length];
   if (wm) {
-    const wBadge = document.getElementById("qb-week-badge");
-    const wText = document.getElementById("qb-week-text");
-    const wAuthor = document.getElementById("qb-week-author");
-    const wTakeaway = document.getElementById("qb-week-takeaway");
-    if (wBadge) wBadge.textContent = `// PURPLE · QUOTE & MANTRA OF THE WEEK (W${wNum})`;
-    if (wText) wText.textContent = wm.quote;
-    if (wAuthor) wAuthor.textContent = wm.author;
-    if (wTakeaway) wTakeaway.textContent = wm.takeaway;
+    const mwTitle = document.getElementById("qb-mantra-week-title");
+    const mwText = document.getElementById("qb-mantra-week-text");
+    const mwAuthor = document.getElementById("qb-mantra-week-author");
+    const mwTakeaway = document.getElementById("qb-mantra-week-takeaway");
+    if (mwTitle) mwTitle.textContent = wm.weekLabel;
+    if (mwText) mwText.textContent = wm.quote;
+    if (mwAuthor) mwAuthor.textContent = wm.author;
+    if (mwTakeaway) mwTakeaway.textContent = wm.takeaway;
+    const vMantraWeek = document.getElementById("mantra-view-week");
+    if (vMantraWeek && vMantraWeek.style.display !== "none") {
+      const wBadge = document.getElementById("qb-week-badge");
+      if (wBadge) wBadge.textContent = `// PURPLE · QUOTE & MANTRA OF THE WEEK (W${wNum})`;
+    }
   }
 
   // 2. Green: Islamic Quote of the Week
@@ -9811,6 +9898,11 @@ function renderWeeklyMentalQuotes(packIdx) {
     if (iText) iText.textContent = wi.quote;
     if (iAuthor) iAuthor.textContent = wi.author;
     if (iTakeaway) iTakeaway.textContent = wi.takeaway;
+    const vIslamWeek = document.getElementById("islam-view-week");
+    if (vIslamWeek && vIslamWeek.style.display !== "none") {
+      const iBadge = document.getElementById("qb-islam-badge");
+      if (iBadge) iBadge.textContent = `// GREEN · WEEK ${wNum} ISLAMIC MASTERCLASS`;
+    }
   }
 
   // 3. Orange: Book Quote of the Week
@@ -9824,43 +9916,78 @@ function renderWeeklyMentalQuotes(packIdx) {
     if (bText) bText.textContent = wb.quote;
     if (bAuthor) bAuthor.textContent = wb.author;
     if (bTakeaway) bTakeaway.textContent = wb.takeaway;
+    const vBookWeek = document.getElementById("book-view-week");
+    if (vBookWeek && vBookWeek.style.display !== "none") {
+      const bBadge = document.getElementById("qb-book-badge");
+      if (bBadge) bBadge.textContent = `// ORANGE · WEEK ${wNum} BOOK MASTERCLASS`;
+    }
   }
 }
 
 function switchMentalTab(cat, tab) {
-  if (cat === "islam") {
-    const vDay = document.getElementById("islam-view-day");
-    const vWeek = document.getElementById("islam-view-week");
-    const bDay = document.getElementById("tab-btn-islam-day");
-    const bWeek = document.getElementById("tab-btn-islam-week");
+  const dayNames = ["SUNDAY", "MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY"];
+  const dNum = (typeof window.ACTIVE_MENTAL_DAY === "number") ? window.ACTIVE_MENTAL_DAY : new Date().getDay();
+  const wNum = 9 + (getMentalWeekIndex() % 4);
+
+  if (cat === "mantra") {
+    const vDay = document.getElementById("mantra-view-day");
+    const vWeek = document.getElementById("mantra-view-week");
+    const bDay = document.getElementById("tab-btn-mantra-day");
+    const bWeek = document.getElementById("tab-btn-mantra-week");
+    const badge = document.getElementById("qb-week-badge");
     if (tab === "day") {
       if (vDay) vDay.style.display = "block";
       if (vWeek) vWeek.style.display = "none";
       if (bDay) bDay.classList.add("active");
       if (bWeek) bWeek.classList.remove("active");
+      if (badge) badge.textContent = `// PURPLE · ${dayNames[dNum]} MANTRA (W${wNum})`;
     } else {
       renderWeeklyMentalQuotes(getMentalWeekIndex());
       if (vDay) vDay.style.display = "none";
       if (vWeek) vWeek.style.display = "block";
       if (bDay) bDay.classList.remove("active");
       if (bWeek) bWeek.classList.add("active");
+      if (badge) badge.textContent = `// PURPLE · QUOTE & MANTRA OF THE WEEK (W${wNum})`;
+    }
+  } else if (cat === "islam") {
+    const vDay = document.getElementById("islam-view-day");
+    const vWeek = document.getElementById("islam-view-week");
+    const bDay = document.getElementById("tab-btn-islam-day");
+    const bWeek = document.getElementById("tab-btn-islam-week");
+    const badge = document.getElementById("qb-islam-badge");
+    if (tab === "day") {
+      if (vDay) vDay.style.display = "block";
+      if (vWeek) vWeek.style.display = "none";
+      if (bDay) bDay.classList.add("active");
+      if (bWeek) bWeek.classList.remove("active");
+      if (badge) badge.textContent = `// GREEN · ${dayNames[dNum]} ISLAMIC REFLECTION (W${wNum})`;
+    } else {
+      renderWeeklyMentalQuotes(getMentalWeekIndex());
+      if (vDay) vDay.style.display = "none";
+      if (vWeek) vWeek.style.display = "block";
+      if (bDay) bDay.classList.remove("active");
+      if (bWeek) bWeek.classList.add("active");
+      if (badge) badge.textContent = `// GREEN · WEEK ${wNum} ISLAMIC MASTERCLASS`;
     }
   } else if (cat === "book") {
     const vDay = document.getElementById("book-view-day");
     const vWeek = document.getElementById("book-view-week");
     const bDay = document.getElementById("tab-btn-book-day");
     const bWeek = document.getElementById("tab-btn-book-week");
+    const badge = document.getElementById("qb-book-badge");
     if (tab === "day") {
       if (vDay) vDay.style.display = "block";
       if (vWeek) vWeek.style.display = "none";
       if (bDay) bDay.classList.add("active");
       if (bWeek) bWeek.classList.remove("active");
+      if (badge) badge.textContent = `// ORANGE · ${dayNames[dNum]} BOOK MASTERY (W${wNum})`;
     } else {
       renderWeeklyMentalQuotes(getMentalWeekIndex());
       if (vDay) vDay.style.display = "none";
       if (vWeek) vWeek.style.display = "block";
       if (bDay) bDay.classList.remove("active");
       if (bWeek) bWeek.classList.add("active");
+      if (badge) badge.textContent = `// ORANGE · WEEK ${wNum} BOOK MASTERCLASS`;
     }
   }
 }
@@ -9872,8 +9999,9 @@ function setMentalDay(dayNum, btnEl, keepTabs) {
   });
   if (btnEl) btnEl.classList.add("active");
 
-  // If user directly tapped a day pill on Mental screen, ensure Day Quote tabs are visible
-  if (!keepTabs && btnEl) {
+  // When tapping a day pill (keepTabs falsy), ensure Day views are active across all cards
+  if (!keepTabs) {
+    switchMentalTab("mantra", "day");
     switchMentalTab("islam", "day");
     switchMentalTab("book", "day");
   }
@@ -9883,6 +10011,12 @@ function setMentalDay(dayNum, btnEl, keepTabs) {
   const q = Array.isArray(packs) ? packs[weekIdx % packs.length] : packs;
   const dayNames = ["SUNDAY", "MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY"];
   const wNum = 9 + (weekIdx % 4);
+  const isToday = (dayNum === new Date().getDay());
+
+  const indLabel = document.getElementById("mental-day-indicator");
+  if (indLabel) {
+    indLabel.textContent = isToday ? `// TODAY · ${dayNames[dayNum]} (W${wNum})` : `// ${dayNames[dayNum]} · WEEK ${wNum}`;
+  }
 
   const rotLabel = document.getElementById("mental-active-rotation-label");
   if (rotLabel) {
@@ -9899,31 +10033,63 @@ function setMentalDay(dayNum, btnEl, keepTabs) {
   if (dAuthor && q.dayQuote) dAuthor.textContent = q.dayQuote.author;
   if (dTakeaway && q.dayQuote && q.dayQuote.takeaway) dTakeaway.textContent = q.dayQuote.takeaway;
 
-  // 2. Green: Islamic Day Quote + Arabic + Author + Takeaway
+  // 2. Purple: Daily Mantra + Author + Takeaway
+  const wBadge = document.getElementById("qb-week-badge");
+  const wText = document.getElementById("qb-week-text");
+  const wAuthor = document.getElementById("qb-week-author");
+  const wTakeaway = document.getElementById("qb-week-takeaway");
+  const vMantraWeek = document.getElementById("mantra-view-week");
+  const isMantraWeekOpen = vMantraWeek && vMantraWeek.style.display !== "none";
+  if (wBadge) {
+    wBadge.textContent = isMantraWeekOpen
+      ? `// PURPLE · QUOTE & MANTRA OF THE WEEK (W${wNum})`
+      : `// PURPLE · ${dayNames[dayNum]} MANTRA (W${wNum})`;
+  }
+  if (q.mantraQuote) {
+    if (wText) wText.textContent = q.mantraQuote.text;
+    if (wAuthor) wAuthor.textContent = q.mantraQuote.author;
+    if (wTakeaway) wTakeaway.textContent = q.mantraQuote.takeaway;
+  }
+
+  // 3. Green: Islamic Day Quote + Arabic + Author + Takeaway
   const iBadge = document.getElementById("qb-islam-badge");
   const iArabic = document.getElementById("qb-islam-arabic");
   const iText = document.getElementById("qb-islam-text");
   const iAuthor = document.getElementById("qb-islam-author");
   const iTakeaway = document.getElementById("qb-islam-takeaway");
-  if (iBadge) iBadge.textContent = `// GREEN · ${dayNames[dayNum]} ISLAMIC REFLECTION`;
+  const vIslamWeek = document.getElementById("islam-view-week");
+  const isIslamWeekOpen = vIslamWeek && vIslamWeek.style.display !== "none";
+  if (iBadge) {
+    iBadge.textContent = isIslamWeekOpen
+      ? `// GREEN · WEEK ${wNum} ISLAMIC MASTERCLASS`
+      : `// GREEN · ${dayNames[dayNum]} ISLAMIC REFLECTION (W${wNum})`;
+  }
   if (iArabic && q.islamQuote) iArabic.textContent = q.islamQuote.arabic;
   if (iText && q.islamQuote) iText.textContent = q.islamQuote.text;
   if (iAuthor && q.islamQuote) iAuthor.textContent = q.islamQuote.author;
   if (iTakeaway && q.islamQuote) iTakeaway.textContent = q.islamQuote.takeaway;
 
-  // 3. Orange: Book Mastery Day Quote + Author + Takeaway
+  // 4. Orange: Book Mastery Day Quote + Author + Takeaway
   const bBadge = document.getElementById("qb-book-badge");
   const bText = document.getElementById("qb-book-text");
   const bAuthor = document.getElementById("qb-book-author");
   const bTakeaway = document.getElementById("qb-book-takeaway");
-  if (bBadge) bBadge.textContent = `// ORANGE · ${dayNames[dayNum]} BOOK MASTERY`;
+  const vBookWeek = document.getElementById("book-view-week");
+  const isBookWeekOpen = vBookWeek && vBookWeek.style.display !== "none";
+  if (bBadge) {
+    bBadge.textContent = isBookWeekOpen
+      ? `// ORANGE · WEEK ${wNum} BOOK MASTERCLASS`
+      : `// ORANGE · ${dayNames[dayNum]} BOOK MASTERY (W${wNum})`;
+  }
   if (bText && q.bookQuote) bText.textContent = q.bookQuote.text;
   if (bAuthor && q.bookQuote) bAuthor.textContent = q.bookQuote.author;
   if (bTakeaway && q.bookQuote) bTakeaway.textContent = q.bookQuote.takeaway;
 
-  // 4. Sync Profile Daily Quote Card
+  // 5. Sync Profile Daily Quote Card
+  const pBadge = document.getElementById("profile-quote-badge");
   const pQuote = document.getElementById("profile-daily-quote");
   const pAuthor = document.getElementById("profile-daily-author");
+  if (pBadge) pBadge.textContent = `// ${dayNames[dayNum]} QUOTE · WEEK ${wNum}`;
   if (pQuote && q.dayQuote) pQuote.textContent = q.dayQuote.text;
   if (pAuthor && q.dayQuote) pAuthor.textContent = q.dayQuote.author;
 }
@@ -9931,25 +10097,36 @@ function setMentalDay(dayNum, btnEl, keepTabs) {
 // Auto-refresh daily recovery & quotes when switching back to app
 document.addEventListener("visibilitychange", () => {
   if (document.visibilityState === "visible") {
+    checkWeekReset();
     if (checkDailyResets()) {
-      initMentalQuotes();
+      initMentalQuotes(true);
       showToast("NEW DAY · DAILY PROTOCOLS & QUOTES REFRESHED ✓", "toast-success");
+    } else {
+      initMentalQuotes(false);
     }
   }
 });
 window.addEventListener("focus", () => {
-  checkDailyRecoveryReset();
+  checkWeekReset();
+  if (checkDailyRecoveryReset()) {
+    initMentalQuotes(true);
+  }
 });
 
-function initMentalQuotes() {
+function initMentalQuotes(forceResetToToday) {
   const today = new Date().getDay();
-  const weekIdx = (APP && typeof APP.currentPhaseWeek === "number") ? (APP.currentPhaseWeek % 4) : getMentalWeekIndex();
-  window.ACTIVE_MENTAL_WEEK_PACK = weekIdx;
-  renderWeeklyMentalQuotes(weekIdx);
-  const activeBtn = document.querySelector(`.md-day-pill[data-d="${today}"]`);
-  setMentalDay(today, activeBtn, true);
+  const phaseWeekIdx = (APP && typeof APP.currentPhaseWeek === "number") ? (APP.currentPhaseWeek % 4) : 2;
+  if (forceResetToToday || typeof window.ACTIVE_MENTAL_WEEK_PACK !== "number" || window.__lastSyncedPhaseWeek !== phaseWeekIdx) {
+    window.ACTIVE_MENTAL_WEEK_PACK = phaseWeekIdx;
+    window.__lastSyncedPhaseWeek = phaseWeekIdx;
+  }
+  if (forceResetToToday || typeof window.ACTIVE_MENTAL_DAY !== "number") {
+    window.ACTIVE_MENTAL_DAY = today;
+  }
+  renderWeeklyMentalQuotes(window.ACTIVE_MENTAL_WEEK_PACK);
+  const activeBtn = document.querySelector(`.md-day-pill[data-d="${window.ACTIVE_MENTAL_DAY}"]`);
+  setMentalDay(window.ACTIVE_MENTAL_DAY, activeBtn, !forceResetToToday);
 }
-
 </script>
 
 
