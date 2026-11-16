@@ -1738,28 +1738,86 @@ body>*{position:relative;z-index:1}
 .bb-btn-reset{background:var(--panel2);border:1px solid var(--border);color:var(--text)}
 
 
-/* ═══ SCREEN: HIDE PDF DOSSIER CONTAINER ═══ */
+/* ═══ SCREEN: HIDE PDF DOSSIER CONTAINER BY DEFAULT ═══ */
 #pdf-dossier {
   display: none;
 }
 
-/* ═══ PRINT & PDF EXPORT: EXACT 2-PAGE ELITE ATHLETIC DOSSIER ═══ */
-@page {
-  size: 210mm 297mm;
-  margin: 0;
+/* ═══ PRINT PREVIEW MODE ON SCREEN (body.is-printing-pdf) ═══ */
+body.is-printing-pdf {
+  background: #060608 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
 }
 
-body.is-printing-pdf {
-  width: 210mm !important;
-  max-width: 210mm !important;
-  min-width: 210mm !important;
-  margin: 0 auto !important;
-  padding: 0 !important;
+body.is-printing-pdf > *:not(#pdf-dossier):not(#toast) {
+  display: none !important;
+}
+
+body.is-printing-pdf #pdf-dossier {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  width: 100% !important;
+  min-height: 100vh !important;
+  background: #060608 !important;
+  padding: 68px 10px 36px !important;
+  margin: 0 !important;
+  gap: 18px !important;
+  box-sizing: border-box !important;
+  z-index: 99999 !important;
+}
+
+body.is-printing-pdf .pdf-print-toolbar {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  min-height: 56px !important;
+  background: rgba(12, 12, 16, 0.96) !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+  border-bottom: 1.5px solid rgba(212, 168, 67, 0.45) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  flex-wrap: wrap !important;
+  gap: 8px !important;
+  padding: 8px 12px !important;
+  z-index: 100000 !important;
+  box-sizing: border-box !important;
+}
+
+body.is-printing-pdf .pdf-page {
+  width: 100% !important;
+  max-width: 794px !important;
+  aspect-ratio: 210 / 297 !important;
+  background: #060608 !important;
+  border: 1px solid rgba(212, 168, 67, 0.28) !important;
+  border-radius: 6px !important;
+  overflow: hidden !important;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.75) !important;
+  display: block !important;
+}
+
+body.is-printing-pdf .pdf-page svg {
+  width: 100% !important;
+  height: 100% !important;
+  display: block !important;
+}
+
+/* ═══ PRINT & PDF EXPORT: EXACT 2-PAGE ELITE ATHLETIC DOSSIER ═══ */
+@page {
+  size: A4 portrait;
+  margin: 0mm !important;
 }
 
 @media print {
   @page {
-    size: 210mm 297mm;
+    size: A4 portrait;
     margin: 0mm !important;
   }
 
@@ -1776,9 +1834,10 @@ body.is-printing-pdf {
   }
 
   html, body {
-    width: 210mm !important;
-    max-width: 210mm !important;
-    min-width: 210mm !important;
+    width: 100% !important;
+    max-width: none !important;
+    min-width: 0 !important;
+    height: auto !important;
     margin: 0 !important;
     padding: 0 !important;
     background: #060608 !important;
@@ -1788,33 +1847,44 @@ body.is-printing-pdf {
     print-color-adjust: exact !important;
   }
   
-  /* Hide all app chrome, screens, modals, bottom nav, and standard mobile report overlay */
-  .bottom-nav, .app-header, .page, .bb-overlay, .modal-overlay, #report-overlay, .rp-header, .rp-body, .rp-export-actions, .rp-share-btn, .complete-overlay, .toast, .install-banner {
+  /* Hide EVERY app element except #pdf-dossier, and hide the on-screen print toolbar */
+  body > *:not(#pdf-dossier),
+  .pdf-print-toolbar,
+  .bottom-nav, .app-header, .page, .bb-overlay, .modal-overlay, .overlay-base, .swap-modal-overlay, .change-workout-overlay, .warmup-overlay, .add-event-overlay, #report-overlay, .rp-header, .rp-body, .rp-export-actions, .rp-share-btn, .complete-overlay, .toast, .install-banner, #mental-bg-layer, #business-bg-layer {
     display: none !important;
   }
   
   #pdf-dossier {
     display: block !important;
-    width: 210mm !important;
-    max-width: 210mm !important;
-    min-width: 210mm !important;
+    position: static !important;
+    width: 100% !important;
+    max-width: none !important;
+    min-width: 0 !important;
+    min-height: 0 !important;
     margin: 0 !important;
     padding: 0 !important;
     background: #060608 !important;
     color: #FFFFFF !important;
+    overflow: visible !important;
   }
 
   .pdf-page {
-    width: 210mm !important;
-    max-width: 210mm !important;
-    min-width: 210mm !important;
-    height: 297mm !important;
-    max-height: 297mm !important;
-    min-height: 297mm !important;
+    width: 100vw !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    height: 100vh !important;
+    max-height: 100vh !important;
+    min-height: 0 !important;
+    aspect-ratio: auto !important;
     box-sizing: border-box !important;
-    display: block !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
     margin: 0 !important;
     padding: 0 !important;
+    border: none !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
     overflow: hidden !important;
     background: #060608 !important;
     page-break-inside: avoid !important;
@@ -1822,8 +1892,10 @@ body.is-printing-pdf {
   }
 
   .pdf-page svg {
-    width: 210mm !important;
-    height: 297mm !important;
+    width: 100% !important;
+    height: 100% !important;
+    max-width: 100vw !important;
+    max-height: 100vh !important;
     display: block !important;
   }
 
@@ -1833,8 +1905,8 @@ body.is-printing-pdf {
   }
 
   .pdf-page-2 {
-    page-break-after: avoid !important;
-    break-after: avoid !important;
+    page-break-after: auto !important;
+    break-after: auto !important;
   }
 
   .pdf-header {
@@ -3978,20 +4050,13 @@ function getDailyQuote() {
   return DAILY_QUOTES[qIdx];
 }
 
-function getWeeklyMantra() {
-  const offset = (APP && typeof APP.currentPhaseWeek === 'number') ? APP.currentPhaseWeek : 2;
-  const weekIdx = offset % 4;
-  if (typeof WEEKLY_MENTAL_MANTRAS !== 'undefined' && WEEKLY_MENTAL_MANTRAS[weekIdx]) {
-    const wm = WEEKLY_MENTAL_MANTRAS[weekIdx];
-    return {
-      week: 9 + offset,
-      mantra: wm.quote.replace(/^["“]|["”]$/g, ''),
-      theme: wm.weekLabel.split('·')[1] ? wm.weekLabel.split('·')[1].trim() : wm.weekLabel
-    };
-  }
-  const m = WEEKLY_MANTRAS[weekIdx % WEEKLY_MANTRAS.length];
+function getWeeklyMantra(customPhaseIdx) {
+  const offset = (typeof customPhaseIdx === 'number') ? customPhaseIdx : ((APP && typeof APP.currentPhaseWeek === 'number') ? APP.currentPhaseWeek : 2);
+  const weekIdx = Math.max(0, offset) % 4;
+  const phaseMantraIdx = 8 + weekIdx; // W9=8, W10=9, W11=10, W12=11 in WEEKLY_MANTRAS
+  const m = WEEKLY_MANTRAS[phaseMantraIdx] || WEEKLY_MANTRAS[weekIdx % WEEKLY_MANTRAS.length];
   return {
-    week: 9 + offset,
+    week: 9 + weekIdx,
     mantra: m.mantra,
     theme: m.theme
   };
@@ -5182,6 +5247,22 @@ function toggleWarmup(el,id){
 // ══════════════════════════════════════════════
 // WEEKLY REPORT
 // ══════════════════════════════════════════════
+function renderReportWeekSwitcherHTML(activePhaseIdx) {
+  const curIdx = typeof activePhaseIdx === 'number' ? activePhaseIdx : (APP.currentPhaseWeek || 0);
+  let btns = '';
+  for (let i = 0; i < 4; i++) {
+    const wNum = 9 + i;
+    const isAct = i === curIdx;
+    const isPastDone = i < (APP.currentPhaseWeek || 0) || (APP.phaseWeeks && APP.phaseWeeks[i] === 100);
+    const pctVal = i === (APP.currentPhaseWeek || 0) ? getOverallPct() : (isPastDone ? 100 : ((APP.phaseWeeks && APP.phaseWeeks[i]) || 0));
+    const bg = isAct ? 'linear-gradient(135deg,#D4A843,#9A7420)' : 'rgba(255,255,255,0.04)';
+    const col = isAct ? '#060608' : '#E8E8F0';
+    const bdr = isAct ? '#D4A843' : 'rgba(212,168,67,0.28)';
+    btns += `<button type="button" onclick="openReportForPhaseWeek(${i})" style="flex:1;padding:8px 4px;border-radius:6px;border:1px solid ${bdr};background:${bg};color:${col};font-family:'DM Mono',monospace;font-size:10px;font-weight:700;cursor:pointer;letter-spacing:0.5px">W${wNum} · ${pctVal}%</button>`;
+  }
+  return `<div style="display:flex;gap:6px;margin-bottom:14px">${btns}</div>`;
+}
+
 function openReport(context){
   const overlay=document.getElementById('report-overlay');
   if(!overlay)return;
@@ -5194,13 +5275,14 @@ function openReport(context){
   } else if (typeof context === 'number') {
     // Phase week index (0=W9, 1=W10, 2=W11, 3=W12)
     const wNum = 9 + context;
-    if (context === (APP.currentPhaseWeek || 0)) {
+    if (context === (APP.currentPhaseWeek || 0) && getOverallPct() > 0) {
       window.CURRENT_REPORT_ITEM = null;
       document.getElementById('rp-sub').textContent = `Phase 3 · Week ${wNum} · ${APP.weekKey} (Active Training Week)`;
       buildReport();
-    } else if (context < (APP.currentPhaseWeek || 0)) {
-      const pastItem = (APP.weekHistory || []).find(h => h.week && (h.week.includes(`Week ${wNum}`) || h.week.includes(`W${wNum}`))) || {
+    } else if (context < (APP.currentPhaseWeek || 0) || (APP.phaseWeeks && APP.phaseWeeks[context] === 100)) {
+      const pastItem = (APP.weekHistory || []).find(h => h.week && h.week.includes(`Week ${wNum}`)) || {
         week: `Phase 3 · Week ${wNum}`,
+        phaseIdx: context,
         pct: (APP.phaseWeeks && APP.phaseWeeks[context]) || 100,
         sessions: 14,
         completedSessions: {
@@ -5214,13 +5296,23 @@ function openReport(context){
       window.CURRENT_REPORT_ITEM = pastItem;
       document.getElementById('rp-sub').textContent = `Phase 3 · Week ${wNum} · Completed Dossier`;
       buildReport(pastItem);
-    } else {
+    } else if (context === (APP.currentPhaseWeek || 0)) {
       window.CURRENT_REPORT_ITEM = null;
+      document.getElementById('rp-sub').textContent = `Phase 3 · Week ${wNum} · ${APP.weekKey} (Active Training Week)`;
+      buildReport();
+    } else {
+      window.CURRENT_REPORT_ITEM = {
+        week: `Phase 3 · Week ${wNum} (Scheduled Target)`,
+        phaseIdx: context,
+        pct: (APP.phaseWeeks && APP.phaseWeeks[context]) || 0,
+        sessions: 0,
+        completedSessions: {}
+      };
       document.getElementById('rp-sub').textContent = `Phase 3 · Week ${wNum} · Upcoming Training Dossier`;
       buildUpcomingWeekPreview(context);
     }
   } else {
-    // Live active week report
+    // Live active week report (if 0% right after Sunday rollover, still show switcher at top)
     window.CURRENT_REPORT_ITEM = null;
     const wNum = 9 + (APP.currentPhaseWeek || 0);
     document.getElementById('rp-sub').textContent = `Phase 3 · Week ${wNum} · ${APP.weekKey}`;
@@ -5302,7 +5394,17 @@ function buildUpcomingWeekPreview(phaseIdx) {
     </div>
   `;
 
-  document.getElementById('rp-body').innerHTML = htmlContent;
+  const exportBtnsHTML = `
+    <div class="rp-export-actions" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px;margin-bottom:10px">
+      <button class="rp-export-btn" onclick="exportReportPDF(${phaseIdx})" style="background:linear-gradient(135deg,rgba(212,168,67,0.22),rgba(212,168,67,0.08));border:1.5px solid var(--gold);color:var(--gold);border-radius:var(--r-sm);padding:14px 10px;font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:1px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px">
+        <span>📄</span> EXPORT PDF / PRINT
+      </button>
+      <button class="rp-export-btn" onclick="exportReportMarkdown()" style="background:var(--panel2);border:1px solid var(--border);color:#fff;border-radius:var(--r-sm);padding:14px 10px;font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:1px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px">
+        <span>📝</span> EXPORT REPORT (.MD)
+      </button>
+    </div>
+  `;
+  document.getElementById('rp-body').innerHTML = renderReportWeekSwitcherHTML(phaseIdx) + htmlContent + exportBtnsHTML;
 }
 
 function buildReport(historyItem){
@@ -5317,7 +5419,7 @@ function buildReport(historyItem){
   } else if (!historyItem) {
     activeSessions = APP.sessions || {};
   }
-  if (isHistory && (historyItem.pct === 100 || historyItem.sessions >= 14 || (historyItem.week && (historyItem.week.includes('Week 9') || historyItem.week.includes('Week 10'))))) {
+  if (isHistory && (historyItem.pct === 100 || historyItem.sessions >= 14 || (historyItem.week && (historyItem.week.includes('Week 9') || historyItem.week.includes('Week 10') || historyItem.week.includes('Week 11'))))) {
     activeSessions = {
       's-0-0': true, 's-0-1': true, 's-0-2': true,
       's-1-0': true, 's-1-1': true, 's-1-2': true,
@@ -5716,10 +5818,10 @@ function buildReport(historyItem){
 
 // Build Weekly PR & Peak Loads Spotlight
   let prSpotlightHTML = '';
-  if (APP.currentSessionSets) {
-    Object.keys(APP.currentSessionSets).forEach(k => {
-      const sets = APP.currentSessionSets[k] || [];
-      const exName = k.replace(/s-\d+-\d+-/, '').replace(/-/g, ' ').toUpperCase();
+  if (activeSessionSets) {
+    Object.keys(activeSessionSets).forEach(k => {
+      const sets = activeSessionSets[k] || [];
+      const exName = resolveExerciseNameFromSetKey(k);
       sets.forEach((s, sIdx) => {
         if (s.weight && parseFloat(s.weight) > 0) {
           prList.push({
@@ -5877,7 +5979,15 @@ function buildReport(historyItem){
   const totalPhaseTonnage = volumeData.reduce((acc, v) => acc + v.tonnage, 0);
   const overloadDelta = Math.round(((volumeData[1].tonnage - volumeData[0].tonnage) / volumeData[0].tonnage) * 100);
 
-  document.getElementById('rp-body').innerHTML=`
+  let reportPhaseIdx = APP.currentPhaseWeek || 0;
+  if (historyItem && typeof historyItem.phaseIdx === 'number') reportPhaseIdx = historyItem.phaseIdx;
+  else if (historyItem && historyItem.week) {
+    if (historyItem.week.includes('Week 9')) reportPhaseIdx = 0;
+    else if (historyItem.week.includes('Week 10')) reportPhaseIdx = 1;
+    else if (historyItem.week.includes('Week 11')) reportPhaseIdx = 2;
+    else if (historyItem.week.includes('Week 12')) reportPhaseIdx = 3;
+  }
+  document.getElementById('rp-body').innerHTML=renderReportWeekSwitcherHTML(reportPhaseIdx) + `
     <!-- HERO STAT -->
     <div class="rp-hero-card">
       <div class="rp-big-num">${pct}%</div>
@@ -6061,20 +6171,90 @@ function buildReport(historyItem){
 // ══════════════════════════════════════════════
 // PERFORMANCE DOSSIER EXPORT ENGINES (PDF & MD)
 // ══════════════════════════════════════════════
+function resolveExerciseNameFromSetKey(setKey) {
+  if (!setKey) return 'EXERCISE';
+  if (APP && APP.swappedExercises && APP.swappedExercises[setKey] && APP.swappedExercises[setKey].name) {
+    return APP.swappedExercises[setKey].name.toUpperCase();
+  }
+  const m = String(setKey).match(/^(.+)-(\d+)$/);
+  if (m) {
+    const wKey = m[1];
+    const exIdx = parseInt(m[2], 10);
+    if (typeof WORKOUTS !== 'undefined' && WORKOUTS[wKey] && WORKOUTS[wKey].exercises && WORKOUTS[wKey].exercises[exIdx]) {
+      return WORKOUTS[wKey].exercises[exIdx].name.toUpperCase();
+    }
+    if (typeof DEFAULT_SESSIONS !== 'undefined' && DEFAULT_SESSIONS[wKey]) {
+      const defKey = DEFAULT_SESSIONS[wKey].key;
+      if (defKey && WORKOUTS[defKey] && WORKOUTS[defKey].exercises && WORKOUTS[defKey].exercises[exIdx]) {
+        return WORKOUTS[defKey].exercises[exIdx].name.toUpperCase();
+      }
+    }
+  }
+  return String(setKey).replace(/^s-\d+-\d+-/, '').replace(/-\d+$/, '').replace(/-/g, ' ').toUpperCase();
+}
+
+function resolveReportItemContext(inputItem) {
+  if (typeof inputItem === 'number') {
+    const wNum = 9 + inputItem;
+    if (inputItem === (APP.currentPhaseWeek || 0)) return null;
+    const found = (APP.weekHistory || []).find(h => h.week && h.week.includes('Week ' + wNum));
+    if (found) return found;
+    if (inputItem < (APP.currentPhaseWeek || 0) || (APP.phaseWeeks && APP.phaseWeeks[inputItem] === 100)) {
+      return {
+        week: 'Phase 3 · Week ' + wNum,
+        phaseIdx: inputItem,
+        pct: 100,
+        sessions: 14,
+        tonnage: inputItem === 0 ? 24500 : (inputItem === 1 ? 26400 : 25200),
+        completedSessions: {
+          's-0-0': true, 's-0-1': true, 's-0-2': true,
+          's-1-0': true, 's-1-1': true, 's-1-2': true,
+          's-2-0': true, 's-2-1': true, 's-2-2': true,
+          's-3-0': true, 's-3-1': true,
+          's-4-0': true, 's-4-1': true, 's-4-2': true
+        }
+      };
+    }
+    return {
+      week: 'Phase 3 · Week ' + wNum,
+      phaseIdx: inputItem,
+      pct: (APP.phaseWeeks && APP.phaseWeeks[inputItem]) || 0,
+      sessions: 0,
+      completedSessions: {}
+    };
+  }
+  if (inputItem === null) return null;
+  if (inputItem && typeof inputItem === 'object') return inputItem;
+  if (window.CURRENT_REPORT_ITEM) return window.CURRENT_REPORT_ITEM;
+  return null;
+}
+
+function resolveTargetWeekIdx(item) {
+  if (item && typeof item.phaseIdx === 'number') return item.phaseIdx;
+  if (item && item.week) {
+    if (item.week.includes('Week 9')) return 0;
+    if (item.week.includes('Week 10')) return 1;
+    if (item.week.includes('Week 11')) return 2;
+    if (item.week.includes('Week 12')) return 3;
+    if (item.week.includes('W43')) return 0;
+    if (item.week.includes('W44')) return 1;
+    if (item.week.includes('W45') || item.week.includes('W46')) return 2;
+    if (item.week.includes('W47')) return 3;
+  }
+  return APP.currentPhaseWeek || 0;
+}
+
 function generateWeeklyReportMarkdown(historyItem) {
-  const itemContext = historyItem || window.CURRENT_REPORT_ITEM;
+  const itemContext = resolveReportItemContext(historyItem);
   const isHistory = !!itemContext;
-  const curWeek = isHistory ? itemContext.week : (APP.weekKey || 'CURRENT WEEK');
-  const wNum = 9 + (APP.currentPhaseWeek || 0);
+  const targetWeekIdx = resolveTargetWeekIdx(itemContext);
+  const wNum = 9 + targetWeekIdx;
+  const curWeek = isHistory ? itemContext.week : (APP.weekKey || ('Phase 3 · Week ' + wNum));
   const pct = isHistory ? (itemContext.pct || 0) : getOverallPct();
   
   // Resolve active sessions
   let activeSessions = {};
-  if (itemContext && itemContext.completedSessions && Object.keys(itemContext.completedSessions).length > 0) {
-    activeSessions = itemContext.completedSessions;
-  } else if (!itemContext) {
-    activeSessions = APP.sessions || {};
-  } else if (itemContext && (itemContext.pct === 100 || itemContext.sessions >= 14 || (itemContext.week && (itemContext.week.includes('Week 9') || itemContext.week.includes('Week 10'))))) {
+  if (isHistory && (itemContext.pct === 100 || itemContext.sessions >= 14 || (itemContext.week && (itemContext.week.includes('Week 9') || itemContext.week.includes('Week 10') || itemContext.week.includes('Week 11'))))) {
     activeSessions = {
       's-0-0': true, 's-0-1': true, 's-0-2': true,
       's-1-0': true, 's-1-1': true, 's-1-2': true,
@@ -6082,6 +6262,8 @@ function generateWeeklyReportMarkdown(historyItem) {
       's-3-0': true, 's-3-1': true,
       's-4-0': true, 's-4-1': true, 's-4-2': true
     };
+  } else if (itemContext && itemContext.completedSessions && Object.keys(itemContext.completedSessions).length > 0) {
+    activeSessions = itemContext.completedSessions;
   } else {
     activeSessions = APP.sessions || {};
   }
@@ -6089,14 +6271,6 @@ function generateWeeklyReportMarkdown(historyItem) {
   const activeCustomWorkouts = (itemContext && itemContext.customWorkouts) ? itemContext.customWorkouts : (APP.customWorkouts || {});
   const activeNotes = (itemContext && itemContext.notes) ? itemContext.notes : (APP.sessionNotes || {});
   const activeSessionSets = (itemContext && itemContext.sessionSets && Object.keys(itemContext.sessionSets).length > 0) ? itemContext.sessionSets : (APP.currentSessionSets || {});
-
-  let targetWeekIdx = APP.currentPhaseWeek || 0;
-  if (itemContext && itemContext.week) {
-    if (itemContext.week.includes('Week 9') || itemContext.week.includes('W43')) targetWeekIdx = 0;
-    else if (itemContext.week.includes('Week 10') || itemContext.week.includes('W44')) targetWeekIdx = 1;
-    else if (itemContext.week.includes('Week 11') || itemContext.week.includes('W45')) targetWeekIdx = 2;
-    else if (itemContext.week.includes('Week 12') || itemContext.week.includes('W46')) targetWeekIdx = 3;
-  }
 
   let done = 0;
   for (let d = 0; d < 5; d++) {
@@ -6126,7 +6300,7 @@ function generateWeeklyReportMarkdown(historyItem) {
   if (activeSessionSets) {
     Object.keys(activeSessionSets).forEach(k => {
       const sets = activeSessionSets[k] || [];
-      const exName = k.replace(/s-\d+-\d+-/, '').replace(/-/g, ' ').toUpperCase();
+      const exName = resolveExerciseNameFromSetKey(k);
       sets.forEach((s) => {
         if (s.done || (s.weight && s.reps)) {
           totalSets++;
@@ -6395,7 +6569,7 @@ function renderPDFDossier(historyItem) {
   if (activeSessionSets) {
     Object.keys(activeSessionSets).forEach(k => {
       const sets = activeSessionSets[k] || [];
-      const exName = k.replace(/s-\d+-\d+-/, '').replace(/-/g, ' ').toUpperCase();
+      const exName = resolveExerciseNameFromSetKey(k);
       sets.forEach(s => {
         if (s.done || (s.weight && s.reps)) {
           totalSets++;
@@ -6407,8 +6581,8 @@ function renderPDFDossier(historyItem) {
       });
     });
   }
-  if (totalTonnage === 0 && (targetWeekIdx === 0 || targetWeekIdx === 1 || (item && item.tonnage))) {
-    totalTonnage = (item && item.tonnage) || (targetWeekIdx === 1 ? 26400 : 24500);
+  if (totalTonnage === 0 && (targetWeekIdx <= 2 || (item && item.tonnage))) {
+    totalTonnage = (item && item.tonnage) || (targetWeekIdx === 1 ? 26400 : (targetWeekIdx === 2 ? 25200 : 24500));
   }
   if (totalSets === 0 && isHistory) {
     totalSets = 56;
@@ -6976,7 +7150,8 @@ function buildTwoPagePDFBlob(jpegDataUrl1, jpegDataUrl2, imgW, imgH) {
   return new Blob(chunks, { type: 'application/pdf' });
 }
 
-function createSVGContext(W, H) {
+function createSVGContext(W, H, gradId) {
+  const gId = gradId || 'pdfBgGlow';
   const mCanvas = document.createElement('canvas');
   const mCtx = mCanvas.getContext('2d');
   const els = [];
@@ -6996,11 +7171,16 @@ function createSVGContext(W, H) {
       return { isGrad: true, addColorStop() {} };
     },
     measureText(s) {
-      mCtx.font = this.font;
-      return mCtx.measureText(s);
+      if (mCtx) {
+        mCtx.font = this.font;
+        return mCtx.measureText(s);
+      }
+      const m = String(this.font).match(/([\d.]+)px/);
+      const fs = m ? parseFloat(m[1]) : 12;
+      return { width: String(s || '').length * fs * 0.56 };
     },
     fillRect(x, y, w, h) {
-      const fill = (this.fillStyle && this.fillStyle.isGrad) ? 'url(#pdfBgGlow)' : this.fillStyle;
+      const fill = (this.fillStyle && this.fillStyle.isGrad) ? ('url(#' + gId + ')') : this.fillStyle;
       const op = this.globalAlpha < 1 ? ' opacity="' + this.globalAlpha + '"' : '';
       els.push('<rect x="' + x + '" y="' + y + '" width="' + w + '" height="' + h + '" fill="' + esc(fill) + '"' + op + ' />');
     },
@@ -7057,8 +7237,8 @@ function createSVGContext(W, H) {
       }
     },
     toSVG() {
-      return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ' + W + ' ' + H + '" width="100%" height="100%" preserveAspectRatio="none">' +
-        '<defs><radialGradient id="pdfBgGlow" cx="50%" cy="0%" r="55%"><stop offset="0%" stop-color="#D4A843" stop-opacity="0.08"/><stop offset="100%" stop-color="#060608" stop-opacity="0"/></radialGradient></defs>' +
+      return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ' + W + ' ' + H + '" width="100%" height="100%" preserveAspectRatio="xMidYMid meet" style="background:#060608;display:block">' +
+        '<defs><radialGradient id="' + gId + '" cx="50%" cy="0%" r="55%"><stop offset="0%" stop-color="#D4A843" stop-opacity="0.08"/><stop offset="100%" stop-color="#060608" stop-opacity="0"/></radialGradient></defs>' +
         els.join('') +
         '</svg>';
     }
@@ -7101,22 +7281,16 @@ function fitText(ctx, text, maxWidth) {
 }
 
 function renderA4DarkCanvases(historyItem, useSVG) {
-  const item = historyItem || window.CURRENT_REPORT_ITEM;
+  const item = resolveReportItemContext(historyItem);
   const isHistory = !!item;
-  const curWeek = isHistory ? item.week : (APP.weekKey || 'CURRENT WEEK');
-
-  let targetWeekIdx = APP.currentPhaseWeek || 0;
-  if (item && item.week) {
-    if (item.week.includes('Week 9') || item.week.includes('W43')) targetWeekIdx = 0;
-    else if (item.week.includes('Week 10') || item.week.includes('W44')) targetWeekIdx = 1;
-    else if (item.week.includes('Week 11') || item.week.includes('W45')) targetWeekIdx = 2;
-    else if (item.week.includes('Week 12') || item.week.includes('W46')) targetWeekIdx = 3;
-  }
+  const targetWeekIdx = resolveTargetWeekIdx(item);
   const wNum = 9 + targetWeekIdx;
-  const pct = isHistory ? (item.pct || 0) : getOverallPct();
+  const curWeek = isHistory ? item.week : (APP.weekKey || ('Phase 3 · Week ' + wNum));
+  const isPastCompletedWeek = isHistory && (item.pct === 100 || item.sessions >= 14 || (item.week && (item.week.includes('Week 9') || item.week.includes('Week 10') || item.week.includes('Week 11'))));
+  const pct = isPastCompletedWeek ? 100 : (isHistory ? (item.pct || 0) : getOverallPct());
 
   let activeSessions = {};
-  if (isHistory && (item.pct === 100 || item.sessions >= 14 || (item.week && (item.week.includes('Week 9') || item.week.includes('Week 10'))))) {
+  if (isPastCompletedWeek) {
     activeSessions = {
       's-0-0': true, 's-0-1': true, 's-0-2': true,
       's-1-0': true, 's-1-1': true, 's-1-2': true,
@@ -7124,6 +7298,9 @@ function renderA4DarkCanvases(historyItem, useSVG) {
       's-3-0': true, 's-3-1': true,
       's-4-0': true, 's-4-1': true, 's-4-2': true
     };
+    if (item && item.completedSessions) {
+      activeSessions = Object.assign({}, activeSessions, item.completedSessions);
+    }
   } else if (item && item.completedSessions && Object.keys(item.completedSessions).length > 0) {
     activeSessions = Object.assign({}, item.completedSessions);
   } else {
@@ -7151,7 +7328,7 @@ function renderA4DarkCanvases(historyItem, useSVG) {
   if (activeSessionSets) {
     Object.keys(activeSessionSets).forEach(k => {
       const sets = activeSessionSets[k] || [];
-      const exName = k.replace(/s-d+-d+-/, '').replace(/-/g, ' ').toUpperCase();
+      const exName = resolveExerciseNameFromSetKey(k);
       sets.forEach(s => {
         if (s.done || (s.weight && s.reps)) {
           totalSets++;
@@ -7232,7 +7409,7 @@ function renderA4DarkCanvases(historyItem, useSVG) {
   const c1 = document.createElement('canvas');
   c1.width = W;
   c1.height = H;
-  const ctx1 = useSVG ? createSVGContext(W, H) : c1.getContext('2d');
+  const ctx1 = useSVG ? createSVGContext(W, H, 'pdfBgGlow1') : c1.getContext('2d');
 
   // 100% Full-Bleed Dark Background (#060608) - Zero white anywhere
   ctx1.fillStyle = '#060608';
@@ -7703,10 +7880,10 @@ function renderA4DarkCanvases(historyItem, useSVG) {
   ctx1.font = '600 15.5px "Barlow", sans-serif';
   ctx1.fillText('Visualization (Court Lock-In ✓)   ·   Box Breathing (4-4-4-4 Parasympathetic Reset ✓)   ·   Focus Routine (Cognitive Priming ✓)', padX + 22, 1566);
 
-  const mantraObj = getWeeklyMantra();
+  const mantraObj = getWeeklyMantra(targetWeekIdx);
   ctx1.fillStyle = '#D4A843';
   ctx1.font = '600 13px "DM Mono", monospace';
-  ctx1.fillText('WEEKLY MANTRA: "' + mantraObj.mantra.replace(/\n/g, ' ') + '" (' + mantraObj.theme + ')', padX + 22, 1600);
+  ctx1.fillText(fitText(ctx1, 'WEEKLY MANTRA: "' + mantraObj.mantra.replace(/\n/g, ' ') + '" (' + mantraObj.theme + ')', contentW - 210), padX + 22, 1600);
 
   drawRoundedRect(ctx1, W - padX - 165, 1540, 143, 38, 6, 'rgba(48,209,88,0.18)', '#30D158', 1);
   ctx1.fillStyle = '#30D158';
@@ -7732,7 +7909,7 @@ function renderA4DarkCanvases(historyItem, useSVG) {
   const c2 = document.createElement('canvas');
   c2.width = W;
   c2.height = H;
-  const ctx2 = useSVG ? createSVGContext(W, H) : c2.getContext('2d');
+  const ctx2 = useSVG ? createSVGContext(W, H, 'pdfBgGlow2') : c2.getContext('2d');
 
   // 100% Full-Bleed Dark Background (#060608) - Zero white anywhere
   ctx2.fillStyle = '#060608';
@@ -7778,7 +7955,7 @@ function renderA4DarkCanvases(historyItem, useSVG) {
       const key = customKey || (def ? def.key : null);
       const w = (key && WORKOUTS[key]) ? WORKOUTS[key] : null;
       const isDone = !!activeSessions[sId];
-      const dayShort = ['MON', 'TUE', 'WED', 'THU', 'FRI'][def ? def.day : 0];
+      const dayShort = ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'][def ? def.day : 0] || 'SAT';
 
       if (w && w.exercises && w.exercises.length > 0) {
         w.exercises.forEach((ex, exIdx) => {
@@ -7928,24 +8105,122 @@ function renderA4DarkCanvases(historyItem, useSVG) {
   return { c1, c2, svg1: useSVG ? ctx1.toSVG() : null, svg2: useSVG ? ctx2.toSVG() : null, wNum };
 }
 
-function exportReportPDF(historyItem) {
-  const item = historyItem || window.CURRENT_REPORT_ITEM;
+let __activePDFReportContext = null;
+let __prevDocumentTitle = null;
+let __prevBodyOverflow = '';
+
+function buildPDFToolbarHTML(activeWNum) {
+  const curIdx = Math.max(0, Math.min(3, (activeWNum || 9) - 9));
+  let weekPills = '';
+  for (let i = 0; i < 4; i++) {
+    const w = 9 + i;
+    const isAct = i === curIdx;
+    const bg = isAct ? '#D4A843' : 'rgba(255,255,255,0.06)';
+    const col = isAct ? '#060608' : '#E8E8F0';
+    const bdr = isAct ? '#D4A843' : 'rgba(212,168,67,0.35)';
+    weekPills += '<button type="button" onclick="switchPDFPrintWeek(' + i + ')" style="padding:6px 10px;border-radius:5px;border:1px solid ' + bdr + ';background:' + bg + ';color:' + col + ';font-family:\'DM Mono\',monospace;font-size:11px;font-weight:700;cursor:pointer">W' + w + '</button>';
+  }
+  return '<div class="pdf-print-toolbar">' +
+    '<div style="display:flex;align-items:center;gap:8px">' +
+      '<button type="button" onclick="closePDFPrintView()" style="padding:7px 12px;border-radius:6px;border:1px solid rgba(255,255,255,0.2);background:rgba(255,255,255,0.08);color:#FFFFFF;font-family:\'Bebas Neue\',sans-serif;font-size:16px;letter-spacing:1px;cursor:pointer">← BACK</button>' +
+      '<div style="display:flex;gap:4px">' + weekPills + '</div>' +
+    '</div>' +
+    '<div style="display:flex;align-items:center;gap:8px">' +
+      '<button type="button" onclick="triggerNativePrint()" style="padding:7px 14px;border-radius:6px;border:1.5px solid #D4A843;background:linear-gradient(135deg,#D4A843,#9A7420);color:#060608;font-family:\'Bebas Neue\',sans-serif;font-size:16px;letter-spacing:1px;font-weight:700;cursor:pointer">🖨️ PRINT / SAVE PDF</button>' +
+      '<button type="button" onclick="downloadDirectPDFFile()" style="padding:7px 12px;border-radius:6px;border:1px solid rgba(48,209,88,0.5);background:rgba(48,209,88,0.14);color:#30D158;font-family:\'Bebas Neue\',sans-serif;font-size:16px;letter-spacing:1px;cursor:pointer">📥 SAVE FILE</button>' +
+    '</div>' +
+  '</div>';
+}
+
+function closePDFPrintView() {
+  document.body.classList.remove('is-printing-pdf');
+  const reportOverlay = document.getElementById('report-overlay');
+  if (reportOverlay && reportOverlay.classList.contains('open')) {
+    document.body.style.overflow = 'hidden';
+  } else {
+    document.body.style.overflow = __prevBodyOverflow || '';
+  }
+  if (__prevDocumentTitle) {
+    document.title = __prevDocumentTitle;
+    __prevDocumentTitle = null;
+  }
+}
+
+function switchPDFPrintWeek(phaseIdx) {
+  __activePDFReportContext = resolveReportItemContext(phaseIdx);
+  const { svg1, svg2, wNum } = renderA4DarkCanvases(__activePDFReportContext, true);
+  const container = document.getElementById('pdf-dossier');
+  if (container && svg1 && svg2) {
+    container.innerHTML = buildPDFToolbarHTML(wNum) +
+      '<div class="pdf-page pdf-page-1">' + svg1 + '</div>' +
+      '<div class="pdf-page pdf-page-2">' + svg2 + '</div>';
+  }
+  document.title = 'Tiegbe Bamba — Week ' + (wNum || (9 + phaseIdx)) + ' Performance Report';
+}
+
+function triggerNativePrint() {
+  window.print();
+}
+
+function downloadDirectPDFFile() {
   try {
+    const item = __activePDFReportContext || resolveReportItemContext();
+    const { c1, c2, wNum } = renderA4DarkCanvases(item, false);
+    const scale = 2.0;
+    const hi1 = document.createElement('canvas');
+    hi1.width = c1.width * scale;
+    hi1.height = c1.height * scale;
+    const hctx1 = hi1.getContext('2d');
+    hctx1.fillStyle = '#060608';
+    hctx1.fillRect(0, 0, hi1.width, hi1.height);
+    hctx1.drawImage(c1, 0, 0, hi1.width, hi1.height);
+
+    const hi2 = document.createElement('canvas');
+    hi2.width = c2.width * scale;
+    hi2.height = c2.height * scale;
+    const hctx2 = hi2.getContext('2d');
+    hctx2.fillStyle = '#060608';
+    hctx2.fillRect(0, 0, hi2.width, hi2.height);
+    hctx2.drawImage(c2, 0, 0, hi2.width, hi2.height);
+
+    const pdfBlob = buildTwoPagePDFBlob(hi1, hi2);
+    const fileName = 'Tiegbe-Bamba-Week-' + (wNum || 9) + '-Performance-Report.pdf';
+    const url = URL.createObjectURL(pdfBlob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = fileName;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 15000);
+    showToast('PDF FILE DOWNLOADED ✓', 'toast-success');
+  } catch (err) {
+    showToast('PDF FILE ERROR: ' + err.message, 'toast-warn');
+  }
+}
+
+function exportReportPDF(historyItem) {
+  try {
+    const item = resolveReportItemContext(historyItem);
+    __activePDFReportContext = item;
     const { svg1, svg2, wNum } = renderA4DarkCanvases(item, true);
     const container = document.getElementById('pdf-dossier');
     if (container && svg1 && svg2) {
-      container.innerHTML = '<div class="pdf-page pdf-page-1">' + svg1 + '</div><div class="pdf-page pdf-page-2">' + svg2 + '</div>';
+      container.innerHTML = buildPDFToolbarHTML(wNum) +
+        '<div class="pdf-page pdf-page-1">' + svg1 + '</div>' +
+        '<div class="pdf-page pdf-page-2">' + svg2 + '</div>';
     } else {
       renderPDFDossier(item);
     }
-    const prevTitle = document.title;
+    if (!__prevDocumentTitle) __prevDocumentTitle = document.title;
+    __prevBodyOverflow = document.body.style.overflow;
     document.title = 'Tiegbe Bamba — Week ' + (wNum || 9) + ' Performance Report';
-    showToast('OPENING PRINT / SAVE AS PDF... 📄', 'toast-fire');
+    document.body.classList.add('is-printing-pdf');
+    document.body.style.overflow = 'visible';
+    window.scrollTo(0, 0);
+    if (container) void container.offsetHeight; // Force synchronous layout before print snapshot
     if (typeof SoundFX !== 'undefined' && SoundFX.vibrate) SoundFX.vibrate(80);
-    setTimeout(() => {
-      window.print();
-      setTimeout(() => { document.title = prevTitle; }, 1000);
-    }, 120);
+    window.print();
   } catch (err) {
     showToast('PDF EXPORT ERROR: ' + err.message, 'toast-warn');
   }

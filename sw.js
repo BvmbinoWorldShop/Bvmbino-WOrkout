@@ -1,4 +1,4 @@
-const CACHE_NAME = 'bvmbino-offline-v9';
+const CACHE_NAME = 'bvmbino-offline-v10';
 const CORE_ASSETS = [
   './',
   './index.html',
